@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Document</title>
+    <title>Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -22,7 +22,7 @@
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="index.html">
+                    <a href="index.php">
                         <span class="ti-home"></span>
                         <span>Home</span>
                     </a>
@@ -66,7 +66,6 @@
             </ul>
         </div>
     </div>
-    
     
     <div class="main-content">
         
