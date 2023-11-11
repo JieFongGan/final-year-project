@@ -8,6 +8,7 @@
     <!-- styling -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/header.css">
 </head>
 <body>
 

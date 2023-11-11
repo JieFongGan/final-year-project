@@ -17,24 +17,29 @@ include '../contain/header.php';
     </header>
 
     <main>
-        <input type="text" id="searchInput" placeholder="Search for names..." onkeyup="searchTable()">
+        <div class="button-and-search">
+            <button>Create New</button>
+            <input type="text" id="searchInput" placeholder="Search for names..." onkeyup="searchTable()">
+        </div>
 
-        <table id="myTable" class="table table-striped" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Office</th>
-                    <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- Table rows will be dynamically added here using JavaScript -->
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="myTable" class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Table rows will be dynamically added here using JavaScript -->
+                </tbody>
+            </table>
+        </div>
 
         <div id="pagination" class="pagination">
             <!-- Pagination links will be dynamically added here using JavaScript -->
@@ -88,9 +93,6 @@ include '../contain/header.php';
         }
     }
 
-
-
-
     const itemsPerPage = 10; // Number of items to display per page
     const data = [
         ["John Doe", "Developer", "New York", 30, "2020-01-15", "$90,000"],
@@ -110,7 +112,6 @@ include '../contain/header.php';
         // ... (other employee data)
     ];
 
-
     function displayTablePage(page) {
         const startIndex = (page - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
@@ -122,37 +123,84 @@ include '../contain/header.php';
         currentPageData.forEach(employee => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${employee[0]}</td>
-                <td>${employee[1]}</td>
-                <td>${employee[2]}</td>
-                <td>${employee[3]}</td>
-                <td>${employee[4]}</td>
-                <td>${employee[5]}</td>
-                <td>
-                    <button>edit</button>
-                    <button>delete</button>
-                </td>
-            `;
+            <td>${employee[0]}</td>
+            <td>${employee[1]}</td>
+            <td>${employee[2]}</td>
+            <td>${employee[3]}</td>
+            <td>${employee[4]}</td>
+            <td>${employee[5]}</td>
+            <td>
+                <button class="edit">edit</button>
+                <button class="delete">delete</button>
+            </td>
+        `;
             tableBody.appendChild(row);
         });
     }
 
-    function displayPagination() {
-        const totalPages = Math.ceil(data.length / itemsPerPage);
-        const pagination = document.getElementById("pagination");
-        pagination.innerHTML = ""; // Clear existing content
+    function updatePaginationLinks(currentPage, totalPages) {
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = ""; // Clear existing content
 
-        for (let i = 1; i <= totalPages; i++) {
-            const link = document.createElement("a");
-            link.href = "javascript:void(0);";
-            link.textContent = i;
-            link.onclick = function () {
-                displayTablePage(i);
-            };
-            pagination.appendChild(link);
+    const visiblePages = 5; // Number of visible pagination links
+    const ellipsisThreshold = 2; // Threshold for displaying ellipsis
+
+    let startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
+    if (totalPages > visiblePages) {
+        // Adjust startPage and endPage to show ellipsis
+        if (currentPage <= ellipsisThreshold) {
+            endPage = visiblePages;
+        } else if (currentPage >= totalPages - ellipsisThreshold) {
+            startPage = totalPages - visiblePages + 1;
+        } else {
+            startPage = currentPage - Math.floor(visiblePages / 2);
+            endPage = startPage + visiblePages - 1;
         }
     }
 
+    for (let i = startPage; i <= endPage; i++) {
+        const link = document.createElement("a");
+        link.href = "javascript:void(0);";
+        link.textContent = i;
+        link.onclick = function () {
+            const clickedPage = parseInt(link.textContent);
+            displayTablePage(clickedPage);
+            updatePaginationLinks(clickedPage, totalPages);
+        };
+
+        if (i === currentPage) {
+            link.classList.add("active"); // Highlight the current page
+        }
+
+        pagination.appendChild(link);
+    }
+
+    // Add ellipsis if necessary
+    if (startPage > 1) {
+        const ellipsisStart = document.createElement("span");
+        ellipsisStart.textContent = "...";
+        ellipsisStart.classList.add("ellipsis");
+        pagination.insertBefore(ellipsisStart, pagination.firstChild);
+    }
+
+    if (endPage < totalPages) {
+        const ellipsisEnd = document.createElement("span");
+        ellipsisEnd.textContent = "...";
+        ellipsisEnd.classList.add("ellipsis");
+        pagination.appendChild(ellipsisEnd);
+    }
+}
+
+    function displayPagination() {
+        const totalPages = Math.ceil(data.length / itemsPerPage);
+        const currentPage = 1; // You can set the default page here
+
+        updatePaginationLinks(currentPage, totalPages);
+    }
+
+    // Initialize the page with the first set of data and pagination links
     displayTablePage(1);
     displayPagination();
 </script>
