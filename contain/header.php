@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title><?php echo $pageTitle; ?></title>
+    <title>
+        <?php echo $pageTitle; ?>
+    </title>
 
     <!-- styling -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/header.css">
+    <script src="../script/script.js"></script>
 </head>
+
 <body>
 
-<input type="checkbox" id="sidebar-toggle">
+    <input type="checkbox" id="sidebar-toggle">
     <div class="sidebar">
         <div class="sidebar-header">
             <h3 class="brand">
-                <span class="ti-unlink"></span> 
+                <span class="ti-unlink"></span>
                 <span>easywire</span>
-            </h3> 
+            </h3>
             <label for="sidebar-toggle" class="ti-menu-alt"></label>
         </div>
-        
+
         <div class="sidebar-menu">
-        <ul>
+            <ul>
                 <li>
                     <a href="../index.php">
                         <span class="ti-home"></span>
@@ -69,4 +74,3 @@
             </ul>
         </div>
     </div>
-    

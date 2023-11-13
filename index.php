@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
@@ -7,19 +8,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/header.css">
+    <script src="../script/script.js"></script>
 </head>
+
 <body>
-    
+
     <input type="checkbox" id="sidebar-toggle">
     <div class="sidebar">
         <div class="sidebar-header">
             <h3 class="brand">
-                <span class="ti-unlink"></span> 
+                <span class="ti-unlink"></span>
                 <span>easywire</span>
-            </h3> 
+            </h3>
             <label for="sidebar-toggle" class="ti-menu-alt"></label>
         </div>
-        
+
         <div class="sidebar-menu">
             <ul>
                 <li>
@@ -67,9 +70,9 @@
             </ul>
         </div>
     </div>
-    
+
     <div class="main-content">
-        
+
         <header>
             <div class="directory-tag">
                 <p>Home</p>
@@ -80,11 +83,11 @@
                 <span>username</span>
             </div>
         </header>
-        
+
         <main>
-            
+
             <h2 class="dash-title">Overview</h2>
-            
+
             <div class="dash-cards">
                 <div class="card-single">
                     <div class="card-body">
@@ -98,7 +101,7 @@
                         <a href="">View all</a>
                     </div>
                 </div>
-                
+
                 <div class="card-single">
                     <div class="card-body">
                         <span class="ti-reload"></span>
@@ -111,7 +114,7 @@
                         <a href="">View all</a>
                     </div>
                 </div>
-                
+
                 <div class="card-single">
                     <div class="card-body">
                         <span class="ti-check-box"></span>
@@ -125,13 +128,13 @@
                     </div>
                 </div>
             </div>
-            
-            
+
+
             <section class="recent">
                 <div class="activity-grid">
                     <div class="activity-card">
                         <h3>Recent activity</h3>
-                        
+
                         <div class="table-responsive">
                             <table>
                                 <thead>
@@ -213,7 +216,7 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     <div class="summary">
                         <div class="summary-card">
                             <div class="summary-single">
@@ -238,7 +241,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="bday-card">
                             <div class="bday-flex">
                                 <div class="bday-img"></div>
@@ -247,7 +250,7 @@
                                     <small>Birthday Today</small>
                                 </div>
                             </div>
-                            
+
                             <div class="text-center">
                                 <button>
                                     <span class="ti-gift"></span>
@@ -258,10 +261,11 @@
                     </div>
                 </div>
             </section>
-            
+
         </main>
-        
+
     </div>
-    
+
 </body>
+
 </html>

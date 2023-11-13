@@ -212,18 +212,20 @@ tbody tr:nth-child(even) {
     padding: .4rem 1rem;
 }
 
+
+
+/* table style */
 .table-responsive {
     overflow-x: auto;
 }
 
-/* table style */
 .button-and-search {
     display: flex;
     justify-content: space-between;
     padding: 10px;
 }
 
-.button-and-search button {
+.button-and-search button, .table-container td:last-child button {
     padding: 5px 10px;
     background-color: #4CAF50;
     color: white;
@@ -238,32 +240,22 @@ tbody tr:nth-child(even) {
     border-radius: 4px;
 }
 
-/* action button */
-#myTable td:last-child {
+/* action button inside table */
+.table-container td:last-child {
     text-align: center;
 }
 
-#myTable td:last-child button {
-    margin-right: 5px;
-    padding: 5px 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#myTable td:last-child button.delete {
+.table-container td:last-child button.delete {
     background-color: #e74c3c;
     /* Red background for delete button */
 }
 
-#myTable td:last-child button:hover,
+.table-container td:last-child button:hover,
 .button-and-search button:hover {
     background-color: #45a049;
 }
 
-#myTable td:last-child button.delete:hover {
+.table-container td:last-child button.delete:hover {
     background-color: #c0392b;
 }
 
@@ -279,7 +271,9 @@ tbody tr:nth-child(even) {
     padding: 8px 16px;
     text-decoration: none;
     transition: background-color .3s;
-    margin: 0 5px; /* Add margin between pagination links */
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    background-color: #f1f1f1;
 }
 
 .pagination a.active {
@@ -291,7 +285,6 @@ tbody tr:nth-child(even) {
     background-color: #ddd;
 }
 
-/* Custom styles for ellipsis (...) */
 .pagination .ellipsis {
     padding: 8px 16px;
     border: 1px solid #ddd;
@@ -321,7 +314,7 @@ tbody tr:nth-child(even) {
         align-items: stretch;
     }
 
-    .button-and-search button {
+    .button-and-search button, #myTable td:last-child button {
         margin-bottom: 10px;
     }
 
