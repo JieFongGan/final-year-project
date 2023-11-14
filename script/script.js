@@ -18,3 +18,21 @@ function searchTable() {
         tr[i].style.display = found ? "" : "none";
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    var socialIcon = document.querySelector('.social-icon');
+    var dropdown = document.querySelector('.dropdown');
+
+    socialIcon.addEventListener('click', function (event) {
+        event.stopPropagation(); // Prevents the click event from reaching the document click listener
+
+        // Toggle the display of the dropdown
+        dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // Close the dropdown if the user clicks outside of it
+    document.addEventListener('click', function () {
+        dropdown.style.display = 'none';
+    });
+});
+

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/header.css">
-    <script src="../script/script.js"></script>
+    <script src="script/script.js"></script>
 </head>
 
 <body>
@@ -38,31 +38,31 @@
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="#">
                         <span class="ti-shopping-cart"></span>
                         <span>Order</span>
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="#">
                         <span class="ti-truck"></span>
                         <span>Warehouse</span>
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="#">
                         <span class="ti-agenda"></span>
                         <span>Supplier</span>
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="#">
                         <span class="ti-pie-chart"></span>
                         <span>Report</span>
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="#">
                         <span class="ti-settings"></span>
                         <span>Setting</span>
                     </a>
@@ -79,8 +79,14 @@
             </div>
 
             <div class="social-icons">
-                <div></div>
-                <span>username</span>
+                <div class="social-icon">
+                    <img src="img/1.jpg" alt="Social Icon" id="social-icon">
+                    <ul class="dropdown">
+                        <li><a href="#">Option 1Option 1Option 1</a></li>
+                        <li><a href="#">Option 2</a></li>
+                        <li><a href="#">Option 3</a></li>
+                    </ul>
+                </div>
             </div>
         </header>
 

@@ -30,20 +30,21 @@ $offset = ($current_page - 1) * $itemsPerPage;
 
 // Get a subset of employees based on the offset and items per page
 $subsetEmployees = array_slice($employees, $offset, $itemsPerPage);
+
+// Check if the form is submitted
+if (isset($_POST['Edit'])) {
+    // Redirect to the desired page
+    header("Location: inventory-edit.php");
+    exit();
+}
 ?>
 
 <div class="main-content">
 
-    <header>
-        <div class="directory-tag">
-            <p>Inventory</p>
-        </div>
-
-        <div class="social-icons">
-            <div></div>
-            <span>username</span>
-        </div>
-    </header>
+    <?php
+        $pathtitle = "Inventory";
+        include '../contain/horizontal-bar.php';
+    ?>
 
     <main>
         <div class="button-and-search">
@@ -86,13 +87,14 @@ $subsetEmployees = array_slice($employees, $offset, $itemsPerPage);
                                 <?= $employee[5] ?>
                             </td>
                             <td>
-                                <button class="edit">edit</button>
-                                <button class="delete">delete</button>
+                                <form method="POST">
+                                    <button class="edit" name="Edit" type="submit">edit</button>
+                                    <button class="delete">delete</button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
-
             </table>
         </div>
 

@@ -16,7 +16,6 @@
 }
 
 /* sidebar */
-
 #sidebar-toggle {
     display: none;
 }
@@ -48,6 +47,7 @@
 
 .sidebar li {
     margin-bottom: 1.5rem;
+    transition: transform .2s;
 }
 
 .sidebar a {
@@ -57,6 +57,10 @@
 
 .sidebar a span:last-child {
     padding-left: .6rem;
+}
+
+.sidebar li:hover {
+    transform: scale(1.1);
 }
 
 #sidebar-toggle:checked ~ .sidebar {
@@ -83,6 +87,7 @@
     width: calc(100% - 60px);
 }
 
+/* content wrap */
 .main-content {
     position: relative;
     margin-left: 240px;
@@ -90,7 +95,6 @@
 }
 
 /* horizontal bar */
-
 header {
     position: fixed;
     left: 240px;
@@ -117,22 +121,49 @@ header {
 }
 
 .social-icons {
-    display: flex;
-    align-items: center;
+    position: relative;
 }
 
-.social-icons span,
-.social-icons div {
-    margin-left: 1.2rem;
+.social-icons .social-icon {
+    position: relative;
+    display: inline-block;
 }
 
-.social-icons div {
+.social-icons img {
     height: 38px;
     width: 38px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-image: url(../img/1.jpg);
     border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.social-icons .dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    white-space: nowrap;
+    display: none;
+}
+
+.social-icons .dropdown li {
+    text-align: center;
+    padding: 8px;
+}
+
+.social-icons .dropdown a {
+    text-decoration: none;
+    color: #333;
+    display: block; /* Make the link fill the entire li area */
+}
+
+.social-icons .dropdown li:hover,
+.social-icons .dropdown li:hover a {
+    background-color: var(--main-color);
+    color: #fff;
 }
 
 @media only screen and (max-width: 1200px) {
