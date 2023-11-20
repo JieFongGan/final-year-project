@@ -36,3 +36,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+function validateNumberInput(input) {
+    // Ensure the input value is a valid number
+    if (isNaN(input.value)) {
+        input.setCustomValidity("Please enter a valid number.");
+    } else {
+        input.setCustomValidity(""); // Clear the custom validity message
+    }
+}

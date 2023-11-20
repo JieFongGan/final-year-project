@@ -37,6 +37,12 @@ if (isset($_POST['Edit'])) {
     header("Location: inventory-edit.php");
     exit();
 }
+
+if (isset($_POST['Cnew'])) {
+    // Redirect to the desired page
+    header("Location: inventory-new.php");
+    exit();
+}
 ?>
 
 <div class="main-content">
@@ -48,7 +54,9 @@ if (isset($_POST['Edit'])) {
 
     <main>
         <div class="button-and-search">
-            <button>Create New</button>
+            <form method="POST">
+                <button name="Cnew">Create New</button>
+            </form>
             <input type="text" id="searchInput" placeholder="Search on current list..." onkeyup="searchTable()">
         </div>
 
@@ -57,11 +65,11 @@ if (isset($_POST['Edit'])) {
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
+                        <th>ProductID</th>
+                        <th>WarehouseID</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
                         <th>Action</th>
                     </tr>
                 </thead>

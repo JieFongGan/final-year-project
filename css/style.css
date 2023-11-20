@@ -255,7 +255,7 @@ tbody tr:nth-child(even) {
     background-color: #45a049;
 }
 
-.table-container td:last-child button.delete:hover, 
+.table-container td:last-child button.delete:hover,
 .form-group button.cancel:hover {
     background-color: #c0392b;
 }
@@ -298,7 +298,7 @@ tbody tr:nth-child(even) {
     padding: 20px;
     margin-top: 20px;
     border-radius: 5px;
-    width: 100%; 
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -315,9 +315,12 @@ tbody tr:nth-child(even) {
 }
 
 .form-group textarea {
-    resize: vertical; /* Allows only vertical resizing */
-    overflow: auto; /* Ensures the overflow is handled neatly */
-    min-height: 100px; /* Set a minimum height if you wish */
+    resize: vertical;
+    /* Allows only vertical resizing */
+    overflow: auto;
+    /* Ensures the overflow is handled neatly */
+    min-height: 100px;
+    /* Set a minimum height if you wish */
 }
 
 .form-group input[type="text"],
@@ -340,9 +343,36 @@ tbody tr:nth-child(even) {
     margin-bottom: 0.5em;
 }
 
+.form-group input[type="number"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    outline: none;
+    /* Remove the default focus outline */
+}
+
+/* Style the number input on focus */
+.form-group input[type="number"]:focus {
+    border-color: #007bff;
+    /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 .form-group button[type="submit"] {
     background-color: #4CAF50;
     color: white;
+}
+
+.form-group input[type="number"]::-webkit-inner-spin-button,
+.form-group input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-group input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 .form-group button.cancel {
@@ -396,7 +426,7 @@ tbody tr:nth-child(even) {
     .form-group button {
         width: 100%;
     }
-    
+
     .form-group button {
         margin-right: 0;
     }
