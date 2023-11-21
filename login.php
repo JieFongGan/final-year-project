@@ -1,3 +1,6 @@
+<?php
+require ''
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -222,6 +225,7 @@
               <h2 class="login-text1">
                 Sign in your account to manage your company
               </h2>
+              <form class="" action="" method="post" autocomplete="off">
               <div class="login-input-group">
                 <label class="login-label">Username</label>
                 <input type="text" placeholder="Enter your username" class="input login-textinput" />
@@ -231,9 +235,10 @@
                 <input type="password" placeholder="Enter your password" class="input login-textinput" />
               </div>
               <div class="login-btn-group">
-                <button class="login-button button">Login</button>
+                <button type="submit" class="login-button button">Login</button>
                 <button class="login-button1 button">Register</button>
               </div>
+              </form>
             </div>
           </div>
         </div>

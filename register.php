@@ -223,18 +223,31 @@
               <h2 class="register-text1">
                 Sign up your company entry and plan
               </h2>
-              <form action="signup.php" method="POST">
+              <form action="connectsql.php" method="POST">
                 <div class="login-input-group">
                   <label for="company-name" class="register-text2">Company Name</label>
-                  <input type="text" id="company-name" name="company_name" placeholder="Enter your company name"
+                  <input type="text" id="company_name" name="company_name" placeholder="Enter your company name"
                     class="input register-textinput" required />
                 </div>
-                
+
+                <div class="login-input-group">
+                  <label for="email" class="register-text2">Email</label>
+                  <input type="text" id="email" name="email" placeholder="Enter company email"
+                    class="input register-textinput" required />
+                </div>
+
                 <div class="login-input-group">
                   <label for="phone-number" class="register-text2">Phone Number</label>
-                  <input type="tel" id="phone-number" name="phone_number" placeholder="Enter your phone number"
+                  <input type="tel" id="phone_number" name="phone_number" placeholder="Enter company phone number"
                     class="input register-textinput" required />
                 </div>
+
+                <div class="login-input-group">
+                  <label for="address" class="register-text2">Address</label>
+                  <input type="text" id="address" name="address" placeholder="Enter company address"
+                    class="input register-textinput" required />
+                </div>
+
                 <div class="login-input-group">
                   <label for="plan" class="register-text2">Plan</label>
                   <select id="plan" name="plan" class="input register-textinput" required>
