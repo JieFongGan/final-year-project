@@ -66,7 +66,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="../layout/settings.php">
                         <span class="ti-settings"></span>
                         <span>Setting</span>
                     </a>
