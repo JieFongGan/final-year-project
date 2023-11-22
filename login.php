@@ -233,6 +233,14 @@
                   <label class="login-label">Password : </label>
                   <input type="password" placeholder="Enter your password" class="input login-textinput" />
                 </div>
+                <br>
+                <!-- Captcha -->
+                <div class="login-input-group">
+                  <label class="login-label">Captcha :</label>
+                  <img src="captcha.php" alt="Captcha">
+                  <input type="text" name="captcha" placeholder="Enter the captcha" class="input login-textinput" />
+                  
+                </div>
                 <div class="login-btn-group">
                   <button type="submit" class="login-button button">Login</button>
                   <button type="reset" class="login-button1 button">Reset</button>

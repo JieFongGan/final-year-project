@@ -22,6 +22,9 @@ else{
         Phone VARCHAR(20),
         Address VARCHAR(255)
     )");
+    
+    // Insert values into Company table
+    $conn->query("INSERT INTO Company (CompanyID, CompanyName, Email, Phone, Address) VALUES ('$companyid', '$companyname', '$email', '$phone', '$address')");
 
     $conn->query("CREATE TABLE IF NOT EXISTS User (
         UserID INT PRIMARY KEY,
