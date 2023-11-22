@@ -1,6 +1,3 @@
-<?php
-require ''
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -225,20 +222,26 @@ require ''
               <h2 class="login-text1">
                 Sign in your account to manage your company
               </h2>
-              <form class="" action="" method="post" autocomplete="off">
-              <div class="login-input-group">
-                <label class="login-label">Username</label>
-                <input type="text" placeholder="Enter your username" class="input login-textinput" />
-              </div>
-              <div class="login-input-group">
-                <label class="login-label">Password</label>
-                <input type="password" placeholder="Enter your password" class="input login-textinput" />
-              </div>
-              <div class="login-btn-group">
-                <button type="submit" class="login-button button">Login</button>
-                <button class="login-button1 button">Register</button>
-              </div>
+              <br>
+              <form class="" action="" method="post">
+                <div class="login-input-group">
+                  <label class="login-label">Username : </label>
+                  <input type="text" placeholder="Enter your username" class="input login-textinput" />
+                </div>
+                <br>
+                <div class="login-input-group">
+                  <label class="login-label">Password : </label>
+                  <input type="password" placeholder="Enter your password" class="input login-textinput" />
+                </div>
+                <div class="login-btn-group">
+                  <button type="submit" class="login-button button">Login</button>
+                  <button type="reset" class="login-button1 button">Reset</button>
+                </div>
               </form>
+              <div class="login-input-group">
+                <label class="login-label">Don't have an account? </label>
+                <a href="register.php" class="login-text2" style="color: blue;">Register</a>
+              </div>
             </div>
           </div>
         </div>
