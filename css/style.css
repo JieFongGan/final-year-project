@@ -2,7 +2,6 @@
 
 main {
     margin-top: 4vh;
-    background: #f1f5f9;
     min-height: 90vh;
     padding: 1rem 3rem;
 }
@@ -271,6 +270,26 @@ tbody tr:nth-child(even) {
     background-color: #c0392b;
 }
 
+/* item per page style */
+.pagination-form {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.pagination-form label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.pagination-form select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 /* pagination */
 .pagination {
     display: flex;
@@ -334,7 +353,7 @@ tbody tr:nth-child(even) {
     /* Set a minimum height if you wish */
 }
 
-.form-group input[type="text"],
+.form-group input,
 .form-group select,
 .form-group textarea {
     width: calc(100% - 20px);
@@ -521,8 +540,35 @@ tbody tr:nth-child(even) {
         align-items: stretch;
     }
 
-    .button-and-search button,
-    #myTable td:last-child button {
+    .button-and-search button {
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
+    .table-container td:last-child {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .table-container td:last-child button {
+        width: 100%; 
+        box-sizing: border-box; 
+        margin-left: 0; 
+        margin-top: 5px;
+    }
+
+    .pagination-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pagination-form label {
+        margin-bottom: 5px;
+    }
+
+    .pagination-form select {
+        width: 100%;
         margin-bottom: 10px;
     }
 
@@ -539,7 +585,7 @@ tbody tr:nth-child(even) {
         padding: 15px;
     }
 
-    .form-group input[type="text"],
+    .form-group input,
     .form-group select,
     .form-group textarea,
     .form-group button {

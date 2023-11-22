@@ -23,7 +23,7 @@ if ($result->num_rows > 0) {
 }
 
 // Pagination
-$itemsPerPage = 10;
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
 $totalItems = count($products);
 $totalPages = ceil($totalItems / $itemsPerPage);
 
@@ -126,6 +126,16 @@ $conn->close();
                 </tbody>
             </table>
         </div>
+
+        <form method="GET" class="pagination-form">
+            <label for="itemsPerPage">Items per page:</label>
+            <select id="itemsPerPage" name="itemsPerPage" onchange="this.form.submit()">
+                <option value="10" <?= $itemsPerPage == 10 ? 'selected' : '' ?>>10</option>
+                <option value="20" <?= $itemsPerPage == 20 ? 'selected' : '' ?>>20</option>
+                <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
+                <option value="100" <?= $itemsPerPage == 100 ? 'selected' : '' ?>>100</option>
+            </select>
+        </form>
 
         <div id="pagination" class="pagination">
             <?php for ($page = 1; $page <= $totalPages; $page++): ?>

@@ -75,7 +75,7 @@ $conn->close();
                 </div>
                 <div class="form-group">
                     <label for="description">New Category Description:</label>
-                    <textarea id="description" name="description" placeholder="Please enter the description"></textarea>
+                    <textarea id="description" name="description" placeholder="Please enter the description" required></textarea>
                 </div>
                 <div class="form-group">
                     <button type="submit">Add Category</button>

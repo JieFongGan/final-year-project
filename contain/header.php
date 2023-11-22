@@ -48,7 +48,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="../layout/warehouse.php">
                         <span class="ti-truck"></span>
                         <span>Warehouse</span>
                     </a>

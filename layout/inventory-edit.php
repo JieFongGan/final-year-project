@@ -110,15 +110,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         } else {
                             echo "0 results";
                         }
-
-                        $conn->close();
                         ?>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="productWarehouse">Warehouse:</label>
-                    <input type="text" id="productWarehouse" name="productWarehouse"
-                        value="<?= $productData['WarehouseID'] ?>" placeholder="Warehouse">
+                    <select id="productWarehouse" name="productWarehouse">
+                        <option value="" disabled>Please select a warehouse</option>
+                        <?php
+                        $warehouseSql = "SELECT WarehouseID, Name FROM Warehouse";
+                        $warehouseResult = $conn->query($warehouseSql);
+
+                        if ($warehouseResult->num_rows > 0) {
+                            while ($warehouse = $warehouseResult->fetch_assoc()) {
+                                $selected = ($warehouse['WarehouseID'] == $productData['WarehouseID']) ? 'selected' : '';
+                                ?>
+                                <option value="<?= $warehouse["WarehouseID"] ?>" <?= $selected ?>>
+                                    <?= $warehouse["Name"] ?>
+                                </option>
+                                <?php
+                            }
+                        } else {
+                            echo "0 results";
+                        }
+                        
+                        $conn->close();
+                        ?>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="productDescription">Description:</label>
