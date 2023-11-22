@@ -1,24 +1,30 @@
 <?php
 $pageTitle = "Inventory";
 include '../contain/header.php';
+include("../database/database-connect.php");
 
-// Sample data array
-$employees = array(
-    array("John Doe", "Developer", "New York", 30, "2020-01-15", "$90,000"),
-    array("Jane Smith", "Designer", "San Francisco", 28, "2018-05-20", "$80,000"),
-    array("Bob Johnson", "Manager", "Chicago", 35, "2019-08-10", "$100,000"),
-    array("Alice Williams", "Analyst", "Los Angeles", 26, "2021-02-28", "$75,000"),
-    array("Charlie Brown", "Tester", "Seattle", 32, "2017-11-05", "$85,000"),
-    array("Eva Martinez", "Developer", "Miami", 29, "2019-04-12", "$95,000"),
-    array("David Clark", "Designer", "Austin", 31, "2016-09-22", "$82,000"),
-    array("Grace Lee", "Manager", "Houston", 34, "2020-11-18", "$105,000"),
-    array("Henry Turner", "Analyst", "Denver", 27, "2018-07-03", "$78,000"),
-    array("Sophia Baker", "Tester", "Portland", 33, "2017-03-14", "$88,000")
-);
+$sql = "SELECT Name, ProductID, WarehouseID, Description, Price, Quantity FROM Product";
+$result = $conn->query($sql);
+
+$products = array();
+
+if ($result->num_rows > 0) {
+    // Fetch data from the result set
+    while ($row = $result->fetch_assoc()) {
+        $products[] = array(
+            $row["Name"],
+            $row["ProductID"],
+            $row["WarehouseID"],
+            $row["Description"],
+            $row["Price"],
+            $row["Quantity"]
+        );
+    }
+}
 
 // Pagination
-$itemsPerPage = 5;
-$totalItems = count($employees);
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
+$totalItems = count($products);
 $totalPages = ceil($totalItems / $itemsPerPage);
 
 // Get the current page from the URL, default to 1 if not set
@@ -28,28 +34,36 @@ $current_page = max(1, min($totalPages, $current_page));
 // Calculate the offset
 $offset = ($current_page - 1) * $itemsPerPage;
 
-// Get a subset of employees based on the offset and items per page
-$subsetEmployees = array_slice($employees, $offset, $itemsPerPage);
-
-// Check if the form is submitted
-if (isset($_POST['Edit'])) {
-    // Redirect to the desired page
-    header("Location: inventory-edit.php");
-    exit();
-}
+// Get a subset of products based on the offset and items per page
+$subsetProducts = array_slice($products, $offset, $itemsPerPage);
 
 if (isset($_POST['Cnew'])) {
-    // Redirect to the desired page
     header("Location: inventory-new.php");
     exit();
 }
+
+if (isset($_POST['deleteProduct'])) {
+    $productIDToDelete = mysqli_real_escape_string($conn, $_POST['deleteProduct']);
+
+    $deleteSql = "DELETE FROM Product WHERE ProductID = '$productIDToDelete'";
+    $deleteResult = $conn->query($deleteSql);
+
+    if ($deleteResult) {
+        header("Location: inventory.php");
+        exit();
+    } else {
+        echo "Error: " . $conn->error;
+    }
+}
+
+$conn->close();
 ?>
 
 <div class="main-content">
 
     <?php
-        $pathtitle = "Inventory";
-        include '../contain/horizontal-bar.php';
+    $pathtitle = "Inventory";
+    include '../contain/horizontal-bar.php';
     ?>
 
     <main>
@@ -74,30 +88,37 @@ if (isset($_POST['Cnew'])) {
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <?php foreach ($subsetEmployees as $employee): ?>
+                    <?php foreach ($subsetProducts as $product): ?>
                         <tr>
                             <td>
-                                <?= $employee[0] ?>
+                                <?= $product[0] ?>
                             </td>
                             <td>
-                                <?= $employee[1] ?>
+                                <?= $product[1] ?>
                             </td>
                             <td>
-                                <?= $employee[2] ?>
+                                <?= $product[2] ?>
                             </td>
                             <td>
-                                <?= $employee[3] ?>
+                                <?= $product[3] ?>
                             </td>
                             <td>
-                                <?= $employee[4] ?>
+                                <?= $product[4] ?>
                             </td>
                             <td>
-                                <?= $employee[5] ?>
+                                <?= $product[5] ?>
                             </td>
                             <td>
+                                <form method="GET" action="inventory-edit.php">
+                                    <input type="hidden" name="productID" value="<?= $product[1] ?>">
+                                    <button class="edit" type="submit">edit</button>
+                                </form>
+
                                 <form method="POST">
-                                    <button class="edit" name="Edit" type="submit">edit</button>
-                                    <button class="delete">delete</button>
+                                    <button class="delete" name="deleteProduct" type="submit"
+                                        onclick="return confirm('Are you sure you want to delete this product?')">delete
+                                    </button>
+                                    <input type="hidden" name="deleteProduct" value="<?= $product[1] ?>">
                                 </form>
                             </td>
                         </tr>
@@ -105,6 +126,16 @@ if (isset($_POST['Cnew'])) {
                 </tbody>
             </table>
         </div>
+
+        <form method="GET" class="pagination-form">
+            <label for="itemsPerPage">Items per page:</label>
+            <select id="itemsPerPage" name="itemsPerPage" onchange="this.form.submit()">
+                <option value="10" <?= $itemsPerPage == 10 ? 'selected' : '' ?>>10</option>
+                <option value="20" <?= $itemsPerPage == 20 ? 'selected' : '' ?>>20</option>
+                <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
+                <option value="100" <?= $itemsPerPage == 100 ? 'selected' : '' ?>>100</option>
+            </select>
+        </form>
 
         <div id="pagination" class="pagination">
             <?php for ($page = 1; $page <= $totalPages; $page++): ?>

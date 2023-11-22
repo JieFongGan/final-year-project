@@ -44,3 +44,9 @@ function validateNumberInput(input) {
         input.setCustomValidity(""); // Clear the custom validity message
     }
 }
+
+function changeItemsPerPage() {
+    var select = document.getElementById("itemsPerPage");
+    var selectedValue = select.options[select.selectedIndex].value;
+    window.location.href = "?page=<?= $current_page ?>&itemsPerPage=" + selectedValue;
+}

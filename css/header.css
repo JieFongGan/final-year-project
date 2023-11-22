@@ -15,6 +15,10 @@
     box-sizing: border-box;
 }
 
+body {
+    background: #f1f5f9;
+}
+
 /* sidebar */
 #sidebar-toggle {
     display: none;
@@ -159,7 +163,6 @@ header {
     text-decoration: none;
     color: #333;
     display: block;
-    /* Make the link fill the entire li area */
 }
 
 .social-icons .dropdown li:hover,

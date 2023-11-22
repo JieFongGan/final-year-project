@@ -48,7 +48,7 @@ include("database/database-connect.php");
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="layout/warehouse.php">
                         <span class="ti-truck"></span>
                         <span>Warehouse</span>
                     </a>
@@ -66,7 +66,7 @@ include("database/database-connect.php");
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="layout/settings.php">
                         <span class="ti-settings"></span>
                         <span>Setting</span>
                     </a>

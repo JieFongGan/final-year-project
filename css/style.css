@@ -1,8 +1,7 @@
 /* content */
 
 main {
-    margin-top: 60px;
-    background: #f1f5f9;
+    margin-top: 4vh;
     min-height: 90vh;
     padding: 1rem 3rem;
 }
@@ -241,12 +240,23 @@ tbody tr:nth-child(even) {
 
 /* action button inside table */
 .table-container td:last-child {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table-container td:last-child button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .table-container td:last-child button.delete {
     background-color: #e74c3c;
-    /* Red background for delete button */
 }
 
 .table-container td:last-child button:hover,
@@ -258,6 +268,26 @@ tbody tr:nth-child(even) {
 .table-container td:last-child button.delete:hover,
 .form-group button.cancel:hover {
     background-color: #c0392b;
+}
+
+/* item per page style */
+.pagination-form {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.pagination-form label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.pagination-form select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 /* pagination */
@@ -323,7 +353,7 @@ tbody tr:nth-child(even) {
     /* Set a minimum height if you wish */
 }
 
-.form-group input[type="text"],
+.form-group input,
 .form-group select,
 .form-group textarea {
     width: calc(100% - 20px);
@@ -380,6 +410,114 @@ tbody tr:nth-child(even) {
     color: white;
 }
 
+/* setting */
+.settings-container {
+    list-style: none;
+    margin: 20px;
+    padding: 10px;
+}
+
+.settings-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    padding: 15px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.settings-item:hover {
+    background-color: #f9f9f9;
+}
+
+.settings-header {
+    color: #3498db;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.settings-icon {
+    font-size: 16px;
+    color: #3498db;
+}
+
+.settings-link {
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* setting category */
+.category-list {
+    list-style: none;
+    padding: 0;
+}
+
+.category-list li {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.category-list li:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-list li strong {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.category-list li p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.category-list .category-details {
+    margin-bottom: 10px;
+}
+
+.category-list .category-name {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+.category-list .category-description {
+    color: #555;
+}
+
+.category-list .delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.category-list .delete-button:hover {
+    background-color: #c82333;
+}
+
 @media only screen and (max-width: 860px) {
     .dash-cards {
         grid-template-columns: repeat(2, 1fr);
@@ -402,8 +540,35 @@ tbody tr:nth-child(even) {
         align-items: stretch;
     }
 
-    .button-and-search button,
-    #myTable td:last-child button {
+    .button-and-search button {
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
+    .table-container td:last-child {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .table-container td:last-child button {
+        width: 100%; 
+        box-sizing: border-box; 
+        margin-left: 0; 
+        margin-top: 5px;
+    }
+
+    .pagination-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pagination-form label {
+        margin-bottom: 5px;
+    }
+
+    .pagination-form select {
+        width: 100%;
         margin-bottom: 10px;
     }
 
@@ -420,7 +585,7 @@ tbody tr:nth-child(even) {
         padding: 15px;
     }
 
-    .form-group input[type="text"],
+    .form-group input,
     .form-group select,
     .form-group textarea,
     .form-group button {
