@@ -54,7 +54,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="../layout/supplier.php">
                         <span class="ti-agenda"></span>
                         <span>Supplier</span>
                     </a>
