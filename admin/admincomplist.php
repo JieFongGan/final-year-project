@@ -128,13 +128,13 @@
 <body>
     <div class="sidebar">
         <ul>
-            <li><a href="#">Company List</a></li>
+            <li><a href="admincomplist.php">Company List</a></li>
             <li><a href="adlogin.php">Log Out</a></li>
         </ul>
     </div>
     <div class="container">
         <div class="content">
-            <button>Create</button>
+            <button><a href="adauthcode.php" style="color: inherit; text-decoration: none;">Create New AuthCode</a></button>
             <br><br>
             <table>
                 <thead>
