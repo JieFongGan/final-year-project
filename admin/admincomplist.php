@@ -97,6 +97,29 @@
             animation: slide-in 0.5s ease-in-out;
         }
 
+        .pagination {
+            display: flex;
+            list-style: none;
+            margin: 20px 0;
+            padding: 0;
+        }
+
+        .pagination a {
+            display: block;
+            padding: 10px 15px;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            background-color: #f2f2f2;
+            border-radius: 4px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+
         @keyframes slide-in {
             0% {
                 opacity: 0;
@@ -134,7 +157,8 @@
     </div>
     <div class="container">
         <div class="content">
-            <button><a href="adauthcode.php" style="color: inherit; text-decoration: none;">Create New AuthCode</a></button>
+            <button><a href="adauthcode.php" style="color: inherit; text-decoration: none;">Create New
+                    AuthCode</a></button>
             <br><br>
             <table>
                 <thead>
@@ -165,57 +189,69 @@
                 $query = "SELECT CompanyName, Status, PlanType, AuthCode FROM company";
                 $result = mysqli_query($conn, $query);
 
+                // Pagination
+                $recordsPerPage = 10;
+                $totalRecords = mysqli_num_rows($result);
+                $totalPages = ceil($totalRecords / $recordsPerPage);
+                $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+                $offset = ($currentPage - 1) * $recordsPerPage;
+
+                // Fetch data from the database with pagination
+                $query = "SELECT CompanyName, Status, PlanType, AuthCode FROM company LIMIT $offset, $recordsPerPage";
+                $result = mysqli_query($conn, $query);
+
                 // Display the fetched data
+                $number = ($currentPage - 1) * $recordsPerPage + 1;
                 while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<form method='post' action=''>";
+                    echo "<tr>";
+                    echo "<td>" . $number . "</td>";
+                    echo "<td>" . $row['CompanyName'] . "</td>";
+                    echo "<td>" . $row['Status'] . "</td>";
+                    echo "<td>" . $row['PlanType'] . "</td>";
+                    echo "<td>" . $row['AuthCode'] . "</td>";
+                    echo "<td>";
+                    echo "<button><a href='adedit.php?authcode=" . $row['AuthCode'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
+                    echo "&nbsp;";
+                    echo "<input type='hidden' name='AuthCode' value='" . $row['AuthCode'] . "'>";
+                    echo "<button type='submit' name='delete'>Delete</button>";
+                    echo "</td>";
+                    echo "</tr>";
+                    echo "</form>";
+                    $number++;
+                }
 
-                    $number = 1;
+                // Display pagination links
+                echo "<div class='pagination'>";
+                for ($i = 1; $i <= $totalPages; $i++) {
+                    echo "<a href='admincomplist.php?page=" . $i . "'>" . $i . "</a>";
+                }
+                echo "</div>";
 
-                    // Pagination
-                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                    $recordsPerPage = 10;
-                    $offset = ($page - 1) * $recordsPerPage;
+                // Delete button functionality
+                if (isset($_POST['delete'])) {
+                    $authCode = $_POST['AuthCode'];
 
-                    // Fetch data from the database with pagination
-                    $query = "SELECT CompanyName, Status, PlanType, AuthCode FROM company LIMIT $offset, $recordsPerPage";
-                    $result = mysqli_query($conn, $query);
+                    // Delete the record from the database
+                    $deleteQuery = "DELETE FROM company WHERE AuthCode = '$authCode'";
+                    $deleteResult = mysqli_query($conn, $deleteQuery);
 
-                    // Display the fetched data
-                    $number = ($page - 1) * $recordsPerPage + 1;
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>" . $number . "</td>";
-                        echo "<td>" . $row['CompanyName'] . "</td>";
-                        echo "<td>" . $row['Status'] . "</td>";
-                        echo "<td>" . $row['PlanType'] . "</td>";
-                        echo "<td>" . $row['AuthCode'] . "</td>";
-                        echo "<td>";
-                        echo "<button><a href='adedit.php?authcode=" . $row['AuthCode'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
-                        echo "&nbsp;";
-                        echo "<button>Delete</button>";
-                        echo "</td>";
-                        echo "</tr>";
-                        $number++;
-                    }
-
-                    // Delete button functionality
-                    if (isset($_POST['delete'])) {
-                        $authCode = $_POST['authCode'];
-
-                        // Delete the record from the database
-                        $deleteQuery = "DELETE FROM company WHERE AuthCode = '$authCode'";
-                        $deleteResult = mysqli_query($conn, $deleteQuery);
-
-                        if ($deleteResult) {
-                            echo "Record deleted successfully.";
-                        } else {
-                            echo "Error deleting record: " . mysqli_error($conn);
-                        }
+                    if ($deleteResult) {
+                        echo "Record deleted successfully.";
+                        echo "<script>window.location.href='admincomplist.php';</script>";
+                    } else {
+                        echo "Error deleting record: " . mysqli_error($conn);
                     }
                 }
                 ?>
             </table>
         </div>
     </div>
+</body>
+
+</html>
+</div>
+</div>
 </body>
 
 </html>
