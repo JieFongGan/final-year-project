@@ -4,14 +4,23 @@ include '../contain/header.php';
 include("../database/database-connect.php");
 
 // Pagination
-$itemsPerPage = 10;
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int)$_GET['itemsPerPage'] : 10;
 
 // Fetch total number of customers
 $sqlTotalCustomers = "SELECT COUNT(*) FROM Customer";
 $resultTotalCustomers = $conn->query($sqlTotalCustomers);
-$totalCustomers = $resultTotalCustomers->fetch_row()[0];
 
-$totalPages = ceil($totalCustomers / $itemsPerPage);
+// Check if the query was successful
+if ($resultTotalCustomers) {
+    $totalCustomers = $resultTotalCustomers->fetch_row()[0];
+
+    // Calculate total pages and handle division by zero
+    $totalPages = $totalCustomers > 0 ? ceil($totalCustomers / $itemsPerPage) : 1;
+} else {
+    // Handle query error
+    echo "Error fetching total customers: " . $conn->error;
+    exit();
+}
 
 // Get the current page from the URL, default to 1 if not set
 $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -66,7 +75,7 @@ $conn->close();
             <form method="POST">
                 <button name="Cnew">Create New</button>
             </form>
-            <input type="text" id="searchInput" placeholder="Search on current list..." onkeyup="searchTable()">
+            <input type="text" id="searchInput" placeholder="Search on the current list..." onkeyup="searchTable()">
         </div>
 
         <div class="table-responsive">
@@ -110,9 +119,19 @@ $conn->close();
             </table>
         </div>
 
+        <form method="GET" class="pagination-form">
+            <label for="itemsPerPage">Items per page:</label>
+            <select id="itemsPerPage" name="itemsPerPage" onchange="this.form.submit()">
+                <option value="10" <?= $itemsPerPage == 10 ? 'selected' : '' ?>>10</option>
+                <option value="20" <?= $itemsPerPage == 20 ? 'selected' : '' ?>>20</option>
+                <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
+                <option value="100" <?= $itemsPerPage == 100 ? 'selected' : '' ?>>100</option>
+            </select>
+        </form>
+
         <div id="pagination" class="pagination">
             <?php for ($page = 1; $page <= $totalPages; $page++): ?>
-                <a href="?page=<?= $page ?>" <?= $page == $current_page ? 'class="active"' : '' ?>>
+                <a href="?page=<?= $page ?>&itemsPerPage=<?= $itemsPerPage ?>" <?= $page == $current_page ? 'class="active"' : '' ?>>
                     <?= $page ?>
                 </a>
             <?php endfor; ?>

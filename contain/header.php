@@ -60,7 +60,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="../layout/report.php">
                         <span class="ti-pie-chart"></span>
                         <span>Report</span>
                     </a>

@@ -117,7 +117,7 @@ INSERT INTO Product (CategoryID, WarehouseID, Name, Description, Price, Quantity
 
 -- Insert data into Transaction table
 INSERT INTO Transaction (WarehouseID, CustomerID, TransactionType, TransactionDate, DeliveryStatus) VALUES
-(1, 1, 'Sale', '2023-01-01 10:00:00', 'Shipped'), -- Sale to CustomerID 1 with a delivery status
+(1, 1, 'Sales', '2023-01-01 10:00:00', 'Shipped'), -- Sale to CustomerID 1 with a delivery status
 (2, 2, 'Purchase', '2023-01-02 12:30:00', 'Processing'); -- Purchase from CustomerID 2 with a delivery status
 
 -- Insert data into TransactionDetail table

@@ -19,8 +19,8 @@ include '../contain/header.php';
                 </a>
             </li>
             <li class="settings-item">
-                <a class="settings-link" href="#">
-                    <div class="settings-header">test</div>
+                <a class="settings-link" href="settings-user.php">
+                    <div class="settings-header">User</div>
                     <span class="settings-icon">&#9656;</span>
                 </a>
             </li>

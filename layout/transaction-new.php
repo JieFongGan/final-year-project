@@ -15,8 +15,6 @@ $customerResult = $conn->query($customerSql);
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Process form data for transaction
-    // ...
 
     // Store data in session
     $_SESSION['selectedWarehouse'] = $_POST['productWarehouse'];

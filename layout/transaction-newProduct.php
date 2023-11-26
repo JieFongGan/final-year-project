@@ -24,10 +24,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $insertDetailsSql = "INSERT INTO TransactionDetail (TransactionID, ProductID, Quantity) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($insertDetailsSql);
 
+    // Loop through all products to check if the checkbox is selected
     foreach ($selectedProducts as $key => $productId) {
-        $quantity = $quantities[$key] ?? 0; // Assuming $quantities is indexed the same as $selectedProducts
-        $stmt->bind_param("iii", $lastTransactionId, $productId, $quantity);
-        $stmt->execute();
+        $quantity = $quantities[$productId] ?? 0; // Use the product ID as the index
+
+        // Check if the checkbox for this product is checked
+        if (isset($_POST['selectedProducts'][$productId])) {
+            // Process the selected product
+            $stmt->bind_param("iii", $lastTransactionId, $productId, $quantity);
+            $stmt->execute();
+
+            // Update the product quantity based on the transaction type
+            $updateQuantitySql = "UPDATE Product SET Quantity = Quantity ";
+
+            if ($_SESSION['selectedTransactionType'] === 'Sales') {
+                // If the transaction type is Sales, subtract the quantity
+                $updateQuantitySql .= "- ?";
+            } else {
+                // If the transaction type is Purchase, add the quantity
+                $updateQuantitySql .= "+ ?";
+            }
+
+            $updateQuantitySql .= " WHERE ProductID = ?";
+
+            $stmtUpdateQuantity = $conn->prepare($updateQuantitySql);
+            $stmtUpdateQuantity->bind_param("ii", $quantity, $productId);
+            $stmtUpdateQuantity->execute();
+            $stmtUpdateQuantity->close();
+        }
     }
 
     $stmt->close();
@@ -83,8 +107,8 @@ $stmt->close();
                             <td>' . $product["ProductID"] . '</td>
                             <td>' . $product["Name"] . '</td>
                             <td>' . $product["Price"] . '</td>
-                            <td><input type="number" name="quantities[]" value="0" min="0"></td>
-                            <td><input type="checkbox" name="selectedProducts[]" value="' . $product["ProductID"] . '"></td>
+                            <td><input type="number" name="quantities[' . $product["ProductID"] . ']" value="0" min="0"></td>
+                            <td><input type="checkbox" name="selectedProducts[' . $product["ProductID"] . ']" value="' . $product["ProductID"] . '"></td>
                           </tr>';
                                 }
                             } else {
@@ -96,7 +120,8 @@ $stmt->close();
                 </div>
                 <div class="form-group">
                     <button type="submit">Add</button>
-                    <button type="button" class="cancel" onclick="window.location.href='transaction.php'">Cancel</button>
+                    <button type="button" class="cancel"
+                        onclick="window.location.href='transaction.php'">Cancel</button>
                 </div>
             </div>
         </form>
