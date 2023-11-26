@@ -40,19 +40,13 @@ CREATE TABLE IF NOT EXISTS Warehouse (
     Email VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS Supplier (
-    SupplierID INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(255) NOT NULL,
-    Contact VARCHAR(20),
-    Email VARCHAR(255)
-);
-
 CREATE TABLE IF NOT EXISTS Customer (
     CustomerID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
     Contact VARCHAR(20),
     Email VARCHAR(255),
-    Address VARCHAR(255)
+    Address VARCHAR(255),
+    Remark VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS Product (
@@ -68,34 +62,23 @@ CREATE TABLE IF NOT EXISTS Product (
     FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID)
 );
 
-CREATE TABLE IF NOT EXISTS salesOrder (
-    OrderID INT AUTO_INCREMENT PRIMARY KEY,
-    CustomerID INT,
-    OrderDate DATETIME,
-    TotalAmount DECIMAL(10, 2),
-    DeliveryStatus VARCHAR(50),
-    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
-);
-
-CREATE TABLE IF NOT EXISTS PurchaseOrder (
-    OrderID INT AUTO_INCREMENT PRIMARY KEY,
-    SupplierID INT,
-    OrderDate DATETIME,
-    TotalAmount DECIMAL(10, 2),
-    DeliveryStatus VARCHAR(50),
-    FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
-);
-
 CREATE TABLE IF NOT EXISTS Transaction (
     TransactionID INT AUTO_INCREMENT PRIMARY KEY,
     WarehouseID INT,
-    OrderID INT,
-    ProductID INT,
-    Quantity INT,
+    CustomerID INT,
     TransactionType VARCHAR(50),
     TransactionDate DATETIME,
+    DeliveryStatus VARCHAR(50),
     FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID),
-    FOREIGN KEY (OrderID) REFERENCES salesOrder(OrderID),
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+);
+
+CREATE TABLE IF NOT EXISTS TransactionDetail (
+    TransactionDetailID INT AUTO_INCREMENT PRIMARY KEY,
+    TransactionID INT,
+    ProductID INT,
+    Quantity INT,
+    FOREIGN KEY (TransactionID) REFERENCES Transaction(TransactionID),
     FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
 );
 
@@ -121,15 +104,10 @@ INSERT INTO Warehouse (Name, Address, Contact, Email) VALUES
 ('Main Warehouse', '789 Oak St', '555-1111', 'warehouse@company.com'),
 ('Secondary Warehouse', '456 Pine Ave', '555-2222', 'warehouse2@company.com');
 
--- Insert data into Supplier table
-INSERT INTO Supplier (Name, Contact, Email) VALUES
-('Electronics Supplier', '555-3333', 'supplier@electronics.com'),
-('Office Supplies Inc.', '555-4444', 'supplier@office.com');
-
 -- Insert data into Customer table
-INSERT INTO Customer (Name, Contact, Email, Address) VALUES
-('Tech Solutions Ltd.', '555-5555', 'tech@company.com', '789 Tech Blvd'),
-('Best Widgets LLC', '555-6666', 'widgets@best.com', '123 Widget St');
+INSERT INTO Customer (Name, Contact, Email, Address, Remark) VALUES
+('Tech Solutions Ltd.', '555-5555', 'tech@company.com', '789 Tech Blvd', 'Customer'),
+('Best Widgets LLC', '555-6666', 'widgets@best.com', '123 Widget St', 'Supplier');
 
 -- Insert data into Product table
 INSERT INTO Product (CategoryID, WarehouseID, Name, Description, Price, Quantity, LastUpdatedDate) VALUES
@@ -137,18 +115,13 @@ INSERT INTO Product (CategoryID, WarehouseID, Name, Description, Price, Quantity
 (2, 1, 'Smartphone Y3', 'Latest smartphone model', 499.99, 100, '2023-01-05 14:15:00'),
 (3, 2, 'Printer Z5', 'Color laser printer', 299.99, 30, '2023-01-06 09:00:00');
 
--- Insert data into salesOrder table
-INSERT INTO salesOrder (CustomerID, OrderDate, TotalAmount, DeliveryStatus) VALUES
-(1, '2023-01-07 11:45:00', 1999.99, 'Shipped'),
-(2, '2023-01-08 13:30:00', 1499.99, 'Processing');
-
--- Insert data into PurchaseOrder table
-INSERT INTO PurchaseOrder (SupplierID, OrderDate, TotalAmount, DeliveryStatus) VALUES
-(1, '2023-01-09 16:00:00', 1200.00, 'Delivered'),
-(2, '2023-01-10 18:45:00', 800.00, 'Processing');
-
 -- Insert data into Transaction table
-INSERT INTO Transaction (WarehouseID, OrderID, ProductID, Quantity, TransactionType, TransactionDate) VALUES
-(1, 1, 1, 10, 'Sale', '2023-01-11 10:00:00'),
-(1, 1, 2, 20, 'Sale', '2023-01-12 12:30:00'),
-(2, 2, 3, 5, 'Purchase', '2023-01-13 15:15:00');
+INSERT INTO Transaction (WarehouseID, CustomerID, TransactionType, TransactionDate, DeliveryStatus) VALUES
+(1, 1, 'Sale', '2023-01-01 10:00:00', 'Shipped'), -- Sale to CustomerID 1 with a delivery status
+(2, 2, 'Purchase', '2023-01-02 12:30:00', 'Processing'); -- Purchase from CustomerID 2 with a delivery status
+
+-- Insert data into TransactionDetail table
+INSERT INTO TransactionDetail (TransactionID, ProductID, Quantity) VALUES
+(1, 1, 5), -- Sale of 5 units of ProductID 1 in TransactionID 1
+(1, 2, 10), -- Sale of 10 units of ProductID 2 in TransactionID 1
+(2, 3, 15); -- Purchase of 15 units of ProductID 3 in TransactionID 2

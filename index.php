@@ -42,9 +42,9 @@ include("database/database-connect.php");
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="layout/transaction.php">
                         <span class="ti-shopping-cart"></span>
-                        <span>Order</span>
+                        <span>transaction</span>
                     </a>
                 </li>
                 <li>
@@ -54,9 +54,9 @@ include("database/database-connect.php");
                     </a>
                 </li>
                 <li>
-                    <a href="layout/supplier.php">
+                    <a href="layout/customer.php">
                         <span class="ti-agenda"></span>
-                        <span>Supplier</span>
+                        <span>Customer</span>
                     </a>
                 </li>
                 <li>

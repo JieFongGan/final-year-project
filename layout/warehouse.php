@@ -1,5 +1,5 @@
 <?php
-$pageTitle = "Inventory";
+$pageTitle = "Warehouse";
 include '../contain/header.php';
 include("../database/database-connect.php");
 
@@ -50,7 +50,7 @@ $conn->close();
 <div class="main-content">
 
     <?php
-    $pathtitle = "Inventory";
+    $pathtitle = "Warehouse";
     include '../contain/horizontal-bar.php';
     ?>
 

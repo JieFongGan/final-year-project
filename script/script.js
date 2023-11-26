@@ -1,3 +1,40 @@
+document.addEventListener('DOMContentLoaded', function () {
+    var socialIcon = document.querySelector('.social-icon');
+    var dropdown = document.querySelector('.dropdown');
+    var isDropdownVisible = false;
+
+    socialIcon.addEventListener('click', function () {
+        isDropdownVisible = !isDropdownVisible;
+        dropdown.style.display = isDropdownVisible ? 'block' : 'none';
+    });
+
+    document.addEventListener('click', function () {
+        if (isDropdownVisible) {
+            dropdown.style.display = 'none';
+            isDropdownVisible = false;
+        }
+    });
+});
+
+
+// Validation for number input
+function validateNumberInput(input) {
+    // Ensure the input value is a valid number
+    if (isNaN(input.value)) {
+        input.setCustomValidity("Please enter a valid number.");
+    } else {
+        input.setCustomValidity(""); // Clear the custom validity message
+    }
+}
+
+// Change items per page
+function changeItemsPerPage() {
+    var select = document.getElementById("itemsPerPage");
+    var selectedValue = select.options[select.selectedIndex].value;
+    window.location.href = "?page=<?= $current_page ?>&itemsPerPage=" + selectedValue;
+}
+
+// Search table function
 function searchTable() {
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("searchInput");
@@ -17,36 +54,4 @@ function searchTable() {
         }
         tr[i].style.display = found ? "" : "none";
     }
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    var socialIcon = document.querySelector('.social-icon');
-    var dropdown = document.querySelector('.dropdown');
-
-    socialIcon.addEventListener('click', function (event) {
-        event.stopPropagation(); // Prevents the click event from reaching the document click listener
-
-        // Toggle the display of the dropdown
-        dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
-    });
-
-    // Close the dropdown if the user clicks outside of it
-    document.addEventListener('click', function () {
-        dropdown.style.display = 'none';
-    });
-});
-
-function validateNumberInput(input) {
-    // Ensure the input value is a valid number
-    if (isNaN(input.value)) {
-        input.setCustomValidity("Please enter a valid number.");
-    } else {
-        input.setCustomValidity(""); // Clear the custom validity message
-    }
-}
-
-function changeItemsPerPage() {
-    var select = document.getElementById("itemsPerPage");
-    var selectedValue = select.options[select.selectedIndex].value;
-    window.location.href = "?page=<?= $current_page ?>&itemsPerPage=" + selectedValue;
 }

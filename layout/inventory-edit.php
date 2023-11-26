@@ -1,5 +1,5 @@
 <?php
-$pageTitle = "Inventory/edit";
+$pageTitle = "Inventory/Edit";
 include '../contain/header.php';
 include("../database/database-connect.php");
 
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="main-content">
     <?php
-    $pathtitle = "Inventory/edit";
+    $pathtitle = "Inventory/Edit";
     include '../contain/horizontal-bar.php';
     ?>
 
