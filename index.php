@@ -86,9 +86,8 @@ include("database/database-connect.php");
                 <div class="social-icon">
                     <img src="img/1.jpg" alt="Social Icon" id="social-icon">
                     <ul class="dropdown">
-                        <li><a href="#">Option 1Option 1Option 1</a></li>
-                        <li><a href="#">Option 2</a></li>
-                        <li><a href="#">Option 3</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">log out</a></li>
                     </ul>
                 </div>
             </div>

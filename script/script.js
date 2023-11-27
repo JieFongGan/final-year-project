@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var dropdown = document.querySelector('.dropdown');
     var isDropdownVisible = false;
 
-    socialIcon.addEventListener('click', function () {
+    socialIcon.addEventListener('click', function (event) {
+        event.stopPropagation();
         isDropdownVisible = !isDropdownVisible;
         dropdown.style.display = isDropdownVisible ? 'block' : 'none';
     });
