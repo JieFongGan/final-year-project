@@ -1,69 +1,88 @@
 <?php
 session_start();
+
+// Include header and database connection
 $pageTitle = "Transactions/New-product";
 include '../contain/header.php';
 include("../database/database-connect.php");
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Initialize errors array
+    $errors = array();
+
     // Retrieve form data
     $quantities = $_POST['quantities'] ?? [];
     $selectedProducts = $_POST['selectedProducts'] ?? [];
 
-    // Assuming you have a transactions table in your database
-    $insertTransactionSql = "INSERT INTO Transaction (WarehouseID, TransactionType, CustomerID, TransactionDate, DeliveryStatus) VALUES (?, ?, ?, NOW(), 'Pending')";
-    $stmt = $conn->prepare($insertTransactionSql);
-    $stmt->bind_param("iss", $_SESSION['selectedWarehouse'], $_SESSION['selectedTransactionType'], $_SESSION['selectedCustomer']);
-    $stmt->execute();
-    $stmt->close();
+    // Validate if products are selected
+    if (empty($selectedProducts)) {
+        $errors['selectedProducts'] = "Please select at least one product";
+    }
 
-    // Get the ID of the last inserted transaction
-    $lastTransactionId = $conn->insert_id;
-
-    // Insert selected products and quantities into a transaction details table
-    $insertDetailsSql = "INSERT INTO TransactionDetail (TransactionID, ProductID, Quantity) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($insertDetailsSql);
-
-    // Loop through all products to check if the checkbox is selected
-    foreach ($selectedProducts as $key => $productId) {
-        $quantity = $quantities[$productId] ?? 0; // Use the product ID as the index
-
-        // Check if the checkbox for this product is checked
-        if (isset($_POST['selectedProducts'][$productId])) {
-            // Process the selected product
-            $stmt->bind_param("iii", $lastTransactionId, $productId, $quantity);
-            $stmt->execute();
-
-            // Update the product quantity based on the transaction type
-            $updateQuantitySql = "UPDATE Product SET Quantity = Quantity ";
-
-            if ($_SESSION['selectedTransactionType'] === 'Sales') {
-                // If the transaction type is Sales, subtract the quantity
-                $updateQuantitySql .= "- ?";
-            } else {
-                // If the transaction type is Purchase, add the quantity
-                $updateQuantitySql .= "+ ?";
-            }
-
-            $updateQuantitySql .= " WHERE ProductID = ?";
-
-            $stmtUpdateQuantity = $conn->prepare($updateQuantitySql);
-            $stmtUpdateQuantity->bind_param("ii", $quantity, $productId);
-            $stmtUpdateQuantity->execute();
-            $stmtUpdateQuantity->close();
+    // Validate quantities
+    foreach ($quantities as $productId => $quantity) {
+        if (!is_numeric($quantity) || $quantity < 0) {
+            $errors['quantities'][$productId] = "Quantity must be a non-negative numeric value";
         }
     }
 
-    $stmt->close();
-    $conn->close();
+    // If there are no errors, proceed with database operations
+    if (empty($errors)) {
+        // Insert transaction information
+        $insertTransactionSql = "INSERT INTO Transaction (WarehouseID, TransactionType, CustomerID, TransactionDate, DeliveryStatus) VALUES (?, ?, ?, NOW(), 'Pending')";
+        $stmt = $conn->prepare($insertTransactionSql);
+        $stmt->bind_param("iss", $_SESSION['selectedWarehouse'], $_SESSION['selectedTransactionType'], $_SESSION['selectedCustomer']);
+        $stmt->execute();
+        $stmt->close();
 
-    // Redirect to the next page or display a success message
-    header("Location: transaction.php");
-    exit();
+        // Get the ID of the last inserted transaction
+        $lastTransactionId = $conn->insert_id;
+
+        // Insert selected products and quantities into a transaction details table
+        $insertDetailsSql = "INSERT INTO TransactionDetail (TransactionID, ProductID, Quantity) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($insertDetailsSql);
+
+        // Loop through all products to check if the checkbox is selected
+        foreach ($selectedProducts as $key => $productId) {
+            $quantity = $quantities[$productId] ?? 0; // Use the product ID as the index
+
+            // Check if the checkbox for this product is checked
+            if (isset($_POST['selectedProducts'][$productId])) {
+                // Process the selected product
+                $stmt->bind_param("iii", $lastTransactionId, $productId, $quantity);
+                $stmt->execute();
+
+                // Update the product quantity based on the transaction type
+                $updateQuantitySql = "UPDATE Product SET Quantity = Quantity ";
+
+                if ($_SESSION['selectedTransactionType'] === 'Sales') {
+                    // If the transaction type is Sales, subtract the quantity
+                    $updateQuantitySql .= "- ?";
+                } else {
+                    // If the transaction type is Purchase, add the quantity
+                    $updateQuantitySql .= "+ ?";
+                }
+
+                $updateQuantitySql .= " WHERE ProductID = ?";
+
+                $stmtUpdateQuantity = $conn->prepare($updateQuantitySql);
+                $stmtUpdateQuantity->bind_param("ii", $quantity, $productId);
+                $stmtUpdateQuantity->execute();
+                $stmtUpdateQuantity->close();
+            }
+        }
+
+        $stmt->close();
+
+        // Redirect to the next page or display a success message
+        header("Location: transaction.php");
+        exit();
+    }
 }
 
+// If session variables are not set, redirect to the first page
 if (!isset($_SESSION['selectedWarehouse']) || !isset($_SESSION['selectedTransactionType']) || !isset($_SESSION['selectedCustomer'])) {
-    // Redirect to the first page if session variables are not set
     header("Location: transaction-new.php");
     exit();
 }
@@ -89,6 +108,11 @@ $stmt->close();
         <form action="" method="post">
             <div class="table-responsive" id="productSection">
                 <div class="form-group">
+                    <?php
+                    if (!empty($errors['selectedProducts'])) {
+                        echo '<p class="error">' . $errors['selectedProducts'] . '</p>';
+                    }
+                    ?>
                     <h3>Products</h3>
                     <table id="productTable" class="table-container" style="width:100%">
                         <thead>

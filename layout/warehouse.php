@@ -92,28 +92,44 @@ $conn->close();
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <?php foreach ($subsetWarehouses as $warehouse): ?>
+                    <?php if (empty($subsetWarehouses)): ?>
                         <tr>
-                            <td><?= $warehouse[0] ?></td>
-                            <td><?= $warehouse[1] ?></td>
-                            <td><?= $warehouse[2] ?></td>
-                            <td><?= $warehouse[3] ?></td>
-                            <td><?= $warehouse[4] ?></td>
-                            <td>
-                                <form method="GET" action="warehouse-edit.php">
-                                    <input type="hidden" name="warehouseID" value="<?= $warehouse[0] ?>">
-                                    <button class="edit" type="submit">edit</button>
-                                </form>
-
-                                <form method="POST">
-                                    <button class="delete" name="deleteWarehouse" type="submit"
-                                        onclick="return confirm('Are you sure you want to delete this warehouse?')">delete
-                                    </button>
-                                    <input type="hidden" name="deleteWarehouse" value="<?= $warehouse[0] ?>">
-                                </form>
-                            </td>
+                            <td colspan="6">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($subsetWarehouses as $warehouse): ?>
+                            <tr>
+                                <td>
+                                    <?= $warehouse[0] ?>
+                                </td>
+                                <td>
+                                    <?= $warehouse[1] ?>
+                                </td>
+                                <td>
+                                    <?= $warehouse[2] ?>
+                                </td>
+                                <td>
+                                    <?= $warehouse[3] ?>
+                                </td>
+                                <td>
+                                    <?= $warehouse[4] ?>
+                                </td>
+                                <td>
+                                    <form method="GET" action="warehouse-edit.php">
+                                        <input type="hidden" name="warehouseID" value="<?= $warehouse[0] ?>">
+                                        <button class="edit" type="submit">edit</button>
+                                    </form>
+
+                                    <form method="POST">
+                                        <button class="delete" name="deleteWarehouse" type="submit"
+                                            onclick="return confirm('Are you sure you want to delete this warehouse?')">delete
+                                        </button>
+                                        <input type="hidden" name="deleteWarehouse" value="<?= $warehouse[0] ?>">
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

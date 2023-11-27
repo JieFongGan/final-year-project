@@ -13,17 +13,38 @@ $warehouseResult = $conn->query($warehouseSql);
 $customerSql = "SELECT CustomerID, Name, Remark FROM Customer";
 $customerResult = $conn->query($customerSql);
 
+// Initialize error messages
+$errors = array();
+
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // Store data in session
-    $_SESSION['selectedWarehouse'] = $_POST['productWarehouse'];
-    $_SESSION['selectedTransactionType'] = $_POST['transactionType'];
-    $_SESSION['selectedCustomer'] = $_POST['selectedCustomer'];
+    // Validate warehouse selection
+    if (empty($_POST['productWarehouse'])) {
+        $errors['productWarehouse'] = "Please select a warehouse";
+    }
 
-    // Redirect to the second page
-    header("Location: transaction-newProduct.php");
-    exit();
+    // Validate transaction type selection
+    if (empty($_POST['transactionType'])) {
+        $errors['transactionType'] = "Please select a transaction type";
+    }
+
+    // Validate customer selection
+    if (empty($_POST['selectedCustomer'])) {
+        $errors['selectedCustomer'] = "Please select a customer";
+    }
+
+    // If there are no errors, proceed to the next page
+    if (empty($errors)) {
+        // Store data in session
+        $_SESSION['selectedWarehouse'] = $_POST['productWarehouse'];
+        $_SESSION['selectedTransactionType'] = $_POST['transactionType'];
+        $_SESSION['selectedCustomer'] = $_POST['selectedCustomer'];
+
+        // Redirect to the second page
+        header("Location: transaction-newProduct.php");
+        exit();
+    }
 }
 ?>
 
@@ -49,6 +70,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         }
                         ?>
                     </select>
+                    <?php
+                    if (isset($errors['productWarehouse'])) {
+                        echo '<p class="error">' . $errors['productWarehouse'] . '</p>';
+                    }
+                    ?>
                 </div>
                 <div class="form-group">
                     <label for="transactionType">Transaction Type:</label>
@@ -57,6 +83,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <option value="Sales">Sales</option>
                         <option value="Purchase">Purchase</option>
                     </select>
+                    <?php
+                    if (isset($errors['transactionType'])) {
+                        echo '<p class="error">' . $errors['transactionType'] . '</p>';
+                    }
+                    ?>
                 </div>
 
                 <div class="form-group">
@@ -89,6 +120,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     ?>
                                 </tbody>
                             </table>
+                            <?php
+                            if (isset($errors['selectedCustomer'])) {
+                                echo '<p class="error">' . $errors['selectedCustomer'] . '</p>';
+                            }
+                            ?>
                         </div>
                     </div>
 
@@ -97,6 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <button type="button" class="cancel"
                             onclick="window.location.href='transaction.php'">Cancel</button>
                     </div>
+                </div>
             </form>
         </div>
     </main>

@@ -88,41 +88,47 @@ $conn->close();
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <?php foreach ($subsetProducts as $product): ?>
+                    <?php if (empty($subsetProducts)): ?>
                         <tr>
-                            <td>
-                                <?= $product[0] ?>
-                            </td>
-                            <td>
-                                <?= $product[1] ?>
-                            </td>
-                            <td>
-                                <?= $product[2] ?>
-                            </td>
-                            <td>
-                                <?= $product[3] ?>
-                            </td>
-                            <td>
-                                <?= $product[4] ?>
-                            </td>
-                            <td>
-                                <?= $product[5] ?>
-                            </td>
-                            <td>
-                                <form method="GET" action="inventory-edit.php">
-                                    <input type="hidden" name="productID" value="<?= $product[1] ?>">
-                                    <button class="edit" type="submit">edit</button>
-                                </form>
-
-                                <form method="POST">
-                                    <button class="delete" name="deleteProduct" type="submit"
-                                        onclick="return confirm('Are you sure you want to delete this product?')">delete
-                                    </button>
-                                    <input type="hidden" name="deleteProduct" value="<?= $product[1] ?>">
-                                </form>
-                            </td>
+                            <td colspan="7">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($subsetProducts as $product): ?>
+                            <tr>
+                                <td>
+                                    <?= $product[0] ?>
+                                </td>
+                                <td>
+                                    <?= $product[1] ?>
+                                </td>
+                                <td>
+                                    <?= $product[2] ?>
+                                </td>
+                                <td>
+                                    <?= $product[3] ?>
+                                </td>
+                                <td>
+                                    <?= $product[4] ?>
+                                </td>
+                                <td>
+                                    <?= $product[5] ?>
+                                </td>
+                                <td>
+                                    <form method="GET" action="inventory-edit.php">
+                                        <input type="hidden" name="productID" value="<?= $product[1] ?>">
+                                        <button class="edit" type="submit">edit</button>
+                                    </form>
+
+                                    <form method="POST">
+                                        <button class="delete" name="deleteProduct" type="submit"
+                                            onclick="return confirm('Are you sure you want to delete this product?')">delete
+                                        </button>
+                                        <input type="hidden" name="deleteProduct" value="<?= $product[1] ?>">
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

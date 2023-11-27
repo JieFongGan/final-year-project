@@ -89,22 +89,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                     <label for="contact">Contact:</label>
                     <input type="text" id="contact" name="contact" value="<?= $customerData['Contact'] ?>"
-                        placeholder="Contact information">
+                        placeholder="Contact information" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" value="<?= $customerData['Email'] ?>"
-                        placeholder="Email">
+                        placeholder="Email" required>
                 </div>
                 <div class="form-group">
                     <label for="address">Address:</label>
                     <input type="text" id="address" name="address" value="<?= $customerData['Address'] ?>"
-                        placeholder="Address">
+                        placeholder="Address" required>
                 </div>
                 <div class="form-group">
                     <label for="remark">Remark:</label>
                     <input type="text" id="remark" name="remark" value="<?= $customerData['Remark'] ?>"
-                        placeholder="Remark">
+                        placeholder="Remark" required>
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="customerID" value="<?= $customerData['CustomerID'] ?>">

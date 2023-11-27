@@ -23,7 +23,14 @@ ORDER BY
 ";
 
 $result = $conn->query($sql);
-$monthlyReport = $result->fetch_all(MYSQLI_ASSOC);
+
+// Check if the result set is empty
+if ($result->num_rows > 0) {
+    $monthlyReport = $result->fetch_all(MYSQLI_ASSOC);
+} else {
+    $monthlyReport = []; // Set an empty array if there are no results
+}
+
 $conn->close();
 ?>
 
@@ -36,26 +43,31 @@ $conn->close();
     <main>
         <!-- Display Monthly Report Data -->
         <h2>Monthly Report</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>Total Transactions</th>
-                    <th>Total Transaction Details</th>
-                    <th>Total Items Sold</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($monthlyReport as $row): ?>
+
+        <?php if (!empty($monthlyReport)): ?>
+            <table>
+                <thead>
                     <tr>
-                        <td><?= $row['Month'] ?></td>
-                        <td><?= $row['TotalTransactions'] ?></td>
-                        <td><?= $row['TotalTransactionDetails'] ?></td>
-                        <td><?= $row['TotalItemsSold'] ?></td>
+                        <th>Month</th>
+                        <th>Total Transactions</th>
+                        <th>Total Transaction Details</th>
+                        <th>Total Items Sold</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($monthlyReport as $row): ?>
+                        <tr>
+                            <td><?= $row['Month'] ?></td>
+                            <td><?= $row['TotalTransactions'] ?></td>
+                            <td><?= $row['TotalTransactionDetails'] ?></td>
+                            <td><?= $row['TotalItemsSold'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>No data available for the monthly report.</p>
+        <?php endif; ?>
     </main>
 </div>
 </body>

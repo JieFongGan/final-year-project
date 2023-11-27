@@ -23,7 +23,14 @@ ORDER BY
 ";
 
 $result = $conn->query($sql);
-$yearlyReport = $result->fetch_all(MYSQLI_ASSOC);
+
+// Check if the result set is empty
+if ($result->num_rows > 0) {
+    $yearlyReport = $result->fetch_all(MYSQLI_ASSOC);
+} else {
+    $yearlyReport = []; // Set an empty array if there are no results
+}
+
 $conn->close();
 ?>
 
@@ -36,26 +43,31 @@ $conn->close();
     <main>
         <!-- Display Yearly Report Data -->
         <h2>Yearly Report</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Year</th>
-                    <th>Total Transactions</th>
-                    <th>Total Transaction Details</th>
-                    <th>Total Items Sold</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($yearlyReport as $row): ?>
+
+        <?php if (!empty($yearlyReport)): ?>
+            <table>
+                <thead>
                     <tr>
-                        <td><?= $row['Year'] ?></td>
-                        <td><?= $row['TotalTransactions'] ?></td>
-                        <td><?= $row['TotalTransactionDetails'] ?></td>
-                        <td><?= $row['TotalItemsSold'] ?></td>
+                        <th>Year</th>
+                        <th>Total Transactions</th>
+                        <th>Total Transaction Details</th>
+                        <th>Total Items Sold</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($yearlyReport as $row): ?>
+                        <tr>
+                            <td><?= $row['Year'] ?></td>
+                            <td><?= $row['TotalTransactions'] ?></td>
+                            <td><?= $row['TotalTransactionDetails'] ?></td>
+                            <td><?= $row['TotalItemsSold'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p>No data available for the yearly report.</p>
+        <?php endif; ?>
     </main>
 </div>
 </body>

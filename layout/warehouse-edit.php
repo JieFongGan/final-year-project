@@ -87,17 +87,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                     <label for="address">Address:</label>
                     <input type="text" id="address" name="address" value="<?= $warehouseData['Address'] ?>"
-                        placeholder="Address">
+                        placeholder="Address" required>
                 </div>
                 <div class="form-group">
                     <label for="contact">Contact:</label>
                     <input type="text" id="contact" name="contact" value="<?= $warehouseData['Contact'] ?>"
-                        placeholder="Contact information">
+                        placeholder="Contact information" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" value="<?= $warehouseData['Email'] ?>"
-                        placeholder="Email">
+                        placeholder="Email" required>
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="warehouseID" value="<?= $warehouseData['WarehouseID'] ?>">

@@ -272,6 +272,14 @@ tbody tr:nth-child(even) {
     background-color: #c0392b;
 }
 
+.table-container td:last-child button.detail {
+    background-color: #3498db;
+}
+
+.table-container td:last-child button.detail:hover {
+    background-color: #2980b9;
+}
+
 /* item per page style */
 .pagination-form {
     padding-top: 10px;

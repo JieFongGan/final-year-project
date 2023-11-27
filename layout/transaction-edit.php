@@ -121,11 +121,12 @@ if ($isFormSubmitted) {
                 <div class="form-group">
                     <label for="deliveryStatus">Delivery Status:</label>
                     <div class="styled-select">
-                        <select id="deliveryStatus" name="deliveryStatus[]">
+                        <select id="deliveryStatus" name="deliveryStatus[]" required>
                             <option value="" disabled>Please select a delivery Status</option>
                             <option value="Pending" <?= (in_array('Pending', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>Pending</option>
                             <option value="In Progress" <?= (in_array('In Progress', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>In Progress</option>
                             <option value="Completed" <?= (in_array('Completed', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>Completed</option>
+                            <option value="Completed" <?= (in_array('Completed', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>Cancelled</option>
                         </select>
                     </div>
                 </div>

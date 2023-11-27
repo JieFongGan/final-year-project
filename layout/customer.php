@@ -4,7 +4,7 @@ include '../contain/header.php';
 include("../database/database-connect.php");
 
 // Pagination
-$itemsPerPage = isset($_GET['itemsPerPage']) ? (int)$_GET['itemsPerPage'] : 10;
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
 
 // Fetch total number of customers
 $sqlTotalCustomers = "SELECT COUNT(*) FROM Customer";
@@ -92,30 +92,49 @@ $conn->close();
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <?php foreach ($subsetCustomers as $customer): ?>
+                    <?php if (empty($subsetCustomers)): ?>
                         <tr>
-                            <td><?= $customer['CustomerID'] ?></td>
-                            <td><?= $customer['Name'] ?></td>
-                            <td><?= $customer['Contact'] ?></td>
-                            <td><?= $customer['Email'] ?></td>
-                            <td><?= $customer['Address'] ?></td>
-                            <td><?= $customer['Remark'] ?></td>
-                            <td>
-                                <form method="GET" action="customer-edit.php">
-                                    <input type="hidden" name="customerID" value="<?= $customer['CustomerID'] ?>">
-                                    <button class="edit" type="submit">edit</button>
-                                </form>
-
-                                <form method="POST">
-                                    <button class="delete" name="deleteCustomer" type="submit"
-                                        onclick="return confirm('Are you sure you want to delete this customer?')">delete
-                                    </button>
-                                    <input type="hidden" name="deleteCustomer" value="<?= $customer['CustomerID'] ?>">
-                                </form>
-                            </td>
+                            <td colspan="7">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($subsetCustomers as $customer): ?>
+                            <tr>
+                                <td>
+                                    <?= $customer['CustomerID'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Name'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Contact'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Email'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Address'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Remark'] ?>
+                                </td>
+                                <td>
+                                    <form method="GET" action="customer-edit.php">
+                                        <input type="hidden" name="customerID" value="<?= $customer['CustomerID'] ?>">
+                                        <button class="edit" type="submit">edit</button>
+                                    </form>
+
+                                    <form method="POST">
+                                        <button class="delete" name="deleteCustomer" type="submit"
+                                            onclick="return confirm('Are you sure you want to delete this customer?')">delete
+                                        </button>
+                                        <input type="hidden" name="deleteCustomer" value="<?= $customer['CustomerID'] ?>">
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
+
             </table>
         </div>
 

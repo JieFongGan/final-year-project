@@ -84,44 +84,150 @@ CREATE TABLE IF NOT EXISTS TransactionDetail (
 
 -- Insert data into Company table
 INSERT INTO Company (CompanyName, Email, Phone, Address) VALUES
-('ABC Electronics', 'info@abc.com', '123-456-7890', '123 Main St'),
-('XYZ Corporation', 'info@xyz.com', '987-654-3210', '456 Oak Ave');
+('easywire Corporation', 'info@easywire.com', '987-654-3210', '456 Oak Ave');
 
--- Insert data into User table
-INSERT INTO User (CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus) VALUES
-(1, 'admin', 'admin123', 'admin@abc.com', '555-1234', 'John', 'Doe', 'Admin', '2023-01-01 12:00:00', 'Active'),
-(1, 'user1', 'user123', 'user1@abc.com', '555-5678', 'Jane', 'Smith', 'User', '2023-01-02 09:30:00', 'Active'),
-(2, 'manager', 'manager123', 'manager@xyz.com', '555-4321', 'Mike', 'Johnson', 'Manager', '2023-01-03 15:45:00', 'Active');
+-- Users
+INSERT INTO User (CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus)
+VALUES
+(1, 'admin1', 'adminpass1', 'admin1@email.com', '1234567890', 'John', 'Doe', 'Admin', '2023-11-01 10:00:00', 'Active'),
+(1, 'user2', 'userpass2', 'user2@email.com', '9876543210', 'Jane', 'Smith', 'User', '2023-11-02 11:30:00', 'Active'),
+(1, 'manager3', 'managerpass3', 'manager3@email.com', '5556667777', 'Alice', 'Johnson', 'Manager', '2023-11-03 12:45:00', 'Active'),
+(1, 'employee4', 'employeepass4', 'employee4@email.com', '1112223333', 'Bob', 'Miller', 'Employee', '2023-11-04 09:15:00', 'Active'),
+(1, 'user5', 'userpass5', 'user5@email.com', '9998887777', 'Eva', 'Brown', 'User', '2023-11-05 14:30:00', 'Active'),
+(1, 'supervisor6', 'supervisorpass6', 'supervisor6@email.com', '4445556666', 'Charlie', 'Wilson', 'Supervisor', '2023-11-06 08:45:00', 'Active'),
+(1, 'user7', 'userpass7', 'user7@email.com', '7778889999', 'Grace', 'Johnson', 'User', '2023-11-07 11:00:00', 'Active'),
+(1, 'manager8', 'managerpass8', 'manager8@email.com', '2223334444', 'Daniel', 'Smith', 'Manager', '2023-11-08 13:15:00', 'Active'),
+(1, 'admin9', 'adminpass9', 'admin9@email.com', '6667778888', 'Olivia', 'Miller', 'Admin', '2023-11-09 10:30:00', 'Active'),
+(1, 'user10', 'userpass10', 'user10@email.com', '3334445555', 'Liam', 'Johnson', 'User', '2023-11-10 12:45:00', 'Active'),
+(1, 'employee11', 'employeepass11', 'employee11@email.com', '8889990000', 'Emma', 'Brown', 'Employee', '2023-11-11 09:00:00', 'Active'),
+(1, 'user12', 'userpass12', 'user12@email.com', '5556667777', 'Mia', 'Wilson', 'User', '2023-11-12 14:15:00', 'Active'),
+(1, 'supervisor13', 'supervisorpass13', 'supervisor13@email.com', '1112223333', 'Noah', 'Smith', 'Supervisor', '2023-11-13 08:30:00', 'Active'),
+(1, 'user14', 'userpass14', 'user14@email.com', '7778889999', 'Ava', 'Johnson', 'User', '2023-11-14 11:45:00', 'Active'),
+(1, 'manager15', 'managerpass15', 'manager15@email.com', '2223334444', 'Sophia', 'Miller', 'Manager', '2023-11-15 13:00:00', 'Active'),
+(1, 'admin16', 'adminpass16', 'admin16@email.com', '6667778888', 'Jackson', 'Wilson', 'Admin', '2023-11-16 10:15:00', 'Active'),
+(1, 'user17', 'userpass17', 'user17@email.com', '3334445555', 'Lily', 'Brown', 'User', '2023-11-17 12:30:00', 'Active');
 
--- Insert data into Category table
-INSERT INTO Category (Name, Description) VALUES
-('Laptops', 'Portable computers'),
-('Smartphones', 'Mobile devices with advanced features'),
-('Printers', 'Devices for printing documents');
+-- Categories
+INSERT INTO Category (Name, Description)
+VALUES
+('Electronics', 'Electronic devices and components'),
+('Clothing', 'Apparel and fashion accessories'),
+('Books', 'Literary works and publications'),
+('Toys', 'Playthings for children'),
+('Home Appliances', 'Household electronic devices'),
+('Furniture', 'Home and office furniture'),
+('Sports', 'Sports equipment and gear'),
+('Beauty', 'Beauty and personal care products'),
+('Jewelry', 'Jewelry and accessories'),
+('Tools', 'Tools and hardware'),
+('Automotive', 'Automotive parts and accessories'),
+('Garden', 'Gardening tools and supplies'),
+('Food', 'Food and beverages'),
+('Health', 'Health and wellness products'),
+('Pets', 'Pet supplies and accessories'),
+('Stationery', 'Office and school supplies'),
+('Movies', 'Movies and entertainment');
 
--- Insert data into Warehouse table
-INSERT INTO Warehouse (Name, Address, Contact, Email) VALUES
-('Main Warehouse', '789 Oak St', '555-1111', 'warehouse@company.com'),
-('Secondary Warehouse', '456 Pine Ave', '555-2222', 'warehouse2@company.com');
+-- Warehouses
+INSERT INTO Warehouse (Name, Address, Contact, Email)
+VALUES
+('Warehouse A', '123 Main St', '555-1234', 'warehouseA@email.com'),
+('Warehouse B', '456 Oak St', '555-5678', 'warehouseB@email.com'),
+('Warehouse C', '789 Elm St', '555-9876', 'warehouseC@email.com'),
+('Warehouse D', '101 Pine St', '555-1111', 'warehouseD@email.com'),
+('Warehouse E', '202 Maple St', '555-2222', 'warehouseE@email.com'),
+('Warehouse F', '303 Birch St', '555-3333', 'warehouseF@email.com'),
+('Warehouse G', '404 Cedar St', '555-4444', 'warehouseG@email.com'),
+('Warehouse H', '505 Oak St', '555-5555', 'warehouseH@email.com'),
+('Warehouse I', '606 Pine St', '555-6666', 'warehouseI@email.com'),
+('Warehouse J', '707 Maple St', '555-7777', 'warehouseJ@email.com'),
+('Warehouse K', '808 Elm St', '555-8888', 'warehouseK@email.com'),
+('Warehouse L', '909 Cedar St', '555-9999', 'warehouseL@email.com'),
+('Warehouse M', '111 Pine St', '555-0000', 'warehouseM@email.com'),
+('Warehouse N', '222 Maple St', '555-1212', 'warehouseN@email.com'),
+('Warehouse O', '333 Birch St', '555-2323', 'warehouseO@email.com'),
+('Warehouse P', '444 Cedar St', '555-3434', 'warehouseP@email.com'),
+('Warehouse Q', '555 Oak St', '555-4545', 'warehouseQ@email.com');
 
--- Insert data into Customer table
-INSERT INTO Customer (Name, Contact, Email, Address, Remark) VALUES
-('Tech Solutions Ltd.', '555-5555', 'tech@company.com', '789 Tech Blvd', 'Customer'),
-('Best Widgets LLC', '555-6666', 'widgets@best.com', '123 Widget St', 'Supplier');
+-- Customers
+INSERT INTO Customer (Name, Contact, Email, Address, Remark)
+VALUES
+('Customer 1', '555-1111', 'customer1@email.com', '123 Maple St', 'VIP Customer'),
+('Customer 2', '555-2222', 'customer2@email.com', '456 Pine St', 'Regular Customer'),
+('Customer 3', '555-3333', 'customer3@email.com', '789 Birch St', 'Wholesale Buyer'),
+('Customer 4', '555-4444', 'customer4@email.com', '101 Cedar St', 'Frequent Shopper'),
+('Customer 5', '555-5555', 'customer5@email.com', '202 Elm St', 'Online Subscriber'),
+('Customer 6', '555-6666', 'customer6@email.com', '303 Oak St', 'Corporate Client'),
+('Customer 7', '555-7777', 'customer7@email.com', '404 Maple St', 'Local Resident'),
+('Customer 8', '555-8888', 'customer8@email.com', '505 Birch St', 'Event Organizer'),
+('Customer 9', '555-9999', 'customer9@email.com', '606 Pine St', 'Family Account'),
+('Customer 10', '555-0000', 'customer10@email.com', '707 Cedar St', 'Student Discount'),
+('Customer 11', '555-1212', 'customer11@email.com', '808 Elm St', 'First-time Buyer'),
+('Customer 12', '555-2323', 'customer12@email.com', '909 Oak St', 'Holiday Shopper'),
+('Customer 13', '555-3434', 'customer13@email.com', '111 Birch St', 'Tech Enthusiast'),
+('Customer 14', '555-4545', 'customer14@email.com', '222 Cedar St', 'Fitness Buff'),
+('Customer 15', '555-5656', 'customer15@email.com', '333 Elm St', 'Book Lover'),
+('Customer 16', '555-6767', 'customer16@email.com', '444 Pine St', 'Pet Owner'),
+('Customer 17', '555-7878', 'customer17@email.com', '555 Maple St', 'Home Chef');
 
--- Insert data into Product table
-INSERT INTO Product (CategoryID, WarehouseID, Name, Description, Price, Quantity, LastUpdatedDate) VALUES
-(1, 1, 'Laptop X1', 'High-performance laptop', 999.99, 50, '2023-01-04 10:30:00'),
-(2, 1, 'Smartphone Y3', 'Latest smartphone model', 499.99, 100, '2023-01-05 14:15:00'),
-(3, 2, 'Printer Z5', 'Color laser printer', 299.99, 30, '2023-01-06 09:00:00');
+-- Products
+INSERT INTO Product (CategoryID, WarehouseID, Name, Description, Price, Quantity, LastUpdatedDate)
+VALUES
+(1, 1, 'Smartphone', 'Latest model', 699.99, 50, '2023-11-01 08:00:00'),
+(2, 2, 'T-shirt', 'Cotton material', 19.99, 100, '2023-11-02 09:30:00'),
+(3, 3, 'Book', 'Bestseller', 29.99, 30, '2023-11-03 10:15:00'),
+(4, 4, 'Teddy Bear', 'Soft and cuddly', 14.99, 50, '2023-11-04 11:45:00'),
+(5, 5, 'Blender', 'Powerful kitchen appliance', 79.99, 20, '2023-11-05 13:00:00'),
+(6, 6, 'Office Chair', 'Comfortable and ergonomic', 129.99, 10, '2023-11-06 14:15:00'),
+(7, 7, 'Tennis Racket', 'Professional grade', 89.99, 15, '2023-11-07 08:30:00'),
+(8, 8, 'Shampoo', 'For shiny hair', 9.99, 50, '2023-11-08 09:45:00'),
+(9, 9, 'Necklace', 'Elegant jewelry', 49.99, 30, '2023-11-09 11:00:00'),
+(10, 10, 'Drill Set', 'Complete toolkit', 69.99, 25, '2023-11-10 12:15:00'),
+(11, 11, 'Car Battery', 'Long-lasting performance', 129.99, 10, '2023-11-11 13:30:00'),
+(12, 12, 'Garden Hose', 'Durable and flexible', 19.99, 40, '2023-11-12 14:45:00'),
+(13, 13, 'Chocolate Bar', 'Premium dark chocolate', 5.99, 100, '2023-11-13 08:00:00'),
+(14, 14, 'Vitamin C', 'Boosts immunity', 12.99, 50, '2023-11-14 09:15:00'),
+(15, 15, 'Pet Bed', 'Soft and cozy', 29.99, 20, '2023-11-15 10:30:00'),
+(16, 16, 'Notebook', 'High-quality paper', 3.99, 200, '2023-11-16 11:45:00'),
+(17, 17, 'DVD Player', 'Entertainment at its best', 49.99, 15, '2023-11-17 13:00:00');
 
 -- Insert data into Transaction table
 INSERT INTO Transaction (WarehouseID, CustomerID, TransactionType, TransactionDate, DeliveryStatus) VALUES
-(1, 1, 'Sales', '2023-01-01 10:00:00', 'Shipped'), -- Sale to CustomerID 1 with a delivery status
-(2, 2, 'Purchase', '2023-01-02 12:30:00', 'Processing'); -- Purchase from CustomerID 2 with a delivery status
+(1, 1, 'Sales', '2023-01-01 10:00:00', 'Shipped'),
+(2, 2, 'Purchase', '2023-01-02 12:30:00', 'Processing'),
+(1, 3, 'Sales', '2023-01-03 14:45:00', 'Pending'),
+(2, 4, 'Purchase', '2023-01-04 16:20:00', 'Shipped'),
+(1, 5, 'Sales', '2023-01-05 08:00:00', 'Processing'),
+(2, 6, 'Purchase', '2023-01-06 11:10:00', 'Delivered'),
+(1, 7, 'Sales', '2023-01-07 13:25:00', 'Shipped'),
+(2, 8, 'Purchase', '2023-01-08 15:50:00', 'Processing'),
+(1, 9, 'Sales', '2023-01-09 09:30:00', 'Delivered'),
+(2, 10, 'Purchase', '2023-01-10 10:45:00', 'Pending'),
+(1, 11, 'Sales', '2023-01-11 11:55:00', 'Processing'),
+(2, 12, 'Purchase', '2023-01-12 14:00:00', 'Shipped'),
+(1, 13, 'Sales', '2023-01-13 16:15:00', 'Delivered'),
+(2, 14, 'Purchase', '2023-01-14 08:30:00', 'Processing'),
+(1, 15, 'Sales', '2023-01-15 10:40:00', 'Shipped'),
+(2, 16, 'Purchase', '2023-01-16 12:50:00', 'Pending'),
+(1, 17, 'Sales', '2023-01-17 14:00:00', 'Processing');
 
 -- Insert data into TransactionDetail table
 INSERT INTO TransactionDetail (TransactionID, ProductID, Quantity) VALUES
-(1, 1, 5), -- Sale of 5 units of ProductID 1 in TransactionID 1
-(1, 2, 10), -- Sale of 10 units of ProductID 2 in TransactionID 1
-(2, 3, 15); -- Purchase of 15 units of ProductID 3 in TransactionID 2
+(1, 1, 5),
+(1, 2, 10),
+(2, 3, 15),
+(3, 4, 8),
+(3, 5, 12),
+(4, 6, 20),
+(4, 7, 7),
+(5, 8, 3),
+(5, 9, 18),
+(6, 10, 25),
+(6, 11, 5),
+(7, 12, 15),
+(7, 13, 10),
+(8, 14, 7),
+(8, 15, 12),
+(9, 16, 4),
+(9, 17, 20);
+
