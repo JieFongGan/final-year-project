@@ -429,7 +429,7 @@
     flex-direction: column;
   }
   .register-container1 {
-    align-items: center;
+    align-items: left;
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: var(--dl-space-space-twounits);

@@ -260,7 +260,7 @@
                 <br>
                 <div class="login-input-group">
                   <label for="auth-code" class="register-text2">Authentication Code : </label>
-                  <input type="text" id="auth-code" name="auth_code" placeholder="Enter authentication code"
+                  <input type="text" id="auth_code" name="auth_code" placeholder="Enter authentication code"
                     class="input register-textinput" required />
                 </div>
                 <br>

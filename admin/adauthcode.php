@@ -116,21 +116,26 @@
 
 <body>
     <div class="container">
-        <h2>Plan Type</h2>
-        <form action="" method="post">
-            <label for="plan_type">Plan Type:</label>
-            <select name="plan_type" id="plan_type">
-                <option value="BasicPlan">Basic Plan</option>
-                <option value="NormalPlan">Normal Plan</option>
-                <option value="ProPlan">Pro Plan</option>
-            </select>
-            <br><br>
-            <button type="submit">Generate and Save Codes</button>
-        </form>
-    </div>
+<h2>Plan Type</h2>
+<form action="" method="post">
+    <label for="plan_type">Plan Type:</label>
+    <select name="plan_type" id="plan_type">
+        <option value="BasicPlan">Basic Plan</option>
+        <option value="NormalPlan">Normal Plan</option>
+        <option value="ProPlan">Pro Plan</option>
+    </select>
+    <br><br>
+    <button type="submit">Generate and Save Codes</button>
+</form>
 
-    
+<button onclick="goBack()">Back</button>
 
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+</div>
 </body>
-
 </html>

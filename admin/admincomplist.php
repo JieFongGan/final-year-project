@@ -73,6 +73,13 @@
             background-color: #f2f2f2;
         }
 
+        /* Make table scrollable after 10 entries */
+        .table-container {
+            max-height: 300px;
+            /* Set the maximum height as per your requirement */
+            overflow-y: auto;
+        }
+
         /* Button styling */
         button {
             padding: 10px 20px;
@@ -145,6 +152,16 @@
                 opacity: 1;
             }
         }
+
+        .search-container {
+            text-align: left;
+        }
+
+        #searchInput {
+            width: 300px;
+            padding: 8px;
+            font-size: 16px;
+        }
     </style>
 </head>
 
@@ -152,6 +169,7 @@
     <div class="sidebar">
         <ul>
             <li><a href="admincomplist.php">Company List</a></li>
+            <li><a href="adminuserlist.php">User List</a></li>
             <li><a href="adlogin.php">Log Out</a></li>
         </ul>
     </div>
@@ -159,7 +177,18 @@
         <div class="content">
             <button><a href="adauthcode.php" style="color: inherit; text-decoration: none;">Create New
                     AuthCode</a></button>
-            <br><br>
+            <br>
+            <br>
+            <div class="search-container">
+                <form action="admincomplist.php" method="GET">
+                    <input type="text" id="searchInput" name="search"
+                        placeholder="Search by Company Name, Status, Plan Type, or Auth Code">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
+            <br>
+             <div class="table-container">
             <table>
                 <thead>
                     <tr>
@@ -171,6 +200,7 @@
                         <th>Modify</th>
                     </tr>
                 </thead>
+
                 <?php
                 // Connect to the database
                 $servername = "localhost";
@@ -185,25 +215,18 @@
                     die("Connection failed: " . $conn->connect_error);
                 }
 
-                // Fetch data from the database
-                $query = "SELECT CompanyName, Status, PlanType, AuthCode FROM company";
-                $result = mysqli_query($conn, $query);
-
-                // Pagination
-                $recordsPerPage = 10;
-                $totalRecords = mysqli_num_rows($result);
-                $totalPages = ceil($totalRecords / $recordsPerPage);
-                $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-                $offset = ($currentPage - 1) * $recordsPerPage;
-
-                // Fetch data from the database with pagination
-                $query = "SELECT CompanyName, Status, PlanType, AuthCode FROM company LIMIT $offset, $recordsPerPage";
+                // Fetch data from the database with search conditions
+                $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
+                $query = "SELECT CompanyName, Status, PlanType, AuthCode FROM company WHERE 
+                                CompanyName LIKE '%$searchKeyword%' OR
+                                Status LIKE '%$searchKeyword%' OR
+                                PlanType LIKE '%$searchKeyword%' OR
+                                AuthCode LIKE '%$searchKeyword%'";
                 $result = mysqli_query($conn, $query);
 
                 // Display the fetched data
-                $number = ($currentPage - 1) * $recordsPerPage + 1;
+                $number = 1;
                 while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<form method='post' action=''>";
                     echo "<tr>";
                     echo "<td>" . $number . "</td>";
                     echo "<td>" . $row['CompanyName'] . "</td>";
@@ -211,29 +234,50 @@
                     echo "<td>" . $row['PlanType'] . "</td>";
                     echo "<td>" . $row['AuthCode'] . "</td>";
                     echo "<td>";
-                    echo "<button><a href='adedit.php?authcode=" . $row['AuthCode'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
+                    echo "<button style='display: inline-block;'><a href='adcompedit.php?authcode=" . $row['AuthCode'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
                     echo "&nbsp;";
+                    echo "<form method='post' action='' style='display: inline-block;' onsubmit='return confirmDelete();'>";
                     echo "<input type='hidden' name='AuthCode' value='" . $row['AuthCode'] . "'>";
                     echo "<button type='submit' name='delete'>Delete</button>";
+                    echo "</form>";
                     echo "</td>";
                     echo "</tr>";
-                    echo "</form>";
                     $number++;
                 }
 
-                // Display pagination links
-                echo "<div class='pagination'>";
-                for ($i = 1; $i <= $totalPages; $i++) {
-                    echo "<a href='admincomplist.php?page=" . $i . "'>" . $i . "</a>";
-                }
-                echo "</div>";
 
                 // Delete button functionality
                 if (isset($_POST['delete'])) {
                     $authCode = $_POST['AuthCode'];
 
+                    // Select the CompanyName based on the provided AuthCode
+                    $query = 'SELECT CompanyName FROM company WHERE AuthCode = "' . $authCode . '"';
+                    $result = mysqli_query($conn, $query);
+
+                    // Check if the query was successful
+                    if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $companyName = $row['CompanyName'];
+
+                        // Display confirmation dialog using JavaScript
+                        $confirmationMessage = ($companyName !== null) ? "Are you sure you want to delete $companyName?" : "Are you sure you want to delete AuthCode: $authCode?";
+                        echo "<script>
+                                if (confirm('$confirmationMessage')) {
+                                    window.location.href = 'admincomplist.php?deleteAuthCode=$authCode';
+                                }
+                            </script>";
+                    } else {
+                        echo "Error retrieving CompanyName: " . mysqli_error($conn);
+                    }
+                }
+
+
+                // Check if deleteAuthCode is set in the URL
+                if (isset($_GET['deleteAuthCode'])) {
+                    $authCodeToDelete = $_GET['deleteAuthCode'];
+
                     // Delete the record from the database
-                    $deleteQuery = "DELETE FROM company WHERE AuthCode = '$authCode'";
+                    $deleteQuery = "DELETE FROM company WHERE AuthCode = '$authCodeToDelete'";
                     $deleteResult = mysqli_query($conn, $deleteQuery);
 
                     if ($deleteResult) {
@@ -247,18 +291,9 @@
             </table>
         </div>
     </div>
-</body>
+    </div>
 
-</html>
-</div>
-</div>
-</body>
 
-</html>
-
-</table>
-</div>
-</div>
 </body>
 
 </html>
