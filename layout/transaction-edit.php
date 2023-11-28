@@ -124,9 +124,9 @@ if ($isFormSubmitted) {
                         <select id="deliveryStatus" name="deliveryStatus[]" required>
                             <option value="" disabled>Please select a delivery Status</option>
                             <option value="Pending" <?= (in_array('Pending', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>Pending</option>
-                            <option value="In Progress" <?= (in_array('In Progress', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>In Progress</option>
-                            <option value="Completed" <?= (in_array('Completed', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>Completed</option>
-                            <option value="Completed" <?= (in_array('Completed', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>Cancelled</option>
+                            <option value="Processing" <?= (in_array('Processing', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>Processing</option>
+                            <option value="Shipped" <?= (in_array('Shipped', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>Shipped</option>
+                            <option value="Cancelled" <?= (in_array('Cancelled', explode(', ', $transactionData['DeliveryStatus']))) ? 'selected' : '' ?>>Cancelled</option>
                         </select>
                     </div>
                 </div>

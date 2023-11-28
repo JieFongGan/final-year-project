@@ -93,19 +93,7 @@ VALUES
 (1, 'user2', 'userpass2', 'user2@email.com', '9876543210', 'Jane', 'Smith', 'User', '2023-11-02 11:30:00', 'Active'),
 (1, 'manager3', 'managerpass3', 'manager3@email.com', '5556667777', 'Alice', 'Johnson', 'Manager', '2023-11-03 12:45:00', 'Active'),
 (1, 'employee4', 'employeepass4', 'employee4@email.com', '1112223333', 'Bob', 'Miller', 'Employee', '2023-11-04 09:15:00', 'Active'),
-(1, 'user5', 'userpass5', 'user5@email.com', '9998887777', 'Eva', 'Brown', 'User', '2023-11-05 14:30:00', 'Active'),
-(1, 'supervisor6', 'supervisorpass6', 'supervisor6@email.com', '4445556666', 'Charlie', 'Wilson', 'Supervisor', '2023-11-06 08:45:00', 'Active'),
-(1, 'user7', 'userpass7', 'user7@email.com', '7778889999', 'Grace', 'Johnson', 'User', '2023-11-07 11:00:00', 'Active'),
-(1, 'manager8', 'managerpass8', 'manager8@email.com', '2223334444', 'Daniel', 'Smith', 'Manager', '2023-11-08 13:15:00', 'Active'),
-(1, 'admin9', 'adminpass9', 'admin9@email.com', '6667778888', 'Olivia', 'Miller', 'Admin', '2023-11-09 10:30:00', 'Active'),
-(1, 'user10', 'userpass10', 'user10@email.com', '3334445555', 'Liam', 'Johnson', 'User', '2023-11-10 12:45:00', 'Active'),
-(1, 'employee11', 'employeepass11', 'employee11@email.com', '8889990000', 'Emma', 'Brown', 'Employee', '2023-11-11 09:00:00', 'Active'),
-(1, 'user12', 'userpass12', 'user12@email.com', '5556667777', 'Mia', 'Wilson', 'User', '2023-11-12 14:15:00', 'Active'),
-(1, 'supervisor13', 'supervisorpass13', 'supervisor13@email.com', '1112223333', 'Noah', 'Smith', 'Supervisor', '2023-11-13 08:30:00', 'Active'),
-(1, 'user14', 'userpass14', 'user14@email.com', '7778889999', 'Ava', 'Johnson', 'User', '2023-11-14 11:45:00', 'Active'),
-(1, 'manager15', 'managerpass15', 'manager15@email.com', '2223334444', 'Sophia', 'Miller', 'Manager', '2023-11-15 13:00:00', 'Active'),
-(1, 'admin16', 'adminpass16', 'admin16@email.com', '6667778888', 'Jackson', 'Wilson', 'Admin', '2023-11-16 10:15:00', 'Active'),
-(1, 'user17', 'userpass17', 'user17@email.com', '3334445555', 'Lily', 'Brown', 'User', '2023-11-17 12:30:00', 'Active');
+(1, 'user5', 'userpass5', 'user5@email.com', '9998887777', 'Eva', 'Brown', 'User', '2023-11-05 14:30:00', 'Active');
 
 -- Categories
 INSERT INTO Category (Name, Description)
@@ -137,17 +125,7 @@ VALUES
 ('Warehouse D', '101 Pine St', '555-1111', 'warehouseD@email.com'),
 ('Warehouse E', '202 Maple St', '555-2222', 'warehouseE@email.com'),
 ('Warehouse F', '303 Birch St', '555-3333', 'warehouseF@email.com'),
-('Warehouse G', '404 Cedar St', '555-4444', 'warehouseG@email.com'),
-('Warehouse H', '505 Oak St', '555-5555', 'warehouseH@email.com'),
-('Warehouse I', '606 Pine St', '555-6666', 'warehouseI@email.com'),
-('Warehouse J', '707 Maple St', '555-7777', 'warehouseJ@email.com'),
-('Warehouse K', '808 Elm St', '555-8888', 'warehouseK@email.com'),
-('Warehouse L', '909 Cedar St', '555-9999', 'warehouseL@email.com'),
-('Warehouse M', '111 Pine St', '555-0000', 'warehouseM@email.com'),
-('Warehouse N', '222 Maple St', '555-1212', 'warehouseN@email.com'),
-('Warehouse O', '333 Birch St', '555-2323', 'warehouseO@email.com'),
-('Warehouse P', '444 Cedar St', '555-3434', 'warehouseP@email.com'),
-('Warehouse Q', '555 Oak St', '555-4545', 'warehouseQ@email.com');
+('Warehouse G', '404 Cedar St', '555-4444', 'warehouseG@email.com');
 
 -- Customers
 INSERT INTO Customer (Name, Contact, Email, Address, Remark)
