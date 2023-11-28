@@ -1,30 +1,20 @@
 <?php
-$pageTitle = "Inventory/new";
+$pageTitle = "Inventory/Create";
 include '../contain/header.php';
 include("../database/database-connect.php");
 
-// Fetch all categories from the database
-$sql = "SELECT * FROM Category";
-$result = $conn->query($sql);
+$errors = [];
 
-$categories = [];
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $categories[] = $row['Name'];
-    }
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Process form data
-    $productName = mysqli_real_escape_string($conn, $_POST["productName"]);
-    $categoryID = mysqli_real_escape_string($conn, $_POST["category"]);
-    $description = mysqli_real_escape_string($conn, $_POST["description"]);
-    $price = mysqli_real_escape_string($conn, $_POST["price"]);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $productName = mysqli_real_escape_string($conn, $_POST['productName']);
+    $categoryID = mysqli_real_escape_string($conn, $_POST['category']);
+    $warehouseID = !empty($_POST['productWarehouse']) ? mysqli_real_escape_string($conn, $_POST['productWarehouse']) : null;
+    $description = mysqli_real_escape_string($conn, $_POST['productDescription']);
+    $price = mysqli_real_escape_string($conn, $_POST['productPrice']);
+    $quantity = mysqli_real_escape_string($conn, $_POST['productQuantity']);
 
     // Additional validation checks
-    $errors = [];
-
     if (empty($productName)) {
         $errors[] = "Product name is required.";
     }
@@ -47,39 +37,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             echo "<p class='error'>$error</p>";
         }
     } else {
-        // Perform database insertion
-        $sql = "INSERT INTO Product (Name, CategoryID, Description, Price, LastUpdatedDate) VALUES (?, ?, ?, ?, NOW())";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssd", $productName, $categoryID, $description, $price);
+        // Insert the new product into the database
+        $insertSql = "INSERT INTO Product (Name, CategoryID, WarehouseID, Description, Price, Quantity, LastUpdatedDate) 
+                      VALUES (?, ?, ?, ?, ?, ?, NOW())";
+        $insertStmt = $conn->prepare($insertSql);
+        $insertStmt->bind_param("siisdi", $productName, $categoryID, $warehouseID, $description, $price, $quantity);
+        $insertStmt->execute();
 
-        // Execute the statement and handle errors
-        if ($stmt->execute()) {
-            // After successful insertion, redirect to a success page or back to the inventory page
+        // Check if the insertion was successful
+        if ($insertStmt->affected_rows > 0) {
+            echo "Product created successfully.";
             header("Location: inventory.php");
             exit();
         } else {
-            // Handle insertion error
-            echo "Error: " . $stmt->error;
+            echo "Error creating product: " . $insertStmt->error;
         }
 
-        // Close the prepared statement
-        $stmt->close();
+        $insertStmt->close();
     }
 }
 
-// HTML code
 ?>
+
 <div class="main-content">
     <?php
-    $pathtitle = "Inventory/new";
+    $pathtitle = "Inventory/Create";
     include '../contain/horizontal-bar.php';
     ?>
+
     <main>
         <div class="form-container">
             <form action="" method="post">
                 <div class="form-group">
                     <?php
-                    if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($errors)) {
+                    if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($errors)) {
                         echo '<div class="error-container">';
                         echo '<p class="error">Please fix the following errors:</p>';
                         echo '<ul>';
@@ -95,15 +86,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
                 <div class="form-group">
                     <label for="productName">Product name:</label>
-                    <input type="text" id="productName" name="productName" placeholder="Please enter a type name"
+                    <input type="text" id="productName" name="productName" placeholder="Please enter a product name"
                         required>
                 </div>
                 <div class="form-group">
                     <label for="category">Category:</label>
                     <select id="category" name="category" required>
-                        <option value="" selected disabled>Please select a category</option>
+                        <option value="" disabled selected>Please select a category</option>
                         <?php
-                        // Fetch category data from the database
                         $categorySql = "SELECT * FROM Category";
                         $categoryResult = $conn->query($categorySql);
 
@@ -116,17 +106,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea id="description" name="description" placeholder="Please enter the description"
-                        required></textarea>
+                    <label for="productWarehouse">Warehouse:</label>
+                    <select id="productWarehouse" name="productWarehouse" required>
+                        <option value="" disabled selected>Please select a warehouse</option>
+                        <?php
+                        $warehouseSql = "SELECT * FROM Warehouse";
+                        $warehouseResult = $conn->query($warehouseSql);
+
+                        if ($warehouseResult->num_rows > 0) {
+                            while ($warehouseRow = $warehouseResult->fetch_assoc()) {
+                                echo "<option value='" . $warehouseRow['WarehouseID'] . "'>" . $warehouseRow['Name'] . "</option>";
+                            }
+                        }
+                        ?>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="price">Price (RM):</label>
-                    <input type="text" id="price" name="price" placeholder="Please enter a price"
+                    <label for="productDescription">Description:</label>
+                    <textarea id="productDescription" name="productDescription"
+                        placeholder="Please enter the description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Price (RM):</label>
+                    <input type="text" id="productPrice" name="productPrice" placeholder="Please enter a price"
                         oninput="validateNumberInput(this)" required>
                 </div>
                 <div class="form-group">
-                    <button type="submit">Add</button>
+                    <label for="productQuantity">Quantity:</label>
+                    <input type="number" id="productQuantity" name="productQuantity"
+                        placeholder="Please enter a quantity" oninput="validateNumberInput(this)" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Create</button>
                     <button type="button" class="cancel" onclick="window.location.href='inventory.php'">Cancel</button>
                 </div>
             </form>

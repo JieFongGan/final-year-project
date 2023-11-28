@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: settings-category.php");
             exit();
         } else {
-            echo "Error: " . $conn->error;
+            echo "Error deleting category: " . $conn->error;
         }
     }
 
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 header("Location: settings-category.php");
                 exit();
             } else {
-                echo "Error: " . $conn->error;
+                echo "Error adding new category: " . $conn->error;
             }
         } else {
             echo "Category already exists!";
@@ -83,31 +83,33 @@ $conn->close();
             </form>
 
             <h2>All Categories</h2>
-            <ul class="category-list">
-                <?php foreach ($categories as $category): ?>
-                    <li>
-                        <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-                            <div class="category-details">
-                                <strong class="category-name">
-                                    <?= $category['Name'] ?>
-                                </strong>
-                                <?php if (!empty($category['Description'])): ?>
-                                    <p class="category-description">
-                                        <?= $category['Description'] ?>
-                                    </p>
-                                <?php endif; ?>
-                            </div>
-                            <input type="hidden" name="deleteCategory" value="<?= $category['CategoryID'] ?>">
-                            <button type="submit" class="delete-button"
-                                onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
-                        </form>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-
+            <?php if (empty($categories)): ?>
+                <p>No categories available.</p>
+            <?php else: ?>
+                <ul class="category-list">
+                    <?php foreach ($categories as $category): ?>
+                        <li>
+                            <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+                                <div class="category-details">
+                                    <strong class="category-name">
+                                        <?= $category['Name'] ?>
+                                    </strong>
+                                    <?php if (!empty($category['Description'])): ?>
+                                        <p class="category-description">
+                                            <?= $category['Description'] ?>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+                                <input type="hidden" name="deleteCategory" value="<?= $category['CategoryID'] ?>">
+                                <button type="submit" class="delete-button"
+                                    onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
+                            </form>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
         </div>
     </main>
 </div>
 </body>
-
 </html>

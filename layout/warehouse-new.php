@@ -3,6 +3,8 @@ $pageTitle = "Warehouse/New";
 include '../contain/header.php';
 include("../database/database-connect.php");
 
+$errors = [];
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Process form data
     $warehouseName = mysqli_real_escape_string($conn, $_POST["warehouseName"]);
@@ -11,7 +13,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = mysqli_real_escape_string($conn, $_POST["email"]);
 
     // Additional validation checks
-    $errors = [];
 
     // Validate warehouse name
     if (empty($warehouseName)) {
@@ -56,52 +57,52 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } else {
             echo "Error: " . $stmt->error;
         }
-        
+
         $stmt->close();
     }
 }
-
 ?>
+
 <div class="main-content">
     <?php
     $pathtitle = "Warehouse/New";
     include '../contain/horizontal-bar.php';
     ?>
     <main>
+        <?php if (!empty($errors)): ?>
+            <div class="error-container">
+                <p class="error">Please fix the following errors:</p>
+                <ul>
+                    <?php foreach ($errors as $error): ?>
+                        <li>
+                            <?= htmlspecialchars($error) ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
         <div class="form-container">
             <form action="" method="post">
                 <div class="form-group">
-                    <?php
-                    if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($errors)) {
-                        echo '<div class="error-container">';
-                        echo '<p class="error">Please fix the following errors:</p>';
-                        echo '<ul>';
-                        foreach ($errors as $error) {
-                            echo '<li>' . htmlspecialchars($error) . '</li>';
-                        }
-                        echo '</ul>';
-                        echo '</div>';
-                    } else {
-                        echo '<div class="error-container" style="display:none;"></div>';
-                    }
-                    ?>
-                </div>
-                <div class="form-group">
                     <label for="warehouseName">Warehouse name:</label>
-                    <input type="text" id="warehouseName" name="warehouseName" placeholder="Please enter a warehouse name"
-                        required maxlength="255">
+                    <input type="text" id="warehouseName" name="warehouseName"
+                        placeholder="Please enter a warehouse name" required maxlength="255">
                 </div>
                 <div class="form-group">
                     <label for="address">Address:</label>
-                    <input type="text" id="address" name="address" placeholder="Please enter the address" maxlength="255">
+                    <input type="text" id="address" name="address" placeholder="Please enter the address" required
+                        maxlength="255">
                 </div>
                 <div class="form-group">
                     <label for="contact">Contact:</label>
-                    <input type="text" id="contact" name="contact" placeholder="Please enter the contact information" maxlength="20">
+                    <input type="text" id="contact" name="contact" placeholder="Please enter the contact information"
+                        required maxlength="20">
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="Please enter the email" required maxlength="255">
+                    <input type="email" id="email" name="email" placeholder="Please enter the email" required
+                        maxlength="255">
                 </div>
                 <div class="form-group">
                     <button type="submit">Add</button>

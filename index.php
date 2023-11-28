@@ -42,9 +42,9 @@ include("database/database-connect.php");
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="layout/transaction.php">
                         <span class="ti-shopping-cart"></span>
-                        <span>Order</span>
+                        <span>transaction</span>
                     </a>
                 </li>
                 <li>
@@ -54,13 +54,13 @@ include("database/database-connect.php");
                     </a>
                 </li>
                 <li>
-                    <a href="layout/supplier.php">
+                    <a href="layout/customer.php">
                         <span class="ti-agenda"></span>
-                        <span>Supplier</span>
+                        <span>Customer</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="layout/report.php">
                         <span class="ti-pie-chart"></span>
                         <span>Report</span>
                     </a>
@@ -86,9 +86,8 @@ include("database/database-connect.php");
                 <div class="social-icon">
                     <img src="img/1.jpg" alt="Social Icon" id="social-icon">
                     <ul class="dropdown">
-                        <li><a href="#">Option 1Option 1Option 1</a></li>
-                        <li><a href="#">Option 2</a></li>
-                        <li><a href="#">Option 3</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">log out</a></li>
                     </ul>
                 </div>
             </div>

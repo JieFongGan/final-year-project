@@ -223,6 +223,7 @@ tbody tr:nth-child(even) {
 }
 
 .button-and-search button,
+.add-entry-btn,
 .table-container td:last-child button {
     padding: 5px 10px;
     background-color: #4CAF50;
@@ -261,6 +262,7 @@ tbody tr:nth-child(even) {
 
 .table-container td:last-child button:hover,
 .button-and-search button:hover,
+.add-entry-btn:hover,
 .form-group button[type="submit"]:hover {
     background-color: #45a049;
 }
@@ -268,6 +270,14 @@ tbody tr:nth-child(even) {
 .table-container td:last-child button.delete:hover,
 .form-group button.cancel:hover {
     background-color: #c0392b;
+}
+
+.table-container td:last-child button.detail {
+    background-color: #3498db;
+}
+
+.table-container td:last-child button.detail:hover {
+    background-color: #2980b9;
 }
 
 /* item per page style */
@@ -346,11 +356,8 @@ tbody tr:nth-child(even) {
 
 .form-group textarea {
     resize: vertical;
-    /* Allows only vertical resizing */
     overflow: auto;
-    /* Ensures the overflow is handled neatly */
     min-height: 100px;
-    /* Set a minimum height if you wish */
 }
 
 .form-group input,
@@ -380,7 +387,11 @@ tbody tr:nth-child(even) {
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     outline: none;
-    /* Remove the default focus outline */
+}
+
+.form-group .product-entry,
+.form-group .selectpq {
+    margin-top: 20px;
 }
 
 /* Style the number input on focus */
@@ -516,6 +527,24 @@ tbody tr:nth-child(even) {
 
 .category-list .delete-button:hover {
     background-color: #c82333;
+}
+
+/* transaction create form */
+#customerSection input[type="radio"] {
+    margin-right: 5px;
+    vertical-align: middle; 
+}
+
+#productTable input[type="checkbox"] {
+    margin-right: 5px;
+    vertical-align: middle; 
+}
+
+#productTable input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    box-sizing: border-box;
+    text-align: center;
 }
 
 @media only screen and (max-width: 860px) {

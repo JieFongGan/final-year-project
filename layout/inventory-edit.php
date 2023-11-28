@@ -1,5 +1,5 @@
 <?php
-$pageTitle = "Inventory/edit";
+$pageTitle = "Inventory/Edit";
 include '../contain/header.php';
 include("../database/database-connect.php");
 
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="main-content">
     <?php
-    $pathtitle = "Inventory/edit";
+    $pathtitle = "Inventory/Edit";
     include '../contain/horizontal-bar.php';
     ?>
 
@@ -88,11 +88,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                     <label for="productName">Product Name:</label>
                     <input type="text" id="productName" name="productName" value="<?= $productData['Name'] ?>"
-                        placeholder="Product name">
+                        placeholder="Product name" required>
                 </div>
                 <div class="form-group">
                     <label for="category">Category:</label>
-                    <select id="category" name="category">
+                    <select id="category" name="category" required>
                         <option value="" disabled>Please select a category</option>
                         <?php
                         $categorySql = "SELECT CategoryID, Name FROM Category";
@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="form-group">
                     <label for="productWarehouse">Warehouse:</label>
-                    <select id="productWarehouse" name="productWarehouse">
+                    <select id="productWarehouse" name="productWarehouse" required>
                         <option value="" disabled>Please select a warehouse</option>
                         <?php
                         $warehouseSql = "SELECT WarehouseID, Name FROM Warehouse";
@@ -133,26 +133,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         } else {
                             echo "0 results";
                         }
-                        
+
                         $conn->close();
                         ?>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="productDescription">Description:</label>
-                    <textarea id="productDescription" name="productDescription"
-                        placeholder="Description"><?= $productData['Description'] ?></textarea>
+                    <textarea id="productDescription" name="productDescription" placeholder="Description"
+                        required><?= $productData['Description'] ?></textarea>
                 </div>
                 <div class="form-group">
                     <label for="productPrice">Price (RM):</label>
                     <input type="number" id="productPrice" name="productPrice" value="<?= $productData['Price'] ?>"
-                        placeholder="Price" oninput="validateNumberInput(this)">
+                        placeholder="Price" oninput="validateNumberInput(this)" required>
                 </div>
                 <div class="form-group">
                     <label for="productQuantity">Quantity:</label>
                     <input type="number" id="productQuantity" name="productQuantity"
                         value="<?= $productData['Quantity'] ?>" placeholder="Quantity"
-                        oninput="validateNumberInput(this)">
+                        oninput="validateNumberInput(this)" required>
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="productID" value="<?= $productData['ProductID'] ?>">

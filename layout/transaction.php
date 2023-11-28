@@ -1,31 +1,26 @@
 <?php
-$pageTitle = "Inventory";
+$pageTitle = "Transactions";
 include '../contain/header.php';
 include("../database/database-connect.php");
 
-$sql = "SELECT Name, ProductID, WarehouseID, Description, Price, Quantity FROM Product";
-$result = $conn->query($sql);
-
-$products = array();
-
-if ($result->num_rows > 0) {
-    // Fetch data from the result set
-    while ($row = $result->fetch_assoc()) {
-        $products[] = array(
-            $row["Name"],
-            $row["ProductID"],
-            $row["WarehouseID"],
-            $row["Description"],
-            $row["Price"],
-            $row["Quantity"]
-        );
-    }
-}
-
 // Pagination
 $itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
-$totalItems = count($products);
-$totalPages = ceil($totalItems / $itemsPerPage);
+
+// Fetch total number of transactions
+$sqlTotalTransactions = "SELECT COUNT(*) FROM Transaction";
+$resultTotalTransactions = $conn->query($sqlTotalTransactions);
+
+// Check if the query was successful
+if ($resultTotalTransactions) {
+    $totalTransactions = $resultTotalTransactions->fetch_row()[0];
+
+    // Calculate total pages and handle division by zero
+    $totalPages = $totalTransactions > 0 ? ceil($totalTransactions / $itemsPerPage) : 1;
+} else {
+    // Handle query error
+    echo "Error fetching total transactions: " . $conn->error;
+    exit();
+}
 
 // Get the current page from the URL, default to 1 if not set
 $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -34,26 +29,22 @@ $current_page = max(1, min($totalPages, $current_page));
 // Calculate the offset
 $offset = ($current_page - 1) * $itemsPerPage;
 
-// Get a subset of products based on the offset and items per page
-$subsetProducts = array_slice($products, $offset, $itemsPerPage);
+// Fetch a subset of transactions based on the offset and items per page
+$sqlSubsetTransactions = "SELECT * FROM Transaction LIMIT $itemsPerPage OFFSET $offset";
+$resultSubsetTransactions = $conn->query($sqlSubsetTransactions);
 
-if (isset($_POST['Cnew'])) {
-    header("Location: inventory-new.php");
+// Check if the query was successful
+if ($resultSubsetTransactions) {
+    $subsetTransactions = $resultSubsetTransactions->fetch_all();
+} else {
+    // Handle query error
+    echo "Error fetching subset of transactions: " . $conn->error;
     exit();
 }
 
-if (isset($_POST['deleteProduct'])) {
-    $productIDToDelete = mysqli_real_escape_string($conn, $_POST['deleteProduct']);
-
-    $deleteSql = "DELETE FROM Product WHERE ProductID = '$productIDToDelete'";
-    $deleteResult = $conn->query($deleteSql);
-
-    if ($deleteResult) {
-        header("Location: inventory.php");
-        exit();
-    } else {
-        echo "Error: " . $conn->error;
-    }
+if (isset($_POST['Cnew'])) {
+    header("Location: transaction-new.php");
+    exit();
 }
 
 $conn->close();
@@ -62,7 +53,7 @@ $conn->close();
 <div class="main-content">
 
     <?php
-    $pathtitle = "Inventory";
+    $pathtitle = "Transactions";
     include '../contain/horizontal-bar.php';
     ?>
 
@@ -78,52 +69,49 @@ $conn->close();
             <table id="myTable" class="table-container" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>ProductID</th>
+                        <th>TransactionID</th>
                         <th>WarehouseID</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
+                        <th>CustomerID</th>
+                        <th>TransactionType</th>
+                        <th>TransactionDate</th>
+                        <th>DeliveryStatus</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <?php if (empty($subsetProducts)): ?>
+                    <?php if (empty($subsetTransactions)): ?>
                         <tr>
                             <td colspan="7">No data available</td>
                         </tr>
                     <?php else: ?>
-                        <?php foreach ($subsetProducts as $product): ?>
+                        <?php foreach ($subsetTransactions as $transaction): ?>
                             <tr>
                                 <td>
-                                    <?= $product[0] ?>
+                                    <?= $transaction[0] ?>
                                 </td>
                                 <td>
-                                    <?= $product[1] ?>
+                                    <?= $transaction[1] ?>
                                 </td>
                                 <td>
-                                    <?= $product[2] ?>
+                                    <?= $transaction[2] ?>
                                 </td>
                                 <td>
-                                    <?= $product[3] ?>
+                                    <?= $transaction[3] ?>
                                 </td>
                                 <td>
-                                    <?= $product[4] ?>
+                                    <?= $transaction[4] ?>
                                 </td>
                                 <td>
-                                    <?= $product[5] ?>
+                                    <?= $transaction[5] ?>
                                 </td>
                                 <td>
-                                    <form method="GET" action="inventory-edit.php">
-                                        <input type="hidden" name="productID" value="<?= $product[1] ?>">
-                                        <button class="edit" type="submit">edit</button>
+                                    <form method="GET" action="transaction-detailProduct.php">
+                                        <input type="hidden" name="transactionID" value="<?= $transaction[0] ?>">
+                                        <button class="detail" type="submit">Detail</button>
                                     </form>
-
-                                    <form method="POST">
-                                        <button class="delete" name="deleteProduct" type="submit"
-                                            onclick="return confirm('Are you sure you want to delete this product?')">delete
-                                        </button>
-                                        <input type="hidden" name="deleteProduct" value="<?= $product[1] ?>">
+                                    <form method="GET" action="transaction-edit.php">
+                                        <input type="hidden" name="transactionID" value="<?= $transaction[0] ?>">
+                                        <button class="edit" type="submit">Edit</button>
                                     </form>
                                 </td>
                             </tr>
