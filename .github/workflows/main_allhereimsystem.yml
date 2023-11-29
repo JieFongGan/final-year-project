@@ -15,8 +15,8 @@ jobs:
 
     steps:
       - name: Check if composer.json exists
-        run: echo "files_exists=true" > $GITHUB_ENV
-        if: test -f composer.json
+        id: check_files
+        run: echo "files_exists=$(if [ -e composer.json ]; then echo true; else echo false; fi)" >> $GITHUB_ENV
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
