@@ -182,7 +182,7 @@
             <div class="search-container">
                 <form action="admincomplist.php" method="GET">
                     <input type="text" id="searchInput" name="search"
-                        placeholder="Search by Company Name, Status, Plan Type, or Auth Code">
+                        placeholder="Search by Company Name, Status or Auth Code">
                     <button type="submit">Search</button>
                 </form>
             </div>
@@ -195,7 +195,6 @@
                         <th>#</th>
                         <th>Company Name</th>
                         <th>Status</th>
-                        <th>Plan Type</th>
                         <th>Auth Code</th>
                         <th>Modify</th>
                     </tr>
@@ -217,10 +216,9 @@
 
                 // Fetch data from the database with search conditions
                 $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
-                $query = "SELECT CompanyName, Status, PlanType, AuthCode FROM company WHERE 
+                $query = "SELECT CompanyName, Status, AuthCode FROM company WHERE 
                                 CompanyName LIKE '%$searchKeyword%' OR
                                 Status LIKE '%$searchKeyword%' OR
-                                PlanType LIKE '%$searchKeyword%' OR
                                 AuthCode LIKE '%$searchKeyword%'";
                 $result = mysqli_query($conn, $query);
 
@@ -231,7 +229,6 @@
                     echo "<td>" . $number . "</td>";
                     echo "<td>" . $row['CompanyName'] . "</td>";
                     echo "<td>" . $row['Status'] . "</td>";
-                    echo "<td>" . $row['PlanType'] . "</td>";
                     echo "<td>" . $row['AuthCode'] . "</td>";
                     echo "<td>";
                     echo "<button style='display: inline-block;'><a href='adcompedit.php?authcode=" . $row['AuthCode'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";

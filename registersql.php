@@ -112,7 +112,7 @@ if ($stmt->num_rows > 0) {
 
 
 // Prepare the SQL statement
-$sql = "SELECT CompanyName, PlanType FROM company WHERE AuthCode = ?";
+$sql = "SELECT CompanyName FROM company WHERE AuthCode = ?";
 $stmt = $conn->prepare($sql);
 
 // Bind the parameters
@@ -125,7 +125,7 @@ $stmt->execute();
 $stmt->store_result();
 
 // Bind the result variables
-$stmt->bind_result($companynamestore, $plantypestore);
+$stmt->bind_result($companynamestore);
 
 // Check if there are any results
 if ($stmt->num_rows == 0) {
@@ -142,7 +142,6 @@ if ($stmt->num_rows == 0) {
         $conn->close();
         exit;
     } else {
-        $planType = $plantypestore;
         $conn->query("CREATE DATABASE IF NOT EXISTS $companyname");
         $conn->query("USE $companyname");
 
@@ -266,6 +265,7 @@ if ($stmt->num_rows == 0) {
 
         $conn->close();
         $_SESSION['companyname'] = $companyname;
+        $_SESSION['username'] = $username;
         header("Location: index.php");
     }
 }

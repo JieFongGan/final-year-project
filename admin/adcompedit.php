@@ -21,7 +21,6 @@
         $row = $result->fetch_assoc();
         $companyName = $row['CompanyName'];
         $status = $row['Status'];
-        $planType = $row['PlanType'];
 
     } else {
         echo "No data found.";
@@ -95,13 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" action="">
             <label for="authcode">AuthCode:</label>
             <input type="text" id="authcode" name="authcode" value="<?php echo $_GET['authcode']; ?>" readonly><br><br>
-
-            <label for="plantype">PlanType:</label>
-            <select id="plantype" name="plantype">
-                <option value="BasicPlan" <?php if ($planType == 'BasicPlan') echo 'selected'; ?>>Basic Plan</option>
-                <option value="NormalPlan" <?php if ($planType == 'NormalPlan') echo 'selected'; ?>>Normal Plan</option>
-                <option value="ProPlan" <?php if ($planType == 'ProPlan') echo 'selected'; ?>>Pro Plan</option>
-            </select><br><br>
 
             <label for="companyname">Company Name:</label>
             <input type="text" id="companyname" name="companyname" value="<?php echo $companyName; ?>"><br><br>

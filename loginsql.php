@@ -59,6 +59,7 @@ if ($username && $password) {
 
             if ($password === $storedPassword) {
                 $_SESSION['companyname'] = $companyname;
+                $_SESSION['username'] = $username;
                 header("Location: index.php");
                 exit;
             } else {
