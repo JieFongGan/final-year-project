@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                     <input type="hidden" name="userID" value="<?= $userData['UserID'] ?>">
                     <button type="submit">Update</button>
-                    <button type="button" class="cancel" onclick="window.location.href='user.php'">Cancel</button>
+                    <button type="button" class="cancel" onclick="window.location.href='settings-user.php'">Cancel</button>
                 </div>
             </form>
         </div>

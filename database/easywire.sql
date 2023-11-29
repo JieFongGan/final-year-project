@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS User (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
     CompanyID INT,
     Username VARCHAR(50) NOT NULL,
-    Password VARCHAR(50) NOT NULL,
+    Password VARCHAR(255) NOT NULL,
     Email VARCHAR(255),
     Phone VARCHAR(20),
     FirstName VARCHAR(50),
@@ -158,16 +158,16 @@ VALUES
 (5, 5, 'Blender', 'Powerful kitchen appliance', 79.99, 20, '2023-11-05 13:00:00'),
 (6, 6, 'Office Chair', 'Comfortable and ergonomic', 129.99, 10, '2023-11-06 14:15:00'),
 (7, 7, 'Tennis Racket', 'Professional grade', 89.99, 15, '2023-11-07 08:30:00'),
-(8, 8, 'Shampoo', 'For shiny hair', 9.99, 50, '2023-11-08 09:45:00'),
-(9, 9, 'Necklace', 'Elegant jewelry', 49.99, 30, '2023-11-09 11:00:00'),
-(10, 10, 'Drill Set', 'Complete toolkit', 69.99, 25, '2023-11-10 12:15:00'),
-(11, 11, 'Car Battery', 'Long-lasting performance', 129.99, 10, '2023-11-11 13:30:00'),
-(12, 12, 'Garden Hose', 'Durable and flexible', 19.99, 40, '2023-11-12 14:45:00'),
-(13, 13, 'Chocolate Bar', 'Premium dark chocolate', 5.99, 100, '2023-11-13 08:00:00'),
-(14, 14, 'Vitamin C', 'Boosts immunity', 12.99, 50, '2023-11-14 09:15:00'),
-(15, 15, 'Pet Bed', 'Soft and cozy', 29.99, 20, '2023-11-15 10:30:00'),
-(16, 16, 'Notebook', 'High-quality paper', 3.99, 200, '2023-11-16 11:45:00'),
-(17, 17, 'DVD Player', 'Entertainment at its best', 49.99, 15, '2023-11-17 13:00:00');
+(8, 1, 'Shampoo', 'For shiny hair', 9.99, 50, '2023-11-08 09:45:00'),
+(9, 2, 'Necklace', 'Elegant jewelry', 49.99, 30, '2023-11-09 11:00:00'),
+(10, 3, 'Drill Set', 'Complete toolkit', 69.99, 25, '2023-11-10 12:15:00'),
+(11, 4, 'Car Battery', 'Long-lasting performance', 129.99, 10, '2023-11-11 13:30:00'),
+(12, 5, 'Garden Hose', 'Durable and flexible', 19.99, 40, '2023-11-12 14:45:00'),
+(13, 6, 'Chocolate Bar', 'Premium dark chocolate', 5.99, 100, '2023-11-13 08:00:00'),
+(14, 7, 'Vitamin C', 'Boosts immunity', 12.99, 50, '2023-11-14 09:15:00'),
+(15, 1, 'Pet Bed', 'Soft and cozy', 29.99, 20, '2023-11-15 10:30:00'),
+(16, 2, 'Notebook', 'High-quality paper', 3.99, 200, '2023-11-16 11:45:00'),
+(17, 4, 'DVD Player', 'Entertainment at its best', 49.99, 15, '2023-11-17 13:00:00');
 
 -- Insert data into Transaction table
 INSERT INTO Transaction (WarehouseID, CustomerID, TransactionType, TransactionDate, DeliveryStatus) VALUES

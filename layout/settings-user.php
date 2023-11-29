@@ -14,6 +14,24 @@ if (!$resultAllUsers) {
 
 $allUsers = $resultAllUsers->fetch_all(MYSQLI_ASSOC);
 
+// Delete user logic
+if (isset($_POST['deleteUser'])) {
+    $userIDToDelete = $_POST['deleteUser'];
+
+    // Perform the deletion
+    $sqlDeleteUser = "DELETE FROM User WHERE UserID = $userIDToDelete";
+    $resultDeleteUser = $conn->query($sqlDeleteUser);
+
+    if (!$resultDeleteUser) {
+        echo "Error deleting user: " . $conn->error;
+        exit();
+    }
+
+    // Redirect to the same page to refresh the user list
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit();
+}
+
 $conn->close();
 ?>
 
@@ -72,7 +90,7 @@ $conn->close();
 
                                     <form method="POST">
                                         <button class="delete" name="deleteUser" type="submit"
-                                            onclick="return confirm('Are you sure you want to delete this user?')">delete
+                                            onclick="return confirm('Are you sure you want to remove this user?')">remove
                                         </button>
                                         <input type="hidden" name="deleteUser" value="<?= $user['UserID'] ?>">
                                     </form>
