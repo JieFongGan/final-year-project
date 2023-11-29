@@ -1,5 +1,27 @@
 <?php
 include("database/database-connect.php");
+
+// Fetch relevant data for the dashboard
+$totalInventoryQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalProducts FROM Product");
+$totalInventoryResult = mysqli_fetch_assoc($totalInventoryQuery);
+
+$pendingTransactionsQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalPendingTransactions FROM Transaction 
+                                                WHERE DeliveryStatus = 'Pending'");
+$pendingTransactionsResult = mysqli_fetch_assoc($pendingTransactionsQuery);
+
+$processedTransactionsQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalProcessedTransactions FROM Transaction                                                  WHERE DeliveryStatus IN ('Processing', 'Shipped')");
+$processedTransactionsResult = mysqli_fetch_assoc($processedTransactionsQuery);
+
+$userCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS userCount FROM User");
+$userCountResult = mysqli_fetch_assoc($userCountQuery);
+
+$warehouseCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS warehouseCount FROM Warehouse");
+$warehouseCountResult = mysqli_fetch_assoc($warehouseCountQuery);
+
+$categoryCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS categoryCount FROM Category");
+$categoryCountResult = mysqli_fetch_assoc($categoryCountQuery);
+
+$latestTransactionsQuery = mysqli_query($conn, "SELECT * FROM Transaction ORDER BY TransactionDate DESC LIMIT 5");
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +44,7 @@ include("database/database-connect.php");
         <div class="sidebar-header">
             <h3 class="brand">
                 <span class="ti-unlink"></span>
-                <span>easywire</span>
+                <span>Allhere</span>
             </h3>
             <label for="sidebar-toggle" class="ti-menu-alt"></label>
         </div>
@@ -84,7 +106,7 @@ include("database/database-connect.php");
 
             <div class="social-icons">
                 <div class="social-icon">
-                    <img src="img/1.jpg" alt="Social Icon" id="social-icon">
+                    <img src="img/user-profile.png" alt="Social Icon" id="social-icon">
                     <ul class="dropdown">
                         <li><a href="#">Profile</a></li>
                         <li><a href="#">log out</a></li>
@@ -102,12 +124,14 @@ include("database/database-connect.php");
                     <div class="card-body">
                         <span class="ti-briefcase"></span>
                         <div>
-                            <h5>Account Balance</h5>
-                            <h4>$30,659.45</h4>
+                            <h5>Total Inventory</h5>
+                            <h4>
+                                <?php echo $totalInventoryResult['totalProducts']; ?>
+                            </h4>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="">View all</a>
+                        <a href="layout/inventory.php">View all</a>
                     </div>
                 </div>
 
@@ -116,11 +140,13 @@ include("database/database-connect.php");
                         <span class="ti-reload"></span>
                         <div>
                             <h5>Pending</h5>
-                            <h4>$19,500.45</h4>
+                            <h4>
+                                <?php echo $pendingTransactionsResult['totalPendingTransactions']; ?> transactions
+                            </h4>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="">View all</a>
+                        <a href="layout/transaction.php">View all</a>
                     </div>
                 </div>
 
@@ -128,16 +154,17 @@ include("database/database-connect.php");
                     <div class="card-body">
                         <span class="ti-check-box"></span>
                         <div>
-                            <h5>Processed</h5>
-                            <h4>$20,659</h4>
+                            <h5>Processing/Shipped</h5>
+                            <h4>
+                                <?php echo $processedTransactionsResult['totalProcessedTransactions']; ?> transactions
+                            </h4>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="">View all</a>
+                        <a href="layout/transaction.php">View all</a>
                     </div>
                 </div>
             </div>
-
 
             <section class="recent">
                 <div class="activity-grid">
@@ -148,79 +175,32 @@ include("database/database-connect.php");
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Project</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                        <th>Team</th>
+                                        <th>Name</th>
+                                        <th>Last Updated Date</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>App Development</td>
-                                        <td>15 Aug, 2020</td>
-                                        <td>22 Aug, 2020</td>
-                                        <td class="td-team">
-                                            <div class="img-1"></div>
-                                            <div class="img-2"></div>
-                                            <div class="img-3"></div>
-                                        </td>
-                                        <td>
-                                            <span class="badge success">Success</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Logo Design</td>
-                                        <td>15 Aug, 2020</td>
-                                        <td>22 Aug, 2020</td>
-                                        <td class="td-team">
-                                            <div class="img-1"></div>
-                                            <div class="img-2"></div>
-                                            <div class="img-3"></div>
-                                        </td>
-                                        <td>
-                                            <span class="badge warning">Processing</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Server setup</td>
-                                        <td>15 Aug, 2020</td>
-                                        <td>22 Aug, 2020</td>
-                                        <td class="td-team">
-                                            <div class="img-1"></div>
-                                            <div class="img-2"></div>
-                                            <div class="img-3"></div>
-                                        </td>
-                                        <td>
-                                            <span class="badge success">Success</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Front-end Design</td>
-                                        <td>15 Aug, 2020</td>
-                                        <td>22 Aug, 2020</td>
-                                        <td class="td-team">
-                                            <div class="img-1"></div>
-                                            <div class="img-2"></div>
-                                            <div class="img-3"></div>
-                                        </td>
-                                        <td>
-                                            <span class="badge warning">Processing</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Web Development</td>
-                                        <td>15 Aug, 2020</td>
-                                        <td>22 Aug, 2020</td>
-                                        <td class="td-team">
-                                            <div class="img-1"></div>
-                                            <div class="img-2"></div>
-                                            <div class="img-3"></div>
-                                        </td>
-                                        <td>
-                                            <span class="badge success">Success</span>
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    while ($row = mysqli_fetch_assoc($latestTransactionsQuery)) {
+                                        $statusClass = ($row['DeliveryStatus'] == 'Pending' || $row['DeliveryStatus'] == 'Processing') ? 'warning' : 'success';
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <?php echo $row['TransactionType']; ?>
+                                            </td>
+                                            <td>
+                                                <?php echo date('d M, Y', strtotime($row['TransactionDate'])); ?>
+                                            </td>
+                                            <td>
+                                                <span class="badge <?php echo $statusClass; ?>">
+                                                    <?php echo $row['DeliveryStatus']; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -231,48 +211,35 @@ include("database/database-connect.php");
                             <div class="summary-single">
                                 <span class="ti-id-badge"></span>
                                 <div>
-                                    <h5>196</h5>
-                                    <small>Number of staff</small>
+                                    <h5>
+                                        <?php echo $userCountResult['userCount']; ?>
+                                    </h5>
+                                    <small>Number of user</small>
                                 </div>
                             </div>
                             <div class="summary-single">
                                 <span class="ti-calendar"></span>
                                 <div>
-                                    <h5>16</h5>
-                                    <small>Number of leave</small>
+                                    <h5>
+                                        <?php echo $warehouseCountResult['warehouseCount']; ?>
+                                    </h5>
+                                    <small>Number of warehouse</small>
                                 </div>
                             </div>
                             <div class="summary-single">
                                 <span class="ti-face-smile"></span>
                                 <div>
-                                    <h5>12</h5>
-                                    <small>Profile update request</small>
+                                    <h5>
+                                        <?php echo $categoryCountResult['categoryCount']; ?>
+                                    </h5>
+                                    <small>Category create</small>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="bday-card">
-                            <div class="bday-flex">
-                                <div class="bday-img"></div>
-                                <div class="bday-info">
-                                    <h5>Dwayne F. Sanders</h5>
-                                    <small>Birthday Today</small>
-                                </div>
-                            </div>
-
-                            <div class="text-center">
-                                <button>
-                                    <span class="ti-gift"></span>
-                                    Wish him
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-
         </main>
-
     </div>
 
 </body>

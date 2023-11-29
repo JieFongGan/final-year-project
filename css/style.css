@@ -125,30 +125,6 @@ tbody tr:nth-child(even) {
     align-items: center;
 }
 
-.img-1,
-.img-2,
-.img-3 {
-    height: 38px;
-    width: 38px;
-    border-radius: 50%;
-    margin-left: -15px;
-    border: 3px solid #efefef;
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-
-.img-1 {
-    background-image: url(../img/1.jpg);
-}
-
-.img-2 {
-    background-image: url(../img/2.jpg);
-}
-
-.img-3 {
-    background-image: url(../img/3.jpeg);
-}
-
 .summary-card {
     margin-bottom: 1.5rem;
     padding-top: .5rem;
@@ -176,39 +152,6 @@ tbody tr:nth-child(even) {
 .summary-single small {
     font-weight: 700;
     color: var(--text-grey);
-}
-
-.bday-flex {
-    display: flex;
-    align-items: center;
-    margin-bottom: .3rem;
-}
-
-.bday-card {
-    padding: 1rem;
-}
-
-.bday-img {
-    height: 60px;
-    width: 60px;
-    border-radius: 50%;
-    border: 3px solid #efefef;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-image: url(../img/3.jpeg);
-    margin-right: .7rem;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.text-center button {
-    background: var(--main-color);
-    color: #fff;
-    border: 1px solid var(--main-color);
-    border-radius: 4px;
-    padding: .4rem 1rem;
 }
 
 /* table style */
