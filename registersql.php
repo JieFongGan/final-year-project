@@ -95,6 +95,22 @@ if ($conn->connect_error) {
     die("Connection failed:" . $conn->connect_error);
 }
 
+// Check if the user already exists
+$sql = "SELECT UserID FROM user WHERE UserID = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows > 0) {
+    $_SESSION['error_message'] = "Username already exists";
+    header("Location: register.php");
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+
+
 // Prepare the SQL statement
 $sql = "SELECT CompanyName, PlanType FROM company WHERE AuthCode = ?";
 $stmt = $conn->prepare($sql);
@@ -113,7 +129,7 @@ $stmt->bind_result($companynamestore, $plantypestore);
 
 // Check if there are any results
 if ($stmt->num_rows == 0) {
-    echo "Authentication Code is not available.";
+    $_SESSION['error_message'] = "Authentication Code is not available.";
     header("Location: register.php");
     $stmt->close();
     $conn->close();
@@ -121,7 +137,7 @@ if ($stmt->num_rows == 0) {
 } else {
     $stmt->close();
     if (!empty($companynamestore)) {
-        echo "Company already exists.";
+        $_SESSION['error_message'] = "Company already exists.";
         header("Location: register.php");
         $conn->close();
         exit;
