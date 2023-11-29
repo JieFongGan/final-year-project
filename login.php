@@ -237,27 +237,22 @@ if(!$select_db)
                 Sign in your account to manage your company
               </h2>
               <br>
-              <form class="" action="" method="post">
+              <form action="loginsql.php" method="POST">
                 <div class="login-input-group">
                   <label class="login-label">Username : </label>
-                  <input type="text" placeholder="Enter your username" class="input login-textinput" />
+                  <input type="text" placeholder="Enter your username" id="username" name="username" 
+                    class="input register-textinput" required />
                 </div>
                 <br>
                 <div class="login-input-group">
                   <label class="login-label">Password : </label>
-                  <input type="password" placeholder="Enter your password" class="input login-textinput" />
+                  <input type="password" placeholder="Enter your username" id="password" name="password" 
+                    class="input register-textinput" required />
                 </div>
                 <br>
-                <!-- Captcha -->
-                <div class="login-input-group">
-                  <label class="login-label">Captcha :</label>
-                  <img src="captcha.php" alt="Captcha">
-                  <input type="text" name="captcha" placeholder="Enter the captcha" class="input login-textinput" />
-                  
-                </div>
                 <div class="login-btn-group">
                   <button type="submit" class="login-button button">Login</button>
-                  <button type="reset" class="login-button1 button">Reset</button>
+                  <button type="reset" class="login-button1 button">Clear</button>
                 </div>
               </form>
               <div class="login-input-group">
