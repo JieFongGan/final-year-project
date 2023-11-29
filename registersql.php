@@ -3,11 +3,11 @@
 session_start();
 
 $companyid = '1';
-$companyname = validateInput($_POST['company_name']);
+$companyname = validateName($_POST['company_name']);
 $companyemail = validateEmail($_POST['company_email']);
 $companyphone = validatePhone($_POST['company_phone_number']);
 $companyaddress = validateInput($_POST['company_address']);
-$username = validateInput($_POST['username']);
+$username = validateName($_POST['username']);
 $password = validatePassword($_POST['password']);
 $email = validateEmail($_POST['email']);
 $phone = validatePhone($_POST['phone_number']);
@@ -24,14 +24,32 @@ function validateInput($data)
     return $data;
 }
 
+function validateName($name)
+{
+    if (!preg_match("/^[a-zA-Z0-9]+$/", $name)) {
+        $_SESSION['error_message'] = "Name can only contain alphabets and numbers";
+        header("Location: register.php");
+        exit;
+    }
+    if (strlen($name) > 255) {
+        $_SESSION['error_message'] = "Name cannot exceed 255 characters";
+        header("Location: register.php");
+        exit;
+    }
+    return $name;
+}
+
+
 // Validate email function
 function validateEmail($email)
 {
-    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $pattern = "/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/";
+    if (preg_match($pattern, $email)) {
         return $email;
     } else {
-        return false;
+        $_SESSION['error_message'] = "Invalid email format";
+        header("Location: register.php");
+        exit;
     }
 }
 
@@ -42,24 +60,28 @@ function validatePhone($phone)
     if (strlen($phone) >= 10 && strlen($phone) <= 15) {
         return $phone;
     } else {
-        return false;
+        $_SESSION['error_message'] = "Invalid phone number";
+        header("Location: register.php");
+        exit;
     }
 }
 
 // Validate password function
 function validatePassword($password)
 {
-    if (strlen($password) >= 6) {
+    if (strlen($password) >= 6 && preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/", $password)) {
         return $password;
     } else {
-        return false;
+        $_SESSION['error_message'] = "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one number";
+        header("Location: register.php");
+        exit;
     }
 }
 
 $authCode = validateInput($_POST['auth_code']);
 
 if (empty($authCode)) {
-    echo "No auth code found.";
+    $_SESSION['error_message'] = "No authentication code found";
     header("Location: register.php");
     exit;
 }

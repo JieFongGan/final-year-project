@@ -7,7 +7,7 @@ if (isset($_SESSION['companyname'])) {
     $companyname = $_SESSION['companyname'];
     // Use $companyname here
 } else {
-    echo "Session variable 'companyname' is not set.";
+    header("Location: ../final-year-project/login.php");
 }
 
 // Replace these values with your actual database connection details

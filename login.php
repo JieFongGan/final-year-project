@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 $server = "localhost";
 $username = "root";
 $password = "";
@@ -259,6 +261,23 @@ if(!$select_db)
                 <label class="login-label">Don't have an account? </label>
                 <a href="register.php" class="login-text2" style="color: blue;">Register</a>
               </div>
+              <br>
+
+              <?php
+                    // Check if an error message is set
+                    if (isset($_SESSION['error_message'])) {
+
+                      echo '<div class="login-input-group">';
+                      echo '<label class="register-text2">Invalid Input:</label>';
+                      echo '<div class="invalid-input" id="invalid_input">';
+                      echo '<p style="color: red;">' . $_SESSION['error_message'] . '</p>';
+                      echo '</div>';
+                      echo '</div>';
+                      // Unset the session variable to clear the error message
+                      unset($_SESSION['error_message']);
+                      session_destroy();
+                    }
+                    ?>
             </div>
           </div>
         </div>

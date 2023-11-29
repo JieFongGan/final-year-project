@@ -26,10 +26,12 @@ function validateInput($data)
 
 function validatePassword($password)
 {
-    if (strlen($password) >= 6) {
+    if (strlen($password) >= 6 && preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/", $password)) {
         return $password;
     } else {
-        return false;
+        $_SESSION['error_message'] = "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one number";
+        header("Location: login.php");
+        exit;
     }
 }
 
@@ -60,15 +62,18 @@ if ($username && $password) {
                 header("Location: index.php");
                 exit;
             } else {
+                $_SESSION['error_message'] = "Incorrect password";
                 header("Location: login.php");
                 exit;
             }
         } else {
+            $_SESSION['error_message'] = "Username not found";
             header("Location: login.php");
             exit;
         }
 
     } else {
+        $_SESSION['error_message'] = "Username not found";
         header("Location: login.php");
         exit;
     }

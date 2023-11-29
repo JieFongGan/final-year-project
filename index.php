@@ -116,7 +116,7 @@ $userID = $_SESSION['user_id'];
                     <ul class="dropdown">
                         <li><a href="layout/profile.php?userID=<?php echo $userID; ?>">Profile</a></li>
                         <li><a href="layout/chpassword.php?userID=<?php echo $userID; ?>">Change Password</a></li>
-                        <li><a href="#">Log out</a></li>
+                        <li><a href="logout.php">Log out</a></li>
                     </ul>
                 </div>
             </div>

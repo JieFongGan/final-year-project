@@ -1,3 +1,6 @@
+<?php 
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -239,14 +242,15 @@
                 <br>
                 <div class="login-input-group">
                   <label for="phone-number" class="register-text2">Phone Number : </label>
-                  <input type="tel" id="company_phone_number" name="company_phone_number" placeholder="Enter company phone number"
-                    class="input register-textinput" required />
+                  <input type="tel" id="company_phone_number" name="company_phone_number"
+                    placeholder="Enter company phone number" class="input register-textinput" style="width: 264px;"
+                    required />
                 </div>
                 <br>
                 <div class="login-input-group">
                   <label for="address" class="register-text2">Address : </label>
-                  <input type="text" id="company_address" name="company_address" placeholder="Enter company address"
-                    class="input register-textinput" required />
+                  <textarea id="company_address" name="company_address" placeholder="Enter company address"
+                    class="input register-textinput" style="height: 168px; width: 308px;" required></textarea>
                 </div>
                 <br>
                 <div class="login-input-group">
@@ -260,10 +264,22 @@
                   <a href="plans.php" class="login-text2" style="color: blue;">Plans</a>
                 </div>
                 <br>
-                <div class="login-input-group">
-                  <label class="register-text2">Invalid Input:</label>
-                  <div class="invalid-input" id="invalid_input"></div>
-                </div>
+                    <?php
+                    // Check if an error message is set
+                    if (isset($_SESSION['error_message'])) {
+
+                      echo '<div class="login-input-group">';
+                      echo '<label class="register-text2">Invalid Input:</label>';
+                      echo '<div class="invalid-input" id="invalid_input">';
+                      echo '<p style="color: red;">' . $_SESSION['error_message'] . '</p>';
+                      echo '</div>';
+                      echo '</div>';
+                      // Unset the session variable to clear the error message
+                      unset($_SESSION['error_message']);
+                      session_destroy();
+                    }
+                    ?>
+                
             </div>
             <div class="register-container1">
               <h2 class="register-text1">
