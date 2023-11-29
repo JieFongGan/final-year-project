@@ -224,7 +224,7 @@
                 Sign up your company entry and plan
               </h2>
               <br>
-              <form action="connectsql.php" method="POST">
+              <form action="registersql.php" method="POST">
                 <div class="login-input-group">
                   <label for="company-name" class="register-text2">Company Name : </label>
                   <input type="text" id="company_name" name="company_name" placeholder="Enter your company name"
@@ -232,30 +232,21 @@
                 </div>
                 <br>
                 <div class="login-input-group">
-                  <label for="email" class="register-text2">Email : </label>
-                  <input type="text" id="email" name="email" placeholder="Enter company email"
+                  <label for="company-email" class="register-text2">Company Email : </label>
+                  <input type="text" id="company_email" name="company_email" placeholder="Enter company email"
                     class="input register-textinput" required />
                 </div>
                 <br>
                 <div class="login-input-group">
                   <label for="phone-number" class="register-text2">Phone Number : </label>
-                  <input type="tel" id="phone_number" name="phone_number" placeholder="Enter company phone number"
+                  <input type="tel" id="company_phone_number" name="company_phone_number" placeholder="Enter company phone number"
                     class="input register-textinput" required />
                 </div>
                 <br>
                 <div class="login-input-group">
                   <label for="address" class="register-text2">Address : </label>
-                  <input type="text" id="address" name="address" placeholder="Enter company address"
+                  <input type="text" id="company_address" name="company_address" placeholder="Enter company address"
                     class="input register-textinput" required />
-                </div>
-                <br>
-                <div class="login-input-group">
-                  <label for="plan" class="register-text2">Plan : </label>
-                  <select id="plan" name="plan" class="input register-textinput" required>
-                    <option value="BasicPlan">Basic Plan</option>
-                    <option value="NormalPlan">Normal Plan</option>
-                    <option value="ProPlan">Pro Plan</option>
-                  </select>
                 </div>
                 <br>
                 <div class="login-input-group">
@@ -264,6 +255,16 @@
                     class="input register-textinput" required />
                 </div>
                 <br>
+                <div class="login-input-group">
+                  <label class="login-label">Haven't have a authentication code?</label>
+                  <a href="plans.php" class="login-text2" style="color: blue;">Plans</a>
+                </div>
+                <br>
+                <!-- Add this code after the last <div> element in the first code block -->
+                <div class="login-input-group">
+                  <label class="register-text2">Invalid Input:</label>
+                  <div class="invalid-input" id="invalid_input"></div>
+                </div>
             </div>
             <div class="register-container1">
               <h2 class="register-text1">
@@ -317,6 +318,7 @@
               </div>
             </div>
             <div class="register-container1"></div>
+            <br>
           </div>
         </div>
 
