@@ -110,18 +110,18 @@ if ($stmt->num_rows == 0) {
 
         // Create tables
         $conn->query("CREATE TABLE IF NOT EXISTS Company (
-                CompanyID INT PRIMARY KEY,
-                CompanyName VARCHAR(255) NOT NULL,
-                Email VARCHAR(255),
-                Phone VARCHAR(20),
-                Address VARCHAR(255)
-            )");
+        CompanyID INT AUTO_INCREMENT PRIMARY KEY,
+        CompanyName VARCHAR(255) NOT NULL,
+        Email VARCHAR(255),
+        Phone VARCHAR(20),
+        Address VARCHAR(255)
+        )");
 
         // Insert values into Company table
         $conn->query("INSERT INTO Company (CompanyID, CompanyName, Email, Phone, Address) VALUES ('$companyid', '$companyname', '$companyemail', '$companyphone', '$companyaddress')");
 
         $conn->query("CREATE TABLE IF NOT EXISTS User (
-        UserID INT PRIMARY KEY,
+        UserID INT AUTO_INCREMENT PRIMARY KEY,
         CompanyID INT,
         Username VARCHAR(50) NOT NULL,
         Password VARCHAR(50) NOT NULL,
@@ -138,78 +138,59 @@ if ($stmt->num_rows == 0) {
         $conn->query("INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus) VALUES ('1', '$companyid', '$username', '$password', '$email', '$phone', '$firstname', '$lastname', 'Admin', '$currentDateTime', 'Available')");
 
         $conn->query("CREATE TABLE IF NOT EXISTS Category (
-        CategoryID INT PRIMARY KEY,
+        CategoryID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(50) NOT NULL,
         Description TEXT
         )");
 
         $conn->query("CREATE TABLE IF NOT EXISTS Warehouse (
-        WarehouseID INT PRIMARY KEY,
+        WarehouseID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(255) NOT NULL,
         Address VARCHAR(255),
         Contact VARCHAR(20),
         Email VARCHAR(255)
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Supplier (
-        SupplierID INT PRIMARY KEY,
-        Name VARCHAR(255) NOT NULL,
-        Contact VARCHAR(20),
-        Email VARCHAR(255)
-        )");
-
         $conn->query("CREATE TABLE IF NOT EXISTS Customer (
-        CustomerID INT PRIMARY KEY,
+        CustomerID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(255) NOT NULL,
         Contact VARCHAR(20),
         Email VARCHAR(255),
-        Address VARCHAR(255)
+        Address VARCHAR(255),
+        Remark VARCHAR(255)
         )");
 
         $conn->query("CREATE TABLE IF NOT EXISTS Product (
-        ProductID INT PRIMARY KEY,
+        ProductID INT AUTO_INCREMENT PRIMARY KEY,
         CategoryID INT,
         WarehouseID INT,
         Name VARCHAR(255) NOT NULL,
         Description TEXT,
         Price DECIMAL(10, 2),
         Quantity INT,
-        SupplierID INT,
         LastUpdatedDate DATETIME,
         FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID),
-        FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID),
-        FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
-        )");
-
-        $conn->query("CREATE TABLE IF NOT EXISTS salesOrder (
-        OrderID INT PRIMARY KEY,
-        CustomerID INT,
-        OrderDate DATETIME,
-        TotalAmount DECIMAL(10, 2),
-        DeliveryStatus VARCHAR(50),
-        FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
-        )");
-
-        $conn->query("CREATE TABLE IF NOT EXISTS PurchaseOrder (
-        OrderID INT PRIMARY KEY,
-        SupplierID INT,
-        OrderDate DATETIME,
-        TotalAmount DECIMAL(10, 2),
-        DeliveryStatus VARCHAR(50),
-        FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
+        FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID)
         )");
 
         $conn->query("CREATE TABLE IF NOT EXISTS Transaction (
-        TransactionID INT PRIMARY KEY,
+        TransactionID INT AUTO_INCREMENT PRIMARY KEY,
         WarehouseID INT,
-        OrderID INT,
-        ProductID INT,
-        Quantity INT,
+        CustomerID INT,
         TransactionType VARCHAR(50),
         TransactionDate DATETIME,
+        DeliveryStatus VARCHAR(50),
         FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID),
-        FOREIGN KEY (OrderID) REFERENCES salesOrder(OrderID),
-        FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+        FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+        )");
+
+        $conn->query("CREATE TABLE IF NOT EXISTS TransactionDetail (
+            TransactionDetailID INT AUTO_INCREMENT PRIMARY KEY,
+            TransactionID INT,
+            ProductID INT,
+            Quantity INT,
+            FOREIGN KEY (TransactionID) REFERENCES Transaction(TransactionID),
+            FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
         )");
 
         // Connect to the database

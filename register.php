@@ -218,7 +218,7 @@
       <div class="register-gallery">
         <div class="register-gallery1">
           <div class="register-hero1">
-            <div class="register-container1">
+            <div class="register-container1" style="max-width: 500px;">
               <h1 class="register-text">Register</h1>
               <h2 class="register-text1">
                 Sign up your company entry and plan
@@ -260,7 +260,6 @@
                   <a href="plans.php" class="login-text2" style="color: blue;">Plans</a>
                 </div>
                 <br>
-                <!-- Add this code after the last <div> element in the first code block -->
                 <div class="login-input-group">
                   <label class="register-text2">Invalid Input:</label>
                   <div class="invalid-input" id="invalid_input"></div>
