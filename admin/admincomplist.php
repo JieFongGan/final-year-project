@@ -261,12 +261,12 @@
                             }
 
                             // Display confirmation dialog using JavaScript
-                            $confirmationMessage = ($companyName !== null) ? "Are you sure you want to delete $companyName and its database?" : "Are you sure you want to delete AuthCode: $authCode?";
+                            $confirmationMessage = ($companyName !== null) ? "Are you sure you want to delete $companyName and its users?" : "Are you sure you want to delete AuthCode: $authCode?";
                             echo "<script>
-                                if (confirm('$confirmationMessage')) {
-                                    window.location.href = 'admincomplist.php?deleteAuthCode=$authCode';
-                                }
-                            </script>";
+                                    if (confirm('$confirmationMessage')) {
+                                        window.location.href = 'admincomplist.php?deleteAuthCode=$authCode';
+                                    }
+                                </script>";
                         } else {
                             echo "Error retrieving CompanyName: " . mysqli_error($conn);
                         }
@@ -276,14 +276,28 @@
                     if (isset($_GET['deleteAuthCode'])) {
                         $authCodeToDelete = $_GET['deleteAuthCode'];
 
-                        // Delete the record from the database
-                        $deleteQuery = "DELETE FROM company WHERE AuthCode = '$authCodeToDelete';";
-                        $deleteResultCompany = mysqli_query($conn, $deleteQuery);
+                        // Retrieve CompanyName before deletion
+                        $query = "SELECT CompanyName FROM company WHERE AuthCode = '$authCodeToDelete'";
+                        $result = mysqli_query($conn, $query);
 
-                        $deleteQueryUser = "DELETE FROM user WHERE CompanyName = '$companyName';";
-                        $deleteResultUser = mysqli_query($conn, $deleteQueryUser);
+                        if ($result) {
+                            $row = mysqli_fetch_assoc($result);
+                            $companyName = $row['CompanyName'];
 
-                        if ($deleteResultCompany && $deleteResultUser) {
+                            // Delete all users from the user table with the specified CompanyName
+                            $deleteUsersQuery = "DELETE FROM user WHERE CompanyName = '$companyName'";
+                            $deleteUsersResult = mysqli_query($conn, $deleteUsersQuery);
+
+                            if (!$deleteUsersResult) {
+                                echo "Error deleting users: " . mysqli_error($conn);
+                            }
+                        }
+
+                        // Delete the record from the company table
+                        $deleteQueryCompany = "DELETE FROM company WHERE AuthCode = '$authCodeToDelete'";
+                        $deleteResultCompany = mysqli_query($conn, $deleteQueryCompany);
+
+                        if ($deleteResultCompany) {
                             echo "Record deleted successfully.";
 
                             // Check if $companyName is not NULL and delete the corresponding database
@@ -303,6 +317,7 @@
                             echo "Error deleting record: " . mysqli_error($conn);
                         }
                     }
+
 
                     ?>
                 </table>
