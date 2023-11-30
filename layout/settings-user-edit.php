@@ -48,8 +48,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($updateStmt->affected_rows > 0) {
             // Create a new connection using the company name
             
+            $connn = new mysqli("localhost", "root", "", "adminallhere");
             
-
             // Update user status in the new connection
             $sql = "UPDATE User SET Status = ? WHERE UserID = ?";
             $stmt = $connn->prepare($sql);
