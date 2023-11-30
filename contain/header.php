@@ -22,7 +22,7 @@
         <div class="sidebar-header">
             <h3 class="brand">
                 <span class="ti-unlink"></span>
-                <span>Allhere</span>
+                <span><?php echo $companyname ?></span>
             </h3>
             <label for="sidebar-toggle" class="ti-menu-alt"></label>
         </div>

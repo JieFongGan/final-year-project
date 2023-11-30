@@ -3,8 +3,8 @@ session_start();
 
 // Include header and database connection
 $pageTitle = "Transactions/New-product";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {

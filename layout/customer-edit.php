@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Customer/Edit";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 if (isset($_GET['customerID'])) {
     $customerID = $_GET['customerID'];

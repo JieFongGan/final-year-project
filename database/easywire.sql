@@ -89,11 +89,11 @@ INSERT INTO Company (CompanyName, Email, Phone, Address) VALUES
 -- Users
 INSERT INTO User (CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus)
 VALUES
-(1, 'admin1', 'adminpass1', 'admin1@email.com', '1234567890', 'John', 'Doe', 'Admin', '2023-11-01 10:00:00', 'Active'),
-(1, 'user2', 'userpass2', 'user2@email.com', '9876543210', 'Jane', 'Smith', 'User', '2023-11-02 11:30:00', 'Active'),
-(1, 'manager3', 'managerpass3', 'manager3@email.com', '5556667777', 'Alice', 'Johnson', 'Manager', '2023-11-03 12:45:00', 'Active'),
-(1, 'employee4', 'employeepass4', 'employee4@email.com', '1112223333', 'Bob', 'Miller', 'Employee', '2023-11-04 09:15:00', 'Active'),
-(1, 'user5', 'userpass5', 'user5@email.com', '9998887777', 'Eva', 'Brown', 'User', '2023-11-05 14:30:00', 'Active');
+(1, 'admin1', 'Adminpass1', 'admin1@email.com', '1234567890', 'John', 'Doe', 'Admin', '2023-11-01 10:00:00', 'Active'),
+(1, 'user2', 'Userpass2', 'user2@email.com', '9876543210', 'Jane', 'Smith', 'User', '2023-11-02 11:30:00', 'Active'),
+(1, 'manager3', 'Managerpass3', 'manager3@email.com', '5556667777', 'Alice', 'Johnson', 'Manager', '2023-11-03 12:45:00', 'Active'),
+(1, 'admin4', 'Adminpass4', 'admin4@email.com', '1112223333', 'Bob', 'Miller', 'Admin', '2023-11-04 09:15:00', 'Active'),
+(1, 'user5', 'Userpass5', 'user5@email.com', '9998887777', 'Eva', 'Brown', 'User', '2023-11-05 14:30:00', 'Active');
 
 -- Categories
 INSERT INTO Category (Name, Description)

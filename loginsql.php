@@ -66,7 +66,7 @@ if ($username && $password) {
             $row = $result->fetch_assoc();
             $storedPassword = $row['Password'];
 
-            if (password_verify($password, $storedPassword)) {
+            if ($password === $storedPassword) {
                 // Update LastLoginDate
                 $updateSql = "UPDATE user SET LastLoginDate = NOW() WHERE Username = '$username'";
                 $cone->query($updateSql);

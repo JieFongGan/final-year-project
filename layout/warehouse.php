@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Warehouse";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 // Pagination
 $itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;

@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Settings/Users";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 // Fetch all users
 $sqlAllUsers = "SELECT * FROM User";

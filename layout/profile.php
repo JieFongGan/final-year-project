@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Profile";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
     // Fetch user data based on the username
     $userDataQuery = mysqli_query($conn, "SELECT * FROM User WHERE Username = '$username'");
     $userData = mysqli_fetch_assoc($userDataQuery);

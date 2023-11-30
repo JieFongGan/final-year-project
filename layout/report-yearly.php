@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Yearly Report";
+include("../database/database-connect.php");
 include '../contain/header.php';
-include '../database/database-connect.php';
 
 // SQL query for Yearly Sales Report
 $sql = "

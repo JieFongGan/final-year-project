@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Settings/User-edit";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 if (isset($_GET['userID'])) {
     $userID = $_GET['userID'];
@@ -47,7 +47,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Check if the update was successful
         if ($updateStmt->affected_rows > 0) {
             // Create a new connection using the company name
-            $connn = new mysqli('localhost', 'root', '', 'adminallhere');
+            
+            
 
             // Update user status in the new connection
             $sql = "UPDATE User SET Status = ? WHERE UserID = ?";

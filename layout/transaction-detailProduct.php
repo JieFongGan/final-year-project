@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Transactions/Detail";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 // Check if the form is submitted
 $isFormSubmitted = ($_SERVER["REQUEST_METHOD"] == "POST");

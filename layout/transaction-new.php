@@ -2,8 +2,8 @@
 session_start(); // Start the session
 
 $pageTitle = "Transaction/New";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 // Fetch warehouse data
 $warehouseSql = "SELECT WarehouseID, Name FROM Warehouse";

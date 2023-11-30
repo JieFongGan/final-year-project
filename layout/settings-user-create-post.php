@@ -76,9 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userrole = validateInput($_POST['userrole']);
     $UserStatus = "Active";
 
-
     $companyname = $_SESSION['companyname'];
-    $password = password_hash($newPassword, PASSWORD_DEFAULT);
 
     // Replace these values with your actual database connection details
     $servername = "localhost";

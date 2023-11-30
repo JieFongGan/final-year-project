@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Customer/New";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 // Initialize errors array
 $errors = [];

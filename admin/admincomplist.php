@@ -188,106 +188,126 @@
             </div>
 
             <br>
-             <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Company Name</th>
-                        <th>Status</th>
-                        <th>Auth Code</th>
-                        <th>Modify</th>
-                    </tr>
-                </thead>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Company Name</th>
+                            <th>Status</th>
+                            <th>Auth Code</th>
+                            <th>Modify</th>
+                        </tr>
+                    </thead>
 
-                <?php
-                // Connect to the database
-                $servername = "localhost";
-                $dbusername = "root";
-                $dbpassword = "";
-                $dbname = "adminallhere";
+                    <?php
+                    // Connect to the database
+                    $servername = "localhost";
+                    $dbusername = "root";
+                    $dbpassword = "";
+                    $dbname = "adminallhere";
 
-                $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+                    $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
-                // Check connection
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
+                    // Check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
 
-                // Fetch data from the database with search conditions
-                $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
-                $query = "SELECT CompanyName, Status, AuthCode FROM company WHERE 
+                    // Fetch data from the database with search conditions
+                    $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
+                    $query = "SELECT CompanyName, Status, AuthCode FROM company WHERE 
                                 CompanyName LIKE '%$searchKeyword%' OR
                                 Status LIKE '%$searchKeyword%' OR
                                 AuthCode LIKE '%$searchKeyword%'";
-                $result = mysqli_query($conn, $query);
-
-                // Display the fetched data
-                $number = 1;
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>";
-                    echo "<td>" . $number . "</td>";
-                    echo "<td>" . $row['CompanyName'] . "</td>";
-                    echo "<td>" . $row['Status'] . "</td>";
-                    echo "<td>" . $row['AuthCode'] . "</td>";
-                    echo "<td>";
-                    echo "<button style='display: inline-block;'><a href='adcompedit.php?authcode=" . $row['AuthCode'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
-                    echo "&nbsp;";
-                    echo "<form method='post' action='' style='display: inline-block;' onsubmit='return confirmDelete();'>";
-                    echo "<input type='hidden' name='AuthCode' value='" . $row['AuthCode'] . "'>";
-                    echo "<button type='submit' name='delete'>Delete</button>";
-                    echo "</form>";
-                    echo "</td>";
-                    echo "</tr>";
-                    $number++;
-                }
-
-
-                // Delete button functionality
-                if (isset($_POST['delete'])) {
-                    $authCode = $_POST['AuthCode'];
-
-                    // Select the CompanyName based on the provided AuthCode
-                    $query = 'SELECT CompanyName FROM company WHERE AuthCode = "' . $authCode . '"';
                     $result = mysqli_query($conn, $query);
 
-                    // Check if the query was successful
-                    if ($result) {
-                        $row = mysqli_fetch_assoc($result);
-                        $companyName = $row['CompanyName'];
+                    // Display the fetched data
+                    $number = 1;
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr>";
+                        echo "<td>" . $number . "</td>";
+                        echo "<td>" . $row['CompanyName'] . "</td>";
+                        echo "<td>" . $row['Status'] . "</td>";
+                        echo "<td>" . $row['AuthCode'] . "</td>";
+                        echo "<td>";
+                        echo "<button style='display: inline-block;'><a href='adcompedit.php?authcode=" . $row['AuthCode'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
+                        echo "&nbsp;";
+                        echo "<form method='post' action='' style='display: inline-block;' onsubmit='return confirmDelete();'>";
+                        echo "<input type='hidden' name='AuthCode' value='" . $row['AuthCode'] . "'>";
+                        echo "<button type='submit' name='delete'>Delete</button>";
+                        echo "</form>";
+                        echo "</td>";
+                        echo "</tr>";
+                        $number++;
+                    }
 
-                        // Display confirmation dialog using JavaScript
-                        $confirmationMessage = ($companyName !== null) ? "Are you sure you want to delete $companyName?" : "Are you sure you want to delete AuthCode: $authCode?";
-                        echo "<script>
+
+                    // Delete button functionality
+                    if (isset($_POST['delete'])) {
+                        $authCode = $_POST['AuthCode'];
+
+                        // Select the CompanyName based on the provided AuthCode
+                        $query = 'SELECT CompanyName FROM company WHERE AuthCode = "' . $authCode . '"';
+                        $result = mysqli_query($conn, $query);
+
+                        // Check if the query was successful
+                        if ($result) {
+                            $row = mysqli_fetch_assoc($result);
+                            $companyName = $row['CompanyName'];
+
+                            if ($companyName === null) {
+                                echo "Error retrieving CompanyName: " . mysqli_error($conn);
+                            }
+
+                            // Display confirmation dialog using JavaScript
+                            $confirmationMessage = ($companyName !== null) ? "Are you sure you want to delete $companyName and its database?" : "Are you sure you want to delete AuthCode: $authCode?";
+                            echo "<script>
                                 if (confirm('$confirmationMessage')) {
                                     window.location.href = 'admincomplist.php?deleteAuthCode=$authCode';
                                 }
                             </script>";
-                    } else {
-                        echo "Error retrieving CompanyName: " . mysqli_error($conn);
+                        } else {
+                            echo "Error retrieving CompanyName: " . mysqli_error($conn);
+                        }
                     }
-                }
 
+                    // Check if deleteAuthCode is set in the URL
+                    if (isset($_GET['deleteAuthCode'])) {
+                        $authCodeToDelete = $_GET['deleteAuthCode'];
 
-                // Check if deleteAuthCode is set in the URL
-                if (isset($_GET['deleteAuthCode'])) {
-                    $authCodeToDelete = $_GET['deleteAuthCode'];
+                        // Delete the record from the database
+                        $deleteQuery = "DELETE FROM company WHERE AuthCode = '$authCodeToDelete';";
+                        $deleteResultCompany = mysqli_query($conn, $deleteQuery);
 
-                    // Delete the record from the database
-                    $deleteQuery = "DELETE FROM company WHERE AuthCode = '$authCodeToDelete'";
-                    $deleteResult = mysqli_query($conn, $deleteQuery);
+                        $deleteQueryUser = "DELETE FROM user WHERE CompanyName = '$companyName';";
+                        $deleteResultUser = mysqli_query($conn, $deleteQueryUser);
 
-                    if ($deleteResult) {
-                        echo "Record deleted successfully.";
-                        echo "<script>window.location.href='admincomplist.php';</script>";
-                    } else {
-                        echo "Error deleting record: " . mysqli_error($conn);
+                        if ($deleteResultCompany && $deleteResultUser) {
+                            echo "Record deleted successfully.";
+
+                            // Check if $companyName is not NULL and delete the corresponding database
+                            if ($companyName !== null) {
+                                $deleteDatabaseQuery = "DROP DATABASE $companyName";
+                                $deleteDatabaseResult = mysqli_query($conn, $deleteDatabaseQuery);
+
+                                if ($deleteDatabaseResult) {
+                                    echo "Database $companyName deleted successfully.";
+                                } else {
+                                    echo "Error deleting database $companyName: " . mysqli_error($conn);
+                                }
+                            }
+
+                            echo "<script>window.location.href='admincomplist.php';</script>";
+                        } else {
+                            echo "Error deleting record: " . mysqli_error($conn);
+                        }
                     }
-                }
-                ?>
-            </table>
+
+                    ?>
+                </table>
+            </div>
         </div>
-    </div>
     </div>
 
 

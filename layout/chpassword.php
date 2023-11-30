@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Profile";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 // Fetch user data based on the username
 $userDataQuery = mysqli_query($conn, "SELECT * FROM User WHERE Username = '$username'");
@@ -16,17 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newPassword = $_POST['newPassword'];
     $retypePassword = $_POST['retypePassword'];
 
-    // Validate if the current password matches the stored hashed password
-    if (password_verify($currentPassword, $userData['Password'])) {
+    if ($currentPassword === $userData['Password']) {
         // Check if the new password and retype password match
         if ($newPassword === $retypePassword) {
-            // Assuming you have a function to hash the password, apply it here
-            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
+            
             // Create a connection
             $conn = new mysqli($servername, $dbusername, $dbpassword, $database);
 
-            $sql = "UPDATE user SET Password = '$hashedPassword' WHERE Username = '$username'";
+            $sql = "UPDATE user SET Password = '$newPassword' WHERE Username = '$username'";
             // Update the user password in the database
             $updatePasswordQuery = mysqli_query($conn, $sql);
             if ($updatePasswordQuery === TRUE) {

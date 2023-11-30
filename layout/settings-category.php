@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Settings/category";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 $sql = "SELECT * FROM Category";
 $result = $conn->query($sql);

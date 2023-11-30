@@ -1,7 +1,8 @@
 <?php
 $pageTitle = "Weekly Report";
+include("../database/database-connect.php");
 include '../contain/header.php';
-include '../database/database-connect.php';
+
 
 // SQL query for Weekly Sales Report
 $sql = "

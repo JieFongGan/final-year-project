@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Transaction/Edit";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 // Assuming you have a database connection and a query to fetch customer data
 $customerSql = "SELECT CustomerID, Name, Remark FROM Customer";

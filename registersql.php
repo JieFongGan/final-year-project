@@ -172,8 +172,6 @@ if ($stmt->num_rows == 0) {
         FOREIGN KEY (CompanyID) REFERENCES Company(CompanyID)
         )");
 
-        $password = password_hash($password, PASSWORD_DEFAULT);
-
         $conn->query("INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus) VALUES ('1', '$companyid', '$username', '$password', '$email', '$phone', '$firstname', '$lastname', 'Admin', '$currentDateTime', 'Active')");
 
         $conn->query("CREATE TABLE IF NOT EXISTS Category (
@@ -246,8 +244,11 @@ if ($stmt->num_rows == 0) {
         }
 
         // Insert data into the Company table
-        $status = "Available";
+        $status = "Active";
         // Update the Company table
+
+        $companyname = strtolower($companyname);
+
         $sql = "UPDATE Company SET CompanyName = '$companyname', Status = '$status' WHERE AuthCode = '$authCode'";
 
         if ($conn->query($sql) === TRUE) {

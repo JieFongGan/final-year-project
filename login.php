@@ -246,7 +246,7 @@ if(!$select_db)
                 <br>
                 <div class="login-input-group">
                   <label class="login-label">Password : </label>
-                  <input type="password" placeholder="Enter your username" id="password" name="password" 
+                  <input type="password" placeholder="Enter your password" id="password" name="password" 
                     class="input register-textinput" required />
                 </div>
                 <br>

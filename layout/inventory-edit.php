@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Inventory/Edit";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 // Check if the product ID is set in the URL
 if (isset($_GET['productID'])) {

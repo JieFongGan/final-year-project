@@ -1,7 +1,7 @@
 <?php
 $pageTitle = "Inventory";
-include '../contain/header.php';
 include("../database/database-connect.php");
+include '../contain/header.php';
 
 $sql = "SELECT Name, ProductID, WarehouseID, Description, Price, Quantity FROM Product";
 $result = $conn->query($sql);
