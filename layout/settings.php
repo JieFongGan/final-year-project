@@ -1,6 +1,7 @@
 <?php
 $pageTitle = "Settings";
 include '../contain/header.php';
+include("../database/database-connect.php");
 ?>
 
 <div class="main-content">

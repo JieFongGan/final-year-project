@@ -155,7 +155,7 @@
             <nav class="home-links">
               <a href="homepage.php">Home</a>
               <a href="service.php" class="home-nav2">Service</a>
-              <a href="plans.php" class="home-nav3">Plans</a>
+              
               <a href="about.php" class="home-nav4">About</a>
             </nav>
             <div class="home-buttons">
@@ -187,7 +187,6 @@
               <nav class="home-links1">
                 <span class="home-nav11">Home</span>
                 <span class="home-nav21">Service</span>
-                <span class="home-nav31">Plans</span>
                 <span class="home-nav41">About</span>
                 <span class="home-nav5">Login</span>
               </nav>
@@ -229,8 +228,8 @@
               <a href="register.php" class="home-hero-button1 button">
                 Get Started
               </a>
-              <a href="plans.php" class="home-hero-button2 button">
-                Learn More&nbsp;→
+              <a href="payment.php" class="home-hero-button2 button">
+                Buy Now&nbsp;→
               </a>
             </div>
           </div>
@@ -243,7 +242,6 @@
             <nav class="home-nav1">
               <a href="homepage.php" class="home-nav12">Home</a>
               <a href="service.php" class="home-nav22">Service</a>
-              <a href="plans.php" class="home-nav32">Plans</a>
               <a href="about.php" class="home-nav42">About</a>
             </nav>
           </div>

@@ -18,17 +18,54 @@ $allUsers = $resultAllUsers->fetch_all(MYSQLI_ASSOC);
 if (isset($_POST['deleteUser'])) {
     $userIDToDelete = $_POST['deleteUser'];
 
+    // Get the username of the user to be deleted
+    $sqlGetUsername = "SELECT Username FROM User WHERE UserID = $userIDToDelete";
+    $resultGetUsername = $conn->query($sqlGetUsername);
+
+    if (!$resultGetUsername) {
+        echo "Error fetching username: " . $conn->error;
+        exit();
+    }
+
+    $usernameToDelete = $resultGetUsername->fetch_assoc()['Username'];
+
+    // Create a new connection for the other database
+    $connn = new mysqli('localhost', 'root', '', 'adminallhere');
+
+    // Check the new connection
+    if ($connn->connect_error) {
+        die("Connection failed: " . $connn->connect_error);
+    }
+
+    // Use a prepared statement to prevent SQL injection
+    $sqlDeleteOtherTable = "DELETE FROM user WHERE UserID = ?";
+    $stmt = $connn->prepare($sqlDeleteOtherTable);
+
+    // Bind parameters
+    $stmt->bind_param('s', $usernameToDelete);
+
+    // Execute the statement
+    $stmt->execute();
+
+    // Check for errors
+    if ($stmt->error) {
+        echo "Error deleting from other table: " . $stmt->error;
+        exit();
+    }
+
+    // Close the statement
+    $stmt->close();
+
     // Perform the deletion
     $sqlDeleteUser = "DELETE FROM User WHERE UserID = $userIDToDelete";
     $resultDeleteUser = $conn->query($sqlDeleteUser);
-
     if (!$resultDeleteUser) {
         echo "Error deleting user: " . $conn->error;
         exit();
     }
 
     // Redirect to the same page to refresh the user list
-    header("Location: ".$_SERVER['PHP_SELF']);
+    header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
@@ -43,9 +80,8 @@ $conn->close();
 
     <main>
         <div class="button-and-search">
-            <form method="POST">
-                <button name="createUser">Invite</button>
-            </form>
+            <button name="createUser"><a href="settings-user-create.php"
+                    style="text-decoration: none; color: white;">Create new user</a></button>
             <input type="text" id="searchInput" placeholder="Search on current list..." onkeyup="searchTable()">
         </div>
 
@@ -73,15 +109,33 @@ $conn->close();
                     <?php else: ?>
                         <?php foreach ($allUsers as $user): ?>
                             <tr>
-                                <td><?= $user['UserID'] ?></td>
-                                <td><?= $user['Username'] ?></td>
-                                <td><?= $user['Email'] ?></td>
-                                <td><?= $user['Phone'] ?></td>
-                                <td><?= $user['FirstName'] ?></td>
-                                <td><?= $user['LastName'] ?></td>
-                                <td><?= $user['UserRole'] ?></td>
-                                <td><?= $user['LastLoginDate'] ?></td>
-                                <td><?= $user['UserStatus'] ?></td>
+                                <td>
+                                    <?= $user['UserID'] ?>
+                                </td>
+                                <td>
+                                    <?= $user['Username'] ?>
+                                </td>
+                                <td>
+                                    <?= $user['Email'] ?>
+                                </td>
+                                <td>
+                                    <?= $user['Phone'] ?>
+                                </td>
+                                <td>
+                                    <?= $user['FirstName'] ?>
+                                </td>
+                                <td>
+                                    <?= $user['LastName'] ?>
+                                </td>
+                                <td>
+                                    <?= $user['UserRole'] ?>
+                                </td>
+                                <td>
+                                    <?= $user['LastLoginDate'] ?>
+                                </td>
+                                <td>
+                                    <?= $user['UserStatus'] ?>
+                                </td>
                                 <td>
                                     <form method="GET" action="settings-user-edit.php">
                                         <input type="hidden" name="userID" value="<?= $user['UserID'] ?>">
@@ -104,4 +158,5 @@ $conn->close();
     </main>
 </div>
 </body>
+
 </html>

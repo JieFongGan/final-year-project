@@ -155,7 +155,7 @@
             <nav class="about-links">
               <a href="homepage.php">Home</a>
               <a href="service.php" class="about-nav2">Service</a>
-              <a href="plans.php" class="about-nav3">Plans</a>
+              
               <a href="about.php" class="about-nav4">About</a>
             </nav>
             <div class="about-buttons">
@@ -187,7 +187,6 @@
               <nav class="about-links1">
                 <span class="about-nav11">Home</span>
                 <span class="about-nav21">Service</span>
-                <span class="about-nav31">Plans</span>
                 <span class="about-nav41">About</span>
                 <span class="about-nav5">Login</span>
               </nav>
@@ -243,7 +242,6 @@
             <nav class="about-nav1">
               <a href="homepage.php" class="about-nav12">Home</a>
               <a href="service.php" class="about-nav22">Service</a>
-              <a href="plans.php" class="about-nav32">Plans</a>
               <a href="about.php" class="about-nav42">About</a>
             </nav>
           </div>

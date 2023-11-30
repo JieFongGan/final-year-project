@@ -28,27 +28,42 @@ if (isset($_GET['userID'])) {
     exit();
 }
 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the user ID is set in the form
     if (isset($_POST['userID'])) {
         $userID = $_POST['userID'];
 
-        // Retrieve UserRole from the form data
+        // Retrieve UserRole and UserStatus from the form data
         $userRole = $_POST['userRole'];
+        $userStatus = $_POST['userStatus'];
 
-        // Update the user's UserRole in the database
-        $updateSql = "UPDATE User SET UserRole = ? WHERE UserID = ?";
+        // Update the user's UserRole and UserStatus in the database
+        $updateSql = "UPDATE User SET UserRole = ?, UserStatus = ? WHERE UserID = ?";
         $updateStmt = $conn->prepare($updateSql);
-        $updateStmt->bind_param("si", $userRole, $userID);
+        $updateStmt->bind_param("ssi", $userRole, $userStatus, $userID);
         $updateStmt->execute();
 
         // Check if the update was successful
         if ($updateStmt->affected_rows > 0) {
-            echo "User role updated successfully.";
-            header("Location: settings-user.php");
-            exit();
+            // Create a new connection using the company name
+            $connn = new mysqli('localhost', 'root', '', 'adminallhere');
+
+            // Update user status in the new connection
+            $sql = "UPDATE User SET Status = ? WHERE UserID = ?";
+            $stmt = $connn->prepare($sql);
+            $stmt->bind_param("ss", $userStatus, $userData['Username']);
+
+            // Check if the second update was successful
+            if ($stmt->execute()) {
+                // Redirect back to the previous page
+                header('Location: settings-user.php');
+                exit();
+            } else {
+                echo "Error updating user status: " . $connn->error;
+            }
         } else {
-            echo "Error updating user role: " . $updateStmt->error;
+            echo "Error updating user details: " . $conn->error;
         }
 
         $updateStmt->close();
@@ -70,15 +85,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="userID">User ID:</label>
                     <input type="text" id="userID" name="userID" value="<?= $userData['UserID'] ?>" readonly>
                 </div>
+
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<?= $userData['Username'] ?>" readonly>
+                </div>
+
                 <div class="form-group">
                     <label for="userRole">User Role:</label>
-                    <input type="text" id="userRole" name="userRole" value="<?= $userData['UserRole'] ?>"
-                        placeholder="User role" required>
+                    <select id="userRole" name="userRole">
+                        <option value="User" <?php if ($userData['UserRole'] == 'User')
+                            echo 'selected'; ?>>User</option>
+                        <option value="Manager" <?php if ($userData['UserRole'] == 'Manager')
+                            echo 'selected'; ?>>Manager
+                        </option>
+                        <option value="Admin" <?php if ($userData['UserRole'] == 'Admin')
+                            echo 'selected'; ?>>Admin
+                        </option>
+                    </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="userStatus">User Status:</label>
+                    <select id="userStatus" name="userStatus">
+                        <option value="Active" <?php if ($userData['UserStatus'] == 'Active')
+                            echo 'selected'; ?>>Active
+                        </option>
+                        <option value="Disable" <?php if ($userData['UserStatus'] == 'Disable')
+                            echo 'selected'; ?>>
+                            Disable</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <input type="hidden" name="userID" value="<?= $userData['UserID'] ?>">
                     <button type="submit">Update</button>
-                    <button type="button" class="cancel" onclick="window.location.href='settings-user.php'">Cancel</button>
+                    <button type="button" class="cancel"
+                        onclick="window.location.href='settings-user.php'">Cancel</button>
                 </div>
             </form>
         </div>

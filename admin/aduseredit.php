@@ -1,30 +1,32 @@
 <?php
 
-    // Connect to the database
-    $servername = "localhost";
-    $dbusername = "root";
-    $dbpassword = "";
-    $dbname = "adminallhere";
+// Connect to the database
+$servername = "localhost";
+$dbusername = "root";
+$dbpassword = "";
+$dbname = "adminallhere";
 
-    $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+$conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-    $userid = $_GET['userid'];
-    $sql = "SELECT * FROM user WHERE UserID = '" . $userid . "'";
-    $result = $conn->query($sql);
+$userid = $_GET['userid'];
+$sql = "SELECT * FROM user WHERE UserID = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $userid);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $companyName = $row['CompanyName'];
-        $status = $row['Status'];
-
-    } else {
-        echo "No data found.";
-    }
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $companyName = $row['CompanyName'];
+    $status = $row['Status'];
+} else {
+    echo "No data found.";
+}
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,19 +34,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = $_POST['status'];
 
     // Update the company details in the database
-    $sql = "UPDATE user SET Status = '$status' WHERE UserID = '$userid'";
-    if ($conn->query($sql) === TRUE) {
-        // Redirect back to the previous page or perform any other action
-        header('Location: adminuserlist.php');
-        exit;
+    $sql = "UPDATE user SET Status = ? WHERE UserID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $status, $userid);
+
+    if ($stmt->execute()) {
+        // Create a new connection using the company name
+        $connn = new mysqli('localhost', 'root', '', $companyName);
+        
+        // Update user status in the new connection
+        $sql = "UPDATE User SET UserStatus = ? WHERE Username = ?";
+        $stmt = $connn->prepare($sql);
+        $stmt->bind_param("ss", $status, $userid);
+
+        if ($stmt->execute()) {
+            // Redirect back to the previous page or perform any other action
+            header('Location: adminuserlist.php');
+            exit;
+        } else {
+            echo "Error updating user details: " . $connn->error;
+        }
     } else {
         echo "Error updating company details: " . $conn->error;
     }
 }
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Edit Company</title>
     <style>
@@ -57,17 +77,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 5px;
             background-color: #f9f9f9;
         }
+
         /* Add more CSS styles as needed */
         label {
             display: block;
             margin-bottom: 10px;
         }
+
         input[type="text"],
         select {
             width: 100%;
             padding: 5px;
             margin-bottom: 10px;
         }
+
         input[type="submit"],
         input[type="reset"],
         a {
@@ -80,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: none;
             border-radius: 3px;
         }
+
         input[type="submit"]:hover,
         input[type="reset"]:hover,
         a:hover {
@@ -87,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
+
 <body>
     <div class="container" style="margin: 0 auto; width: 50%;">
         <h2>Edit Company Details</h2>
@@ -99,9 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <label for="status">Status:</label>
             <select id="status" name="status">
-                <option value="Available" <?php if ($status == 'Available') echo 'selected'; ?>>Available</option>
-                <option value="Closed" <?php if ($status == 'Closed') echo 'selected'; ?>>Closed</option>
-                <option value="Disable" <?php if ($status == 'Disable') echo 'selected'; ?>>Disable</option>
+                <option value="Active" <?php if ($status == 'Active')
+                    echo 'selected'; ?>>Active</option>
+                <option value="Disable" <?php if ($status == 'Disable')
+                    echo 'selected'; ?>>Disable</option>
             </select><br><br>
 
             <input type="submit" value="Submit">
@@ -110,4 +136,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 </body>
+
 </html>

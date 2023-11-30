@@ -7,11 +7,15 @@
 
     <div class="social-icons">
         <div class="social-icon">
+                <p style="float: left;
+                margin-right: 8px;
+                margin-top: 8px;">Welcome Back, <?php echo $username ?>
+                </p>
             <img src="../img/user-profile.png" alt="Social Icon" id="social-icon">
             <ul class="dropdown">
-                <li><a href="../layout/profile.php?userID=<?php echo $userID; ?>">Profile</a></li>
-                <li><a href="../layout/chpassword.php?userID=<?php echo $userID; ?>">Change Password</a></li>
-                <li><a href="#">log out</a></li>
+                <li><a href="../layout/profile.php">Profile</a></li>
+                <li><a href="../layout/chpassword.php">Change Password</a></li>
+                <li><a href="../logout.php">log out</a></li>
             </ul>
         </div>
     </div>

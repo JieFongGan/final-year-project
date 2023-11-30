@@ -158,7 +158,6 @@ session_start();
             <nav class="register-links">
               <a href="homepage.php">Home</a>
               <a href="service.php" class="register-nav2">Service</a>
-              <a href="plans.php" class="register-nav3">Plans</a>
               <a href="about.php" class="register-nav4">About</a>
             </nav>
             <div class="register-buttons">
@@ -190,7 +189,6 @@ session_start();
               <nav class="register-links1">
                 <span class="register-nav11">Home</span>
                 <span class="register-nav21">Service</span>
-                <span class="register-nav31">Plans</span>
                 <span class="register-nav41">About</span>
                 <span class="register-nav5">Login</span>
               </nav>
@@ -261,7 +259,7 @@ session_start();
                 <br>
                 <div class="login-input-group">
                   <label class="login-label">Haven't have a authentication code?</label>
-                  <a href="plans.php" class="login-text2" style="color: blue;">Plans</a>
+                  <a href="payment.php" class="login-text2" style="color: blue;">Here</a>
                 </div>
                 <br>
                     <?php
@@ -324,7 +322,7 @@ session_start();
               <br>
               <div class="register-btn-group">
                 <button type="submit" class="register-button button">Sign Up</button>
-                <button type="reset" class="register-button1 button">Reset</button>
+                <button type="reset" class="register-button1 button">Clear</button>
               </div>
               </form>
               <div class="login-input-group">
@@ -345,7 +343,6 @@ session_start();
             <nav class="register-nav1">
               <a href="homepage.php" class="register-nav12">Home</a>
               <a href="service.php" class="register-nav22">Service</a>
-              <a href="plans.php" class="register-nav32">Plans</a>
               <a href="about.php" class="register-nav42">About</a>
             </nav>
           </div>

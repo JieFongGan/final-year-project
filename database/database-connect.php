@@ -6,7 +6,7 @@ session_start();
 if (isset($_SESSION['companyname'])) {
     $companyname = $_SESSION['companyname'];
     $username = $_SESSION['username'];
-    // Use $companyname here
+    
 } else {
     header("Location: ../final-year-project/login.php");
 }
@@ -24,7 +24,7 @@ $conn = new mysqli($servername, $dbusername, $dbpassword, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } else {
-    echo "Connected successfully!";
+    // echo "Connected successfully!";
 }
 
 ?>

@@ -4,19 +4,18 @@ include '../contain/header.php';
 include("../database/database-connect.php");
     // Fetch user data based on the username
     $userDataQuery = mysqli_query($conn, "SELECT * FROM User WHERE Username = '$username'");
-    echo $username;
     $userData = mysqli_fetch_assoc($userDataQuery);
 
 
     // Update user data
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userID = $_POST['userID'];
-        $userRole = $_POST['userRole'];
+        $email = $_POST['email'];
         $phone = $_POST['phone'];
         $firstName = $_POST['firstName'];
         $lastName = $_POST['lastName'];
 
-        $sql = "UPDATE User SET Email = '$userRole', Phone = '$phone', FirstName = '$firstName', LastName = '$lastName' WHERE UserID = '$userID'";
+        $sql = "UPDATE User SET Email = '$email', Phone = '$phone', FirstName = '$firstName', LastName = '$lastName' WHERE UserID = '$userID'";
         if ($conn->query($sql) === TRUE) {
             // Redirect back to the previous page or perform any other action
             header('Location: ../index.php');
@@ -43,8 +42,8 @@ include("../database/database-connect.php");
                     <input type="text" id="userID" name="userID" value="<?= $userData['Username'] ?>" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="userRole">Email:</label>
-                    <input type="text" id="userRole" name="userRole" value="<?= $userData['Email'] ?>"
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" value="<?= $userData['Email'] ?>"
                         placeholder="Email" required>
                 </div>
                 <div class="form-group">
@@ -64,7 +63,7 @@ include("../database/database-connect.php");
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="userID" value="<?= $userData['UserID'] ?>">
-                    <button type="submit">Edit</button>
+                    <button type="submit">Update</button>
                     <button type="button" class="cancel"
                         onclick="window.location.href='../index.php'">Cancel</button>
                 </div>

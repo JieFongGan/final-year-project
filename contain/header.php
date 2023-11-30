@@ -44,7 +44,7 @@
                 <li>
                     <a href="../layout/transaction.php">
                         <span class="ti-shopping-cart"></span>
-                        <span>transaction</span>
+                        <span>Transaction</span>
                     </a>
                 </li>
                 <li>

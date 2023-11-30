@@ -35,13 +35,22 @@ function validatePassword($password)
     }
 }
 
+
+
 if ($username && $password) {
-    $sql = "SELECT CompanyName FROM user WHERE UserID = '$username'";
+    $sql = "SELECT CompanyName, Status FROM user WHERE UserID = '$username'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $companyname = $row['CompanyName'];
+        $Status = $row['Status'];
+
+        if ($Status == "Disable") {
+            $_SESSION['error_message'] = "Account has been terminated";
+            header("Location: login.php");
+            exit;
+        }
 
         $cone = new mysqli($servername, $dbusername, $dbpassword, $companyname);
 
@@ -57,7 +66,11 @@ if ($username && $password) {
             $row = $result->fetch_assoc();
             $storedPassword = $row['Password'];
 
-            if ($password === $storedPassword) {
+            if (password_verify($password, $storedPassword)) {
+                // Update LastLoginDate
+                $updateSql = "UPDATE user SET LastLoginDate = NOW() WHERE Username = '$username'";
+                $cone->query($updateSql);
+
                 $_SESSION['companyname'] = $companyname;
                 $_SESSION['username'] = $username;
                 header("Location: index.php");
@@ -72,7 +85,6 @@ if ($username && $password) {
             header("Location: login.php");
             exit;
         }
-
     } else {
         $_SESSION['error_message'] = "Username not found";
         header("Location: login.php");
@@ -82,3 +94,5 @@ if ($username && $password) {
 
 $conn->close();
 ?>
+                
+                

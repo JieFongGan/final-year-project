@@ -23,11 +23,6 @@ $categoryCountResult = mysqli_fetch_assoc($categoryCountQuery);
 
 $latestTransactionsQuery = mysqli_query($conn, "SELECT * FROM Transaction ORDER BY TransactionDate DESC LIMIT 5");
 
-// userid
-$predefinedUserID = 4;
-$_SESSION['user_id'] = $predefinedUserID;
-$userID = $_SESSION['user_id'];
-
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +45,9 @@ $userID = $_SESSION['user_id'];
         <div class="sidebar-header">
             <h3 class="brand">
                 <span class="ti-unlink"></span>
-                <span>Allhere</span>
+                <span>
+                    <?php echo $companyname ?>
+                </span>
             </h3>
             <label for="sidebar-toggle" class="ti-menu-alt"></label>
         </div>
@@ -72,7 +69,7 @@ $userID = $_SESSION['user_id'];
                 <li>
                     <a href="layout/transaction.php">
                         <span class="ti-shopping-cart"></span>
-                        <span>transaction</span>
+                        <span>Transaction</span>
                     </a>
                 </li>
                 <li>
@@ -112,6 +109,10 @@ $userID = $_SESSION['user_id'];
 
             <div class="social-icons">
                 <div class="social-icon">
+                    <p style="float: left;
+                    margin-right: 8px;
+                    margin-top: 8px;">Welcome Back, <?php echo $username ?>
+                    </p>
                     <img src="img/user-profile.png" alt="Social Icon" id="social-icon">
                     <ul class="dropdown">
                         <li><a href="layout/profile.php">Profile</a></li>
@@ -123,6 +124,7 @@ $userID = $_SESSION['user_id'];
         </header>
 
         <main>
+            <br>
 
             <h2 class="dash-title">Overview</h2>
 

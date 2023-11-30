@@ -1,68 +1,57 @@
 <?php
+function generateRandomAuthCode($existingAuthCodes) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $length = 7;
+    $authCode = '';
 
-    function generateRandomAuthCode($existingAuthCodes)
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $length = 7;
+    do {
         $authCode = '';
-
-        do {
-            $authCode = '';
-            for ($i = 0; $i < $length; $i++) {
-                $authCode .= $characters[rand(0, strlen($characters) - 1)];
-            }
-        } while (in_array($authCode, $existingAuthCodes));
-
-        return $authCode;
-    }
-    // Connect to the database
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "adminallhere";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Select all AuthCodes from the company table
-    $sql = "SELECT AuthCode FROM company";
-    $result = $conn->query($sql);
-
-    // Store existing AuthCodes in an array
-    $existingAuthCodes = [];
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $existingAuthCodes[] = $row["AuthCode"];
+        for ($i = 0; $i < $length; $i++) {
+            $authCode .= $characters[rand(0, strlen($characters) - 1)];
         }
-    }
+    } while (in_array($authCode, $existingAuthCodes));
 
+    return $authCode;
+}
+
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "adminallhere";
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch existing AuthCodes from the database
+$sql = "SELECT AuthCode FROM company";
+$result = $conn->query($sql);
+$existingAuthCodes = ($result->num_rows > 0) ? $result->fetch_all(MYSQLI_ASSOC) : [];
+
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Generate a random seven-character string that does not exist in the database
+    $authCode = generateRandomAuthCode(array_column($existingAuthCodes, 'AuthCode'));
 
-    // Check if form is submitted
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Get the selected plan type
-        $planType = $_POST["plan_type"];
-    
-        // Generate a random seven-character string that does not exist in the database
-        $authCode = generateRandomAuthCode($existingAuthCodes);
-    
-        // Prepare and execute the SQL statement to insert data into the company table
-        $sql = "INSERT INTO `company` (`CompanyName`, `Status`, `PlanType`, `AuthCode`) VALUES (NULL, NULL, '$planType', '$authCode')";
-    
-        if ($conn->query($sql) === TRUE) {
-            echo "New record created successfully";
-            header("Location: admincomplist.php");
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
+    // Insert new record into the company table
+    $sql = "INSERT INTO `company` (`CompanyName`, `Status`, `AuthCode`) VALUES (NULL, NULL, '$authCode')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "New record created successfully";
+        header("Location: admincomplist.php");
+        exit();
+    } else {
+        echo "Error: " . $conn->error;
     }
+}
 
+// Close the database connection
+$conn->close();
+?>
 
-    ?>
 
 <!DOCTYPE html>
 <html>
@@ -116,15 +105,9 @@
 
 <body>
     <div class="container">
-<h2>Plan Type</h2>
+<h2>Generate Code</h2>
 <form action="" method="post">
-    <label for="plan_type">Plan Type:</label>
-    <select name="plan_type" id="plan_type">
-        <option value="BasicPlan">Basic Plan</option>
-        <option value="NormalPlan">Normal Plan</option>
-        <option value="ProPlan">Pro Plan</option>
-    </select>
-    <br><br>
+    <br>
     <button type="submit">Generate and Save Codes</button>
 </form>
 
