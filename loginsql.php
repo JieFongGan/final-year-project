@@ -36,7 +36,7 @@ if ($username && $password) {
             $status = $row['Status'];
 
             if ($status == "Disable") {
-                $_SESSION['error_message'] = "Account has been terminated , $companyname, $status";
+                $_SESSION['error_message'] = "Account has been terminated";
                 header("Location: login.php");
                 exit;
             }
@@ -79,10 +79,8 @@ if ($username && $password) {
                     $_SESSION['companyname'] = $companyname;
                     $_SESSION['username'] = $username;
                     $_SESSION['userrole'] = $userrole;
-                    $_SESSION['error_message'] = $companyname . " " . $username . " " . $userrole;
-                    header("Location: login.php");
-                    // header("Location: layout/homepage.php");
-                    // echo "Login successful";
+                    header("Location: layout/homepage.php");
+                    echo "Login successful";
                     exit;
                 } else {
                     $_SESSION['error_message'] = "Incorrect password";
