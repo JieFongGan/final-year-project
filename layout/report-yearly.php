@@ -3,35 +3,39 @@ $pageTitle = "Yearly Report";
 include("../database/database-connect.php");
 include '../contain/header.php';
 
-// SQL query for Yearly Sales Report
-$sql = "
-SELECT
-    YEAR(TransactionDate) AS Year,
-    COUNT(DISTINCT t.TransactionID) AS TotalTransactions,
-    COUNT(td.TransactionDetailID) AS TotalTransactionDetails,
-    SUM(td.Quantity) AS TotalItemsSold
-FROM
-    Transaction t
-JOIN
-    TransactionDetail td ON t.TransactionID = td.TransactionID
-WHERE
-    t.TransactionType = 'Sales'   -- Filter for sales transactions
-GROUP BY
-    Year
-ORDER BY
-    Year;
-";
+try {
+    // SQL query for Yearly Sales Report
+    $sql = "
+    SELECT
+        YEAR(TransactionDate) AS Year,
+        COUNT(DISTINCT t.TransactionID) AS TotalTransactions,
+        COUNT(td.TransactionDetailID) AS TotalTransactionDetails,
+        SUM(td.Quantity) AS TotalItemsSold
+    FROM
+        [Transaction] t
+    JOIN
+        TransactionDetail td ON t.TransactionID = td.TransactionID
+    WHERE
+        t.TransactionType = 'Sales'   -- Filter for sales transactions
+    GROUP BY
+        Year
+    ORDER BY
+        Year;
+    ";
 
-$result = $conn->query($sql);
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
 
-// Check if the result set is empty
-if ($result->num_rows > 0) {
-    $yearlyReport = $result->fetch_all(MYSQLI_ASSOC);
-} else {
-    $yearlyReport = []; // Set an empty array if there are no results
+    // Fetch the result as an associative array
+    $yearlyReport = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // Handle database errors
+    echo "Error: " . $e->getMessage();
+    exit();
+} finally {
+    // Close the database connection
+    $conn = null;
 }
-
-$conn->close();
 ?>
 
 <div class="main-content">
