@@ -7,19 +7,19 @@ try {
     // SQL query for Weekly Sales Report
     $sql = "
     SELECT
-        YEAR(TransactionDate) AS Year,
-        DATEPART(WEEK, TransactionDate) AS Week,
-        COUNT(DISTINCT t.TransactionID) AS TotalTransactions,
-        COUNT(td.TransactionDetailID) AS TotalTransactionDetails,
-        SUM(td.Quantity) AS TotalItemsSold
+    YEAR(TransactionDate) AS Year,
+    DATEPART(WEEK, TransactionDate) AS Week,
+    COUNT(DISTINCT t.TransactionID) AS TotalTransactions,
+    COUNT(td.TransactionDetailID) AS TotalTransactionDetails,
+    SUM(td.Quantity) AS TotalItemsSold
     FROM
         [Transaction] t
     JOIN
         TransactionDetail td ON t.TransactionID = td.TransactionID
     WHERE
-        t.TransactionType = 'Sales'   -- Filter for sales transactions
+        t.TransactionType = 'Sales'
     GROUP BY
-        Year, DATEPART(WEEK, TransactionDate)
+        YEAR(TransactionDate), DATEPART(WEEK, TransactionDate)
     ORDER BY
         Year, DATEPART(WEEK, TransactionDate);
     ";
@@ -63,11 +63,21 @@ try {
                 <tbody>
                     <?php foreach ($weeklyReport as $row): ?>
                         <tr>
-                            <td><?= $row['Year'] ?></td>
-                            <td><?= $row['Week'] ?></td>
-                            <td><?= $row['TotalTransactions'] ?></td>
-                            <td><?= $row['TotalTransactionDetails'] ?></td>
-                            <td><?= $row['TotalItemsSold'] ?></td>
+                            <td>
+                                <?= $row['Year'] ?>
+                            </td>
+                            <td>
+                                <?= $row['Week'] ?>
+                            </td>
+                            <td>
+                                <?= $row['TotalTransactions'] ?>
+                            </td>
+                            <td>
+                                <?= $row['TotalTransactionDetails'] ?>
+                            </td>
+                            <td>
+                                <?= $row['TotalItemsSold'] ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -78,4 +88,5 @@ try {
     </main>
 </div>
 </body>
+
 </html>
