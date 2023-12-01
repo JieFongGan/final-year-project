@@ -15,12 +15,12 @@ function fetchSingleResult($conn, $query)
 }
 
 $totalInventoryResult = fetchSingleResult($conn, "SELECT COUNT(*) AS totalProducts FROM Product");
-$pendingTransactionsResult = fetchSingleResult($conn, "SELECT COUNT(*) AS totalPendingTransactions FROM Transaction WHERE DeliveryStatus = 'Pending'");
-$processedTransactionsResult = fetchSingleResult($conn, "SELECT COUNT(*) AS totalProcessedTransactions FROM Transaction WHERE DeliveryStatus IN ('Processing', 'Shipped')");
-$userCountResult = fetchSingleResult($conn, "SELECT COUNT(*) AS userCount FROM User");
+$pendingTransactionsResult = fetchSingleResult($conn, "SELECT COUNT(*) AS totalPendingTransactions FROM [Transaction] WHERE DeliveryStatus = 'Pending'");
+$processedTransactionsResult = fetchSingleResult($conn, "SELECT COUNT(*) AS totalProcessedTransactions FROM [Transaction] WHERE DeliveryStatus IN ('Processing', 'Shipped')");
+$userCountResult = fetchSingleResult($conn, "SELECT COUNT(*) AS userCount FROM [User]");
 $warehouseCountResult = fetchSingleResult($conn, "SELECT COUNT(*) AS warehouseCount FROM Warehouse");
 $categoryCountResult = fetchSingleResult($conn, "SELECT COUNT(*) AS categoryCount FROM Category");
-$latestTransactionsQuery = $conn->query("SELECT * FROM Transaction ORDER BY TransactionDate DESC LIMIT 5");
+$latestTransactionsQuery = $conn->query("SELECT * FROM [Transaction] ORDER BY TransactionDate DESC LIMIT 5");
 
 ?>
 
