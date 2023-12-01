@@ -1,80 +1,283 @@
+<!-- $successCardNumber = "4111111111111111";
+$successExpiryMonth = "12";
+$successExpiryYear = "2024";
+$successCVV = "123";
+$successCardholder = "John Doe"; -->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Portal</title>
+  <title>Secure Payment</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #f4f4f4;
       margin: 0;
       padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      background-color: #f9f9f9;
+      color: #333;
     }
 
-    .payment-container {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      width: 300px;
-      text-align: center;
-    }
-
-    .payment-options {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-    }
-
-    .visa-logo {
-      width: 50px;
-    }
-
-    .paypal-logo {
-      width: 80px;
-    }
-
-    button {
-      padding: 10px;
+    header {
       background-color: #4caf50;
-      color: #fff;
+      padding: 10px;
+      text-align: center;
+      color: white;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+      display: grid;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .expiry-cvv-container {
+      display: grid;
+      gap: 15px;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    #pay-now {
+      background-color: #4caf50;
+      color: white;
+      padding: 15px;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 16px;
+    }
+
+    .back-button {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #loading-spinner {
+      /* Add styles for the loading spinner */
+    }
+
+    footer {
       margin-top: 20px;
+      text-align: center;
+      color: #777;
+    }
+
+    footer a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    /* Add styles for error messages if any */
+    .error-message {
+      color: red;
+      font-weight: bold;
+    }
+
+    .success-message {
+      color: green;
+      font-weight: bold;
     }
   </style>
 </head>
-<body>
-  <div class="payment-container">
-    <h2>Select Payment Method</h2>
-    <div class="payment-options">
-      <div>
-        <img src="img/visacard.png" alt="Visa Logo" class="visa-logo" style="width: 80px;">
-        <p>Visa Card</p>
-      </div>
-      <div>
-        <img src="img/paypal.png" alt="PayPal Logo" class="paypal-logo">
-        <p>PayPal</p>
-      </div>
-    </div>
-    <h3>RM15 / month</h3>
-    <button><a href="homepage.php" style="text-decoration:none; color:white;">Back</a></button>
-    <button onclick="processPayment()">Proceed to Payment</button>
-  </div>
 
-  <script>
-    function processPayment() {
-      // Add logic to handle payment processing
-      alert('Payment processed successfully!');
-      header('Location: homepage.php');
+<body>
+  <header>
+    <h1>Secure Payment</h1>
+  </header>
+  <br><br><br><br>
+  <main>
+    <?php
+
+    function validateCard($cardNumber, $expiryMonth, $expiryYear, $cvv, $cardholder)
+    {
+      // Remove spaces and non-numeric characters from the card number
+      $cardNumber = preg_replace('/\D/', '', $cardNumber);
+
+      // Validate card number using Luhn's algorithm
+      if (!luhnCheck($cardNumber)) {
+        return false;
+      }
+
+      // Check if the card has not expired
+      $currentYear = date("Y");
+      $currentMonth = date("n");
+      if ($expiryYear < $currentYear || ($expiryYear == $currentYear && $expiryMonth < $currentMonth)) {
+        return false; // Card has expired
+      }
+
+      // Perform additional checks if needed (e.g., cardholder name, CVV length, etc.)
+      // Example checks:
+      if (strlen($cvv) !== 3) {
+        return false; // CVV should be 3 digits
+      }
+
+      // Add more checks as required
+    
+      // If all checks pass, the card is considered valid
+      return true;
     }
-  </script>
+
+    function luhnCheck($number)
+    {
+      $number = strrev(preg_replace('/[^\d]/', '', $number));
+      $sum = 0;
+
+      for ($i = 0, $j = strlen($number); $i < $j; $i++) {
+        $digit = (int) $number[$i];
+
+        if ($i % 2 == 1) {
+          $digit *= 2;
+
+          if ($digit > 9) {
+            $digit -= 9;
+          }
+        }
+
+        $sum += $digit;
+      }
+
+      return $sum % 10 == 0;
+    }
+    // Basic card validation
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+      $servername = "localhost";
+      $username = "root";
+      $password = "";
+      $dbname = "adminallhere";
+
+      // Create a connection
+      $conn = new mysqli($servername, $username, $password, $dbname);
+
+      // Check the connection
+      if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+      }
+
+      // Query to find authcode with NULL CompanyName
+      $sql = "SELECT AuthCode FROM company WHERE CompanyName IS NULL";
+
+      $result = $conn->query($sql);
+
+      if ($result->num_rows > 0) {
+        // Output the authcodes
+        while ($row = $result->fetch_assoc()) {
+          $authcode = $row["AuthCode"];
+        }
+      } else {
+        echo "Auth Code are fulled.";
+        echo "<button class='back-button'><a href='register.php' style='text-decoration: none; color: white;'>Back</a></button>";
+        exit;
+      }
+
+      // Close the connection
+      $conn->close();
+
+      $cardNumber = $_POST["card-number"];
+      $expiryMonth = $_POST["expiry-month"];  // Fix array key
+      $expiryYear = $_POST["expiry-year"];
+      $cvv = $_POST["cvv"];
+      $cardholder = $_POST["cardholder"];
+
+
+      // Perform basic card validation
+      $isValid = validateCard($cardNumber, $expiryMonth, $expiryYear, $cvv, $cardholder);
+
+      if ($isValid) {
+        // Assuming you are using MySQL
+       
+
+        echo '<p class="success-message">Payment successful! ';
+        echo $authcode;
+        echo ' is your Auth Code! Remember to save this code for Register!</p>';
+      } else {
+        echo '<p class="error-message">Invalid card details. Please check and try again.</p>';
+      }
+    }
+
+
+    ?>
+
+    <h2>Payment Details</h2>
+    <p>Total : RM15/month</p>
+    <form id="payment-form" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+      <label for="card-number">Card Number:</label>
+      <input type="text" id="card-number" name="card-number" placeholder="Your Card Numbers" required>
+
+      <div class="expiry-cvv-container">
+        <div>
+          <label for="expiry-month">Expiry Date:</label>
+          <select id="expiry-month" name="expiry-month" required>
+            <option value="">-- Month --</option>
+            <?php
+            for ($i = 1; $i <= 12; $i++) {
+              echo "<option value='" . sprintf("%02d", $i) . "'>" . date("F", mktime(0, 0, 0, $i, 1)) . "</option>";
+            }
+            ?>
+          </select>
+        </div>
+        <div>
+          <label for="expiry-year">Year:</label>
+          <select id="expiry-year" name="expiry-year" required>
+            <option value="">-- Year --</option>
+            <?php
+            $currentYear = date("Y");
+            for ($i = $currentYear; $i <= $currentYear + 10; $i++) {
+              echo "<option value='$i'>$i</option>";
+            }
+            ?>
+          </select>
+        </div>
+        <div>
+          <label for="cvv">CVV:</label>
+          <input type="text" id="cvv" name="cvv" placeholder="Your Card CVV" required>
+        </div>
+      </div>
+
+      <label for="cardholder">Cardholder Name:</label>
+      <input type="text" id="cardholder" name="cardholder" placeholder="Your Name" required>
+
+      <button type="submit" id="pay-now">Pay Now</button>
+      <a href="register.php" style="text-decoration: none; color: black; text-align:center;">Back</a>
+    </form>
+    
+
+    <div id="loading-spinner" class="hidden"></div>
+    <!-- Add error message display area -->
+  </main>
+<br><br><br>
+  <footer>
+    <p>&copy; 2023 All Here. All rights reserved.</p>
+  </footer>
 </body>
+
 </html>

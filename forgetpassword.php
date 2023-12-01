@@ -69,13 +69,22 @@
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
         <h2>Forget Password</h2>
         <form method="POST" action="send_email.php">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             <label for="companyName">Company Name:</label>
             <input type="text" id="companyName" name="companyName" required>
+            <?php
+                    // Check if an error message is set
+                    if (isset($_SESSION['error_message'])) {
+                      echo '<label>Invalid Input:</label>';
+                      echo '<p style="color: red;">' . $_SESSION['error_message'] . '</p>';
+                      // Unset the session variable to clear the error message
+                      unset($_SESSION['error_message']);
+                    }
+                    ?>
             <input type="submit" value="Submit">
         </form>
         <a href="login.php" class="back-button">Back</a>
