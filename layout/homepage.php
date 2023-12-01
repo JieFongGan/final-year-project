@@ -1,29 +1,23 @@
 <?php
 $pageTitle = "Homepage";
-include("../database/database-connect.php");
+include("../database/database-connect.php"); // Include your PDO connection here
 include '../contain/header.php';
 
 // Fetch relevant data for the dashboard
-$totalInventoryQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalProducts FROM Product");
-$totalInventoryResult = mysqli_fetch_assoc($totalInventoryQuery);
+function fetchSingleResult($pdo, $query)
+{
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
-$pendingTransactionsQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalPendingTransactions FROM Transaction 
-                                                WHERE DeliveryStatus = 'Pending'");
-$pendingTransactionsResult = mysqli_fetch_assoc($pendingTransactionsQuery);
-
-$processedTransactionsQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalProcessedTransactions FROM Transaction                                                  WHERE DeliveryStatus IN ('Processing', 'Shipped')");
-$processedTransactionsResult = mysqli_fetch_assoc($processedTransactionsQuery);
-
-$userCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS userCount FROM User");
-$userCountResult = mysqli_fetch_assoc($userCountQuery);
-
-$warehouseCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS warehouseCount FROM Warehouse");
-$warehouseCountResult = mysqli_fetch_assoc($warehouseCountQuery);
-
-$categoryCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS categoryCount FROM Category");
-$categoryCountResult = mysqli_fetch_assoc($categoryCountQuery);
-
-$latestTransactionsQuery = mysqli_query($conn, "SELECT * FROM Transaction ORDER BY TransactionDate DESC LIMIT 5");
+$totalInventoryResult = fetchSingleResult($pdo, "SELECT COUNT(*) AS totalProducts FROM Product");
+$pendingTransactionsResult = fetchSingleResult($pdo, "SELECT COUNT(*) AS totalPendingTransactions FROM Transaction WHERE DeliveryStatus = 'Pending'");
+$processedTransactionsResult = fetchSingleResult($pdo, "SELECT COUNT(*) AS totalProcessedTransactions FROM Transaction WHERE DeliveryStatus IN ('Processing', 'Shipped')");
+$userCountResult = fetchSingleResult($pdo, "SELECT COUNT(*) AS userCount FROM User");
+$warehouseCountResult = fetchSingleResult($pdo, "SELECT COUNT(*) AS warehouseCount FROM Warehouse");
+$categoryCountResult = fetchSingleResult($pdo, "SELECT COUNT(*) AS categoryCount FROM Category");
+$latestTransactionsQuery = $pdo->query("SELECT * FROM Transaction ORDER BY TransactionDate DESC LIMIT 5");
 
 ?>
 
