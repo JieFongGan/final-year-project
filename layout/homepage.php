@@ -3,7 +3,6 @@ $pageTitle = "Homepage";
 include("../database/database-connect.php"); // Include your PDO connection here
 include '../contain/header.php';
 
-
 // Fetch relevant data for the dashboard
 function fetchSingleResult($pdo, $query)
 {
