@@ -3,6 +3,12 @@ $pageTitle = "Homepage";
 include("../database/database-connect.php");
 include '../contain/header.php';
 
+$conn = new PDO(
+    "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = $companyname",
+    "sqladmin",
+    "#Allhere",
+    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+);
 
  // Fetch relevant data for the dashboard
  $totalInventoryQuery = $conn->query("SELECT COUNT(*) AS totalProducts FROM Product");
@@ -104,24 +110,20 @@ include '../contain/header.php';
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                while ($row = mysqli_fetch_assoc($latestTransactionsQuery)) {
+                            <?php
+                                foreach ($latestTransactionsResult as $row) {
                                     $statusClass = ($row['DeliveryStatus'] == 'Pending' || $row['DeliveryStatus'] == 'Processing') ? 'warning' : 'success';
                                     ?>
                                     <tr>
-                                        <td>
-                                            <?php echo $row['TransactionType']; ?>
-                                        </td>
-                                        <td>
-                                            <?php echo date('d M, Y', strtotime($row['TransactionDate'])); ?>
-                                        </td>
+                                        <td><?php echo $row['TransactionType']; ?></td>
+                                        <td><?php echo date('d M, Y', strtotime($row['TransactionDate'])); ?></td>
                                         <td>
                                             <span class="badge <?php echo $statusClass; ?>">
                                                 <?php echo $row['DeliveryStatus']; ?>
                                             </span>
                                         </td>
                                     </tr>
-                                    <?php
+                                <?php
                                 }
                                 ?>
                             </tbody>
