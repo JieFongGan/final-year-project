@@ -34,30 +34,41 @@ if (isset($_POST['Cnew'])) {
 }
 
 if (isset($_POST['deleteProduct'])) {
+    // Validate the product ID
     $productIDToDelete = filter_input(INPUT_POST, 'deleteProduct', FILTER_SANITIZE_STRING);
-
+    if (!filter_var($productIDToDelete, FILTER_VALIDATE_INT)) {
+      echo "Invalid product ID.";
+      exit;
+    }
+  
     try {
-        // Prepare the SQL statement for deletion
-        $deleteSql = "DELETE FROM Product WHERE ProductID = :productID";
-        $deleteStmt = $conn->prepare($deleteSql);
-
-        // Bind the parameters
-        $deleteStmt->bindParam(':productID', $productIDToDelete);
-
-        // Execute the statement for deletion
-        $deleteStmt->execute();
-
+      // Prepare the SQL statement for deletion
+      $deleteSql = "DELETE FROM Product WHERE ProductID = :productID";
+      $deleteStmt = $conn->prepare($deleteSql);
+  
+      // Bind the parameters
+      $deleteStmt->bindParam(':productID', $productIDToDelete);
+  
+      // Execute the statement for deletion
+      if ($deleteStmt->execute()) {
         // Check if the product was deleted
         if ($deleteStmt->rowCount() > 0) {
-            header("Location: inventory.php");
-            exit;
+          // Product deleted successfully
+          header("Location: inventory.php");
+          exit;
         } else {
-            echo "Error: Product not found.";
+          // Product not found
+          echo "Error: Product not found.";
         }
+      } else {
+        // Database error
+        echo "Error: " . $deleteStmt->errorInfo()[2];
+      }
     } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
+      // Unexpected error
+      echo "Error: " . $e->getMessage();
     }
-}
+  }
 
 ?>
 
