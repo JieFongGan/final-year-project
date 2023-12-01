@@ -19,13 +19,13 @@ if (mysqli_num_rows($checkvalidcompanyresult) == 0) {
     header("Location: forgetpassword.php");
     exit;
 }
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = $companyName;
 
-// Create connection
-$connection = mysqli_connect($servername, $dbusername, $dbpassword, $dbname);
+$conn = new PDO(
+    "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = $companyName",
+    "sqladmin",
+    "#Allhere",
+    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+);
 
 $username = mysqli_real_escape_string($connection, $_POST['username']);
 $companyName = mysqli_real_escape_string($connection, $_POST['companyName']);
