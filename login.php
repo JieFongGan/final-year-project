@@ -1,17 +1,26 @@
 <?php
 
 session_start();
-$server = "localhost";
-$username = "root";
-$password = "";
-$database = "adminallhere";
-$connection = mysqli_connect("$server","$username","$password");
-$select_db = mysqli_select_db($connection, $database);
-if(!$select_db)
-{
-	echo("connection terminated");
+
+try {
+    $conn = new PDO("sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb", "sqladmin", "{your_password_here}");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Your SQL queries and operations go here
+    $sql = "SELECT * FROM company";
+    $result = $conn->query($sql);
+    $rows = $result->fetchAll();
+    foreach ($rows as $row) {
+        echo $row['company_id'] . " - " . $row['company_name'] . " - " . $row['company_email'] . " - " . $row['company_password'] . " - " . $row['company_address'] . " - " . $row['company_phone'] . " - " . $row['company_website'] . " - " . $row['company_description'] . " - " . $row['company_logo'] . " - " . $row['company_status'] . "<br>";
+    }
 }
+catch (PDOException $e) {
+    print("Error connecting to SQL Server.");
+    die(print_r($e));
+}
+
 ?>
+
 
 
 <!DOCTYPE html>
