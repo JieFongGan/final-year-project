@@ -3,22 +3,15 @@ $pageTitle = "Inventory";
 include '../database/database-connect.php';
 include '../contain/header.php';
 
-try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Prepare the SQL statement
+$sql = "SELECT * FROM Product";
+$stmt = $conn->prepare($sql);
 
-    // Prepare the SQL statement
-    $sql = "SELECT * FROM Product";
-    $stmt = $conn->prepare($sql);
+// Execute the statement
+$stmt->execute();
 
-    // Execute the statement
-    $stmt->execute();
-
-    // Fetch the results
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-}
+// Fetch the results
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Pagination
 $itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
@@ -37,7 +30,7 @@ $subsetProducts = array_slice($products, $offset, $itemsPerPage);
 
 if (isset($_POST['Cnew'])) {
     header("Location: inventory-new.php");
-    exit();
+    exit;
 }
 
 if (isset($_POST['deleteProduct'])) {
@@ -45,11 +38,11 @@ if (isset($_POST['deleteProduct'])) {
 
     try {
         // Prepare the SQL statement
-        $sql = "DELETE FROM Product WHERE ProductID = :productID";
+        $sql = "DELETE FROM Product WHERE ProductID = ProductID";
         $stmt = $conn->prepare($sql);
 
         // Bind the parameters
-        $stmt->bindParam(':productID', $productIDToDelete);
+        $stmt->bindParam('ProductID', $productIDToDelete);
 
         // Execute the statement
         $stmt->execute();
@@ -57,7 +50,7 @@ if (isset($_POST['deleteProduct'])) {
         // Check if the product was deleted
         if ($stmt->rowCount() > 0) {
             header("Location: inventory.php");
-            exit();
+            exit;
         } else {
             echo "Error: Product not found.";
         }
@@ -66,8 +59,6 @@ if (isset($_POST['deleteProduct'])) {
     }
 }
 
-// Close the connection
-$conn = null;
 ?>
 
 <div class="main-content">
