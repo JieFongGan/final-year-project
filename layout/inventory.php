@@ -11,14 +11,7 @@ $products = array();
 if ($result->rowCount() > 0) {
     // Fetch data from the result set
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $products[] = array(
-            $row["Name"],
-            $row["ProductID"],
-            $row["WarehouseID"],
-            $row["Description"],
-            $row["Price"],
-            $row["Quantity"]
-        );
+        $products[] = $row;
     }
 }
 
@@ -97,27 +90,15 @@ if (isset($_POST['deleteProduct'])) {
                     <?php else: ?>
                         <?php foreach ($subsetProducts as $product): ?>
                             <tr>
-                                <td>
-                                    <?= $product[0] ?>
-                                </td>
-                                <td>
-                                    <?= $product[1] ?>
-                                </td>
-                                <td>
-                                    <?= $product[2] ?>
-                                </td>
-                                <td>
-                                    <?= $product[3] ?>
-                                </td>
-                                <td>
-                                    <?= $product[4] ?>
-                                </td>
-                                <td>
-                                    <?= $product[5] ?>
-                                </td>
+                                <td><?= $product["Name"] ?></td>
+                                <td><?= $product["ProductID"] ?></td>
+                                <td><?= $product["WarehouseID"] ?></td>
+                                <td><?= $product["Description"] ?></td>
+                                <td><?= $product["Price"] ?></td>
+                                <td><?= $product["Quantity"] ?></td>
                                 <td>
                                     <form method="GET" action="inventory-edit.php">
-                                        <input type="hidden" name="productID" value="<?= $product[1] ?>">
+                                        <input type="hidden" name="productID" value="<?= $product["ProductID"] ?>">
                                         <button class="edit" type="submit">edit</button>
                                     </form>
 
@@ -126,7 +107,7 @@ if (isset($_POST['deleteProduct'])) {
                                         <button class="delete" name="deleteProduct" type="submit"
                                             onclick="return confirm('Are you sure you want to delete this product?')">delete
                                         </button>
-                                        <input type="hidden" name="deleteProduct" value="<?= $product[1] ?>">
+                                        <input type="hidden" name="deleteProduct" value="<?= $product["ProductID"] ?>">
                                     </form>
                                     <?php endif; ?>
                                 </td>
