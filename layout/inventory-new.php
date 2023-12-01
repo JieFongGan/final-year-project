@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 $pageTitle = "Inventory/Create";
 include '../database/database-connect.php';
 include '../contain/header.php';

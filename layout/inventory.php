@@ -37,18 +37,18 @@ if (isset($_POST['deleteProduct'])) {
     $productIDToDelete = filter_input(INPUT_POST, 'deleteProduct', FILTER_SANITIZE_STRING);
 
     try {
-        // Prepare the SQL statement
-        $sql = "DELETE FROM Product WHERE ProductID = :productID";
-        $stmt = $conn->prepare($sql);
+        // Prepare the SQL statement for deletion
+        $deleteSql = "DELETE FROM Product WHERE ProductID = :productID";
+        $deleteStmt = $conn->prepare($deleteSql);
 
         // Bind the parameters
-        $stmt->bindParam(':productID', $productIDToDelete);
+        $deleteStmt->bindParam(':productID', $productIDToDelete);
 
-        // Execute the statement
-        $stmt->execute();
+        // Execute the statement for deletion
+        $deleteStmt->execute();
 
         // Check if the product was deleted
-        if ($stmt->rowCount() > 0) {
+        if ($deleteStmt->rowCount() > 0) {
             header("Location: inventory.php");
             exit;
         } else {
