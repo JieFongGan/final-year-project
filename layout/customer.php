@@ -25,7 +25,7 @@ $current_page = max(1, min($totalPages, $current_page));
 // Calculate the offset
 $offset = ($current_page - 1) * $itemsPerPage;
 
-$subsetProducts = array_slice($customers, $offset, $itemsPerPage);
+$subsetCustomers = array_slice($customers, $offset, $itemsPerPage);
 
 if (isset($_POST['Cnew'])) {
     header("Location: customer-new.php");
