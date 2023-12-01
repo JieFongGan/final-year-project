@@ -270,7 +270,7 @@ if ($stmt->num_rows == 0) {
         $_SESSION['companyname'] = $companyname;
         $_SESSION['username'] = $username;
         $_SESSION['userrole'] = "Admin";
-        header("Location: index.php");
+        header("Location: layout/homepage.php");
     }
 }
 

@@ -14,43 +14,48 @@ function generateRandomAuthCode($existingAuthCodes) {
     return $authCode;
 }
 
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "adminallhere";
-$conn = new mysqli($servername, $username, $password, $dbname);
+try {
+    // Database connection
+    $conn = new PDO(
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+        "sqladmin",
+        "#Allhere",
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    // Fetch existing AuthCodes from the database
+    $sql = "SELECT AuthCode FROM company";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $existingAuthCodes = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Fetch existing AuthCodes from the database
-$sql = "SELECT AuthCode FROM company";
-$result = $conn->query($sql);
-$existingAuthCodes = ($result->num_rows > 0) ? $result->fetch_all(MYSQLI_ASSOC) : [];
+    // Check if form is submitted
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Generate a random seven-character string that does not exist in the database
+        $authCode = generateRandomAuthCode($existingAuthCodes);
 
-// Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Generate a random seven-character string that does not exist in the database
-    $authCode = generateRandomAuthCode(array_column($existingAuthCodes, 'AuthCode'));
+        // Insert new record into the company table
+        $sqlInsert = "INSERT INTO company (CompanyName, Status, AuthCode) VALUES (NULL, NULL, :authCode)";
+        $stmtInsert = $conn->prepare($sqlInsert);
+        $stmtInsert->bindParam(':authCode', $authCode);
 
-    // Insert new record into the company table
-    $sql = "INSERT INTO `company` (`CompanyName`, `Status`, `AuthCode`) VALUES (NULL, NULL, '$authCode')";
-
-    if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
-        header("Location: admincomplist.php");
-        exit();
-    } else {
-        echo "Error: " . $conn->error;
+        if ($stmtInsert->execute()) {
+            echo "New record created successfully";
+            header("Location: admincomplist.php");
+            exit();
+        } else {
+            echo "Error: " . $stmtInsert->errorInfo()[2];
+        }
     }
-}
 
-// Close the database connection
-$conn->close();
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+} finally {
+    // Close the database connection
+    $conn = null;
+}
 ?>
+
 
 
 <!DOCTYPE html>

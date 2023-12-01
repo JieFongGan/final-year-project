@@ -6,8 +6,10 @@ $servername = "localhost";
 $dbusername = "root";
 $dbpassword = "";
 $dbname = "adminallhere";
-
 $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed:" . $conn->connect_error);
+}
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -84,7 +86,7 @@ if ($username && $password) {
                 $_SESSION['companyname'] = $companyname;
                 $_SESSION['username'] = $username;
                 $_SESSION['userrole'] = $userrole;
-                header("Location: index.php");
+                header("Location: layout/homepage.php");
                 exit;
             } else {
                 $_SESSION['error_message'] = "Incorrect password";
