@@ -69,7 +69,7 @@ if ($username && $password) {
                 $storedPassword = $row['Password'];
                 $userrole = $row['UserRole'];
 
-                if (password_verify($password, $storedPassword)) {
+                if ($password == $storedPassword) {
                     // Update LastLoginDate
                     $updateSql = "UPDATE [user] SET LastLoginDate = NOW() WHERE Username = :username";
                     $stmt = $cone->prepare($updateSql);
@@ -80,9 +80,10 @@ if ($username && $password) {
                     $_SESSION['username'] = $username;
                     $_SESSION['userrole'] = $userrole;
                     header("Location: layout/homepage.php");
+                    echo "Login successful";
                     exit;
                 } else {
-                    $_SESSION['error_message'] = $storedPassword;
+                    $_SESSION['error_message'] = "Incorrect password";
                     header("Location: login.php");
                     exit;
                 }
