@@ -1,24 +1,27 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 $pageTitle = "Inventory";
 include '../database/database-connect.php';
 include '../contain/header.php';
 
-$sql = "SELECT Name, ProductID, WarehouseID, Description, Price, Quantity FROM Product";
-$result = $conn->query($sql);
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$products = array();
+    // Prepare the SQL statement
+    $sql = "SELECT * FROM Product";
+    $stmt = $conn->prepare($sql);
 
-if ($result->rowCount() > 0) {
-    // Fetch data from the result set
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $products[] = $row;
-    }
+    // Execute the statement
+    $stmt->execute();
+
+    // Fetch the results
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
 
 // Pagination
-$itemsPerPage = isset($_GET['itemsPerPage']) ? (int)$_GET['itemsPerPage'] : 10;
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
 $totalItems = count($products);
 $totalPages = ceil($totalItems / $itemsPerPage);
 
@@ -38,20 +41,33 @@ if (isset($_POST['Cnew'])) {
 }
 
 if (isset($_POST['deleteProduct'])) {
-    $productIDToDelete = $_POST['deleteProduct'];
+    $productIDToDelete = filter_input(INPUT_POST, 'deleteProduct', FILTER_SANITIZE_STRING);
 
-    $deleteSql = "DELETE FROM Product WHERE ProductID = :productID";
-    $deleteStmt = $conn->prepare($deleteSql);
-    $deleteStmt->bindParam(':productID', $productIDToDelete, PDO::PARAM_STR);
+    try {
+        // Prepare the SQL statement
+        $sql = "DELETE FROM Product WHERE ProductID = :productID";
+        $stmt = $conn->prepare($sql);
 
-    if ($deleteStmt->execute()) {
-        header("Location: inventory.php");
-        exit();
-    } else {
-        echo "Error: " . $deleteStmt->errorInfo()[2];
+        // Bind the parameters
+        $stmt->bindParam(':productID', $productIDToDelete);
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Check if the product was deleted
+        if ($stmt->rowCount() > 0) {
+            header("Location: inventory.php");
+            exit();
+        } else {
+            echo "Error: Product not found.";
+        }
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
 }
 
+// Close the connection
+$conn = null;
 ?>
 
 <div class="main-content">
@@ -64,9 +80,9 @@ if (isset($_POST['deleteProduct'])) {
     <main>
         <div class="button-and-search">
             <form method="POST">
-            <?php if ($userrole !== 'User'): ?>
-                <button name="Cnew">Create New</button>
-            <?php endif; ?>
+                <?php if ($userrole !== 'User'): ?>
+                    <button name="Cnew">Create New</button>
+                <?php endif; ?>
             </form>
             <input type="text" id="searchInput" placeholder="Search on current list..." onkeyup="searchTable()">
         </div>
@@ -92,25 +108,37 @@ if (isset($_POST['deleteProduct'])) {
                     <?php else: ?>
                         <?php foreach ($subsetProducts as $product): ?>
                             <tr>
-                                <td><?= $product["Name"] ?></td>
-                                <td><?= $product["ProductID"] ?></td>
-                                <td><?= $product["WarehouseID"] ?></td>
-                                <td><?= $product["Description"] ?></td>
-                                <td><?= $product["Price"] ?></td>
-                                <td><?= $product["Quantity"] ?></td>
+                                <td>
+                                    <?= $product['Name'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['ProductID'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['WarehouseID'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['Description'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['Price'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['Quantity'] ?>
+                                </td>
                                 <td>
                                     <form method="GET" action="inventory-edit.php">
-                                        <input type="hidden" name="productID" value="<?= $product["ProductID"] ?>">
+                                        <input type="hidden" name="productID" value="<?= $product['ProductID'] ?>">
                                         <button class="edit" type="submit">edit</button>
                                     </form>
 
                                     <?php if ($userrole !== 'User'): ?>
-                                    <form method="POST">
-                                        <button class="delete" name="deleteProduct" type="submit"
-                                            onclick="return confirm('Are you sure you want to delete this product?')">delete
-                                        </button>
-                                        <input type="hidden" name="deleteProduct" value="<?= $product["ProductID"] ?>">
-                                    </form>
+                                        <form method="POST">
+                                            <button class="delete" name="deleteProduct" type="submit"
+                                                onclick="return confirm('Are you sure you want to delete this product?')">delete
+                                            </button>
+                                            <input type="hidden" name="deleteProduct" value="<?= $product['ProductID'] ?>">
+                                        </form>
                                     <?php endif; ?>
                                 </td>
                             </tr>
