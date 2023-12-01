@@ -199,18 +199,12 @@
                     </thead>
 
                     <?php
-                    // Connect to the database
-                    $servername = "localhost";
-                    $dbusername = "root";
-                    $dbpassword = "";
-                    $dbname = "adminallhere";
-
-                    $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-
-                    // Check connection
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
+                   $conn = new PDO(
+                    "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+                    "sqladmin",
+                    "#Allhere",
+                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+                );
 
                     // Fetch data from the database with search conditions
                     $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';

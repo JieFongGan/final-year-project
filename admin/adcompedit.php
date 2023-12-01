@@ -1,12 +1,12 @@
 <?php
 
     // Connect to the database
-    $servername = "localhost";
-    $dbusername = "root";
-    $dbpassword = "";
-    $dbname = "adminallhere";
-
-    $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+    $conn = new PDO(
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+        "sqladmin",
+        "#Allhere",
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
 
     // Check connection
     if ($conn->connect_error) {

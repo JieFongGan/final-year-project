@@ -71,7 +71,7 @@ if ($username && $password) {
 
                 if ($password == $storedPassword) {
                     // Update LastLoginDate
-                    $updateSql = "UPDATE [user] SET LastLoginDate = NOW() WHERE Username = :username";
+                    $updateSql = "UPDATE [user] SET LastLoginDate = SYSDATETIME() WHERE Username = :username";
                     $stmt = $cone->prepare($updateSql);
                     $stmt->bindParam(':username', $username);
                     $stmt->execute();

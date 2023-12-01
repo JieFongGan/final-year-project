@@ -40,7 +40,6 @@ try {
         $stmtInsert->bindParam(':authCode', $authCode);
 
         if ($stmtInsert->execute()) {
-            echo "New record created successfully";
             header("Location: admincomplist.php");
             exit();
         } else {

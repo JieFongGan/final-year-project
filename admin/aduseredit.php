@@ -1,66 +1,62 @@
 <?php
 
-// Connect to the database
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "adminallhere";
+$serverName = "tcp:allhereserver.database.windows.net,1433";
+$database = "allheredb";
+$username = "sqladmin";
+$password = "#Allhere";
 
-$conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    $conn = new PDO("sqlsrv:server=$serverName;Database=$database", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
-$userid = $_GET['userid'];
-$sql = "SELECT * FROM user WHERE UserID = ?";
+$userid = isset($_GET['userid']) ? $_GET['userid'] : '';
+if (empty($userid)) {
+    die("User ID is required.");
+}
+
+$sql = "SELECT * FROM [user] WHERE UserID = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $userid);
-$stmt->execute();
-$result = $stmt->get_result();
+$stmt->execute([$userid]);
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $companyName = $row['CompanyName'];
-    $status = $row['Status'];
-} else {
-    echo "No data found.";
+if (!$result) {
+    die("No data found.");
 }
 
-// Check if the form is submitted
+$companyName = $result['CompanyName'];
+$status = $result['Status'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the form data
-    $status = $_POST['status'];
+    $newStatus = isset($_POST['status']) ? $_POST['status'] : '';
 
-    // Update the company details in the database
-    $sql = "UPDATE user SET Status = ? WHERE UserID = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $status, $userid);
+    $updateUserSql = "UPDATE [user] SET Status = ? WHERE UserID = ?";
+    $updateUserStmt = $conn->prepare($updateUserSql);
+    $updateUserStmt->execute([$newStatus, $userid]);
 
-    if ($stmt->execute()) {
-        // Create a new connection using the company name
-        $connn = new mysqli('localhost', 'root', '', $companyName);
-        
-        // Update user status in the new connection
-        $sql = "UPDATE User SET UserStatus = ? WHERE Username = ?";
-        $stmt = $connn->prepare($sql);
-        $stmt->bind_param("ss", $status, $userid);
+    // You may want to check if the user's company name is not empty before creating a new connection
+    if (!empty($companyName)) {
+        try {
+            $connn = new PDO("sqlsrv:server=$serverName;Database=$companyName", $username, $password);
+            $connn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        if ($stmt->execute()) {
-            // Redirect back to the previous page or perform any other action
+            $updateCompanySql = "UPDATE [User] SET UserStatus = ? WHERE Username = ?";
+            $updateCompanyStmt = $connn->prepare($updateCompanySql);
+            $updateCompanyStmt->execute([$newStatus, $userid]);
+
             header('Location: adminuserlist.php');
             exit;
-        } else {
-            echo "Error updating user details: " . $connn->error;
+        } catch (PDOException $e) {
+            echo "Error updating user details: " . $e->getMessage();
         }
-    } else {
-        echo "Error updating company details: " . $conn->error;
     }
 }
 
-$conn->close();
+$conn = null;
 ?>
+
 
 <!DOCTYPE html>
 <html>
