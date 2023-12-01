@@ -3,65 +3,69 @@ $pageTitle = "Customers";
 include("../database/database-connect.php");
 include '../contain/header.php';
 
-// Pagination
-$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
+try {
+    // Pagination
+    $itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
 
-// Fetch total number of customers
-$sqlTotalCustomers = "SELECT COUNT(*) FROM Customer";
-$resultTotalCustomers = $conn->query($sqlTotalCustomers);
+    // Fetch total number of customers
+    $sqlTotalCustomers = "SELECT COUNT(*) FROM Customer";
+    $resultTotalCustomers = $conn->query($sqlTotalCustomers);
 
-// Check if the query was successful
-if ($resultTotalCustomers) {
-    $totalCustomers = $resultTotalCustomers->fetch_row()[0];
+    // Check if the query was successful
+    if ($resultTotalCustomers) {
+        $totalCustomers = $resultTotalCustomers->fetchColumn();
 
-    // Calculate total pages and handle division by zero
-    $totalPages = $totalCustomers > 0 ? ceil($totalCustomers / $itemsPerPage) : 1;
-} else {
-    // Handle query error
-    echo "Error fetching total customers: " . $conn->error;
-    exit();
-}
-
-// Get the current page from the URL, default to 1 if not set
-$current_page = isset($_GET['page']) ? $_GET['page'] : 1;
-$current_page = max(1, min($totalPages, $current_page));
-
-// Calculate the offset
-$offset = ($current_page - 1) * $itemsPerPage;
-
-// Fetch a subset of customers based on the offset and items per page using prepared statement
-$sqlSubsetCustomers = "SELECT * FROM Customer LIMIT ? OFFSET ?";
-$stmtSubsetCustomers = $conn->prepare($sqlSubsetCustomers);
-$stmtSubsetCustomers->bind_param("ii", $itemsPerPage, $offset);
-$stmtSubsetCustomers->execute();
-$resultSubsetCustomers = $stmtSubsetCustomers->get_result();
-$subsetCustomers = $resultSubsetCustomers->fetch_all(MYSQLI_ASSOC);
-$stmtSubsetCustomers->close();
-
-if (isset($_POST['Cnew'])) {
-    header("Location: customer-new.php");
-    exit();
-}
-
-if (isset($_POST['deleteCustomer'])) {
-    // Using prepared statement to prevent SQL injection
-    $customerIDToDelete = $_POST['deleteCustomer'];
-    $deleteSql = "DELETE FROM Customer WHERE CustomerID = ?";
-    $stmtDeleteCustomer = $conn->prepare($deleteSql);
-    $stmtDeleteCustomer->bind_param("i", $customerIDToDelete);
-    $stmtDeleteCustomer->execute();
-
-    if ($stmtDeleteCustomer->affected_rows > 0) {
-        header("Location: customer.php");
-        exit();
+        // Calculate total pages and handle division by zero
+        $totalPages = $totalCustomers > 0 ? ceil($totalCustomers / $itemsPerPage) : 1;
     } else {
-        echo "Error: " . $stmtDeleteCustomer->error;
+        // Handle query error
+        echo "Error fetching total customers: " . $conn->errorInfo()[2];
+        exit();
     }
 
-    $stmtDeleteCustomer->close();
+    // Get the current page from the URL, default to 1 if not set
+    $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $current_page = max(1, min($totalPages, $current_page));
+
+    // Calculate the offset
+    $offset = ($current_page - 1) * $itemsPerPage;
+
+    // Fetch a subset of customers based on the offset and items per page using prepared statement
+    $sqlSubsetCustomers = "SELECT * FROM Customer LIMIT :itemsPerPage OFFSET :offset";
+    $stmtSubsetCustomers = $conn->prepare($sqlSubsetCustomers);
+    $stmtSubsetCustomers->bindParam(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
+    $stmtSubsetCustomers->bindParam(':offset', $offset, PDO::PARAM_INT);
+    $stmtSubsetCustomers->execute();
+    $subsetCustomers = $stmtSubsetCustomers->fetchAll(PDO::FETCH_ASSOC);
+    $stmtSubsetCustomers->closeCursor();
+
+    if (isset($_POST['Cnew'])) {
+        header("Location: customer-new.php");
+        exit();
+    }
+
+    if (isset($_POST['deleteCustomer'])) {
+        // Using prepared statement to prevent SQL injection
+        $customerIDToDelete = $_POST['deleteCustomer'];
+        $deleteSql = "DELETE FROM Customer WHERE CustomerID = :CustomerID";
+        $stmtDeleteCustomer = $conn->prepare($deleteSql);
+        $stmtDeleteCustomer->bindParam(':CustomerID', $customerIDToDelete, PDO::PARAM_INT);
+        $stmtDeleteCustomer->execute();
+
+        if ($stmtDeleteCustomer->rowCount() > 0) {
+            header("Location: customer.php");
+            exit();
+        } else {
+            echo "Error: Customer not found.";
+        }
+
+        $stmtDeleteCustomer->closeCursor();
+    }
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
 
-$conn->close();
+$conn = null; // Close the connection
 ?>
 
 <div class="main-content">

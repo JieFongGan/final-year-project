@@ -38,11 +38,11 @@ if (isset($_POST['deleteProduct'])) {
 
     try {
         // Prepare the SQL statement
-        $sql = "DELETE FROM Product WHERE ProductID = ProductID";
+        $sql = "DELETE FROM Product WHERE ProductID = :productID";
         $stmt = $conn->prepare($sql);
 
         // Bind the parameters
-        $stmt->bindParam('ProductID', $productIDToDelete);
+        $stmt->bindParam(':productID', $productIDToDelete);
 
         // Execute the statement
         $stmt->execute();
