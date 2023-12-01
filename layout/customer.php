@@ -1,6 +1,6 @@
 <?php
 $pageTitle = "Customers";
-include("../database/database-connect.php");
+include '../database/database-connect.php';
 include '../contain/header.php';
 
 // Prepare the SQL statement
@@ -25,7 +25,6 @@ $current_page = max(1, min($totalPages, $current_page));
 // Calculate the offset
 $offset = ($current_page - 1) * $itemsPerPage;
 
-// Get a subset of products based on the offset and items per page
 $subsetProducts = array_slice($customers, $offset, $itemsPerPage);
 
 if (isset($_POST['Cnew'])) {
