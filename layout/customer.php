@@ -11,11 +11,11 @@ $stmt = $conn->prepare($sql);
 $stmt->execute();
 
 // Fetch the results
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Pagination
 $itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
-$totalItems = count($products);
+$totalItems = count($customers);
 $totalPages = ceil($totalItems / $itemsPerPage);
 
 // Get the current page from the URL, default to 1 if not set
@@ -26,7 +26,7 @@ $current_page = max(1, min($totalPages, $current_page));
 $offset = ($current_page - 1) * $itemsPerPage;
 
 // Get a subset of products based on the offset and items per page
-$subsetProducts = array_slice($products, $offset, $itemsPerPage);
+$subsetProducts = array_slice($customers, $offset, $itemsPerPage);
 
 if (isset($_POST['Cnew'])) {
     header("Location: customer-new.php");
