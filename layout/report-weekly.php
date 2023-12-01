@@ -8,7 +8,7 @@ try {
     $sql = "
     SELECT
         YEAR(TransactionDate) AS Year,
-        WEEK(TransactionDate) AS Week,
+        DATEPART(WEEK, TransactionDate) AS Week,
         COUNT(DISTINCT t.TransactionID) AS TotalTransactions,
         COUNT(td.TransactionDetailID) AS TotalTransactionDetails,
         SUM(td.Quantity) AS TotalItemsSold
@@ -19,9 +19,9 @@ try {
     WHERE
         t.TransactionType = 'Sales'   -- Filter for sales transactions
     GROUP BY
-        Year, Week
+        Year, DATEPART(WEEK, TransactionDate)
     ORDER BY
-        Year, Week;
+        Year, DATEPART(WEEK, TransactionDate);
     ";
 
     $stmt = $conn->prepare($sql);

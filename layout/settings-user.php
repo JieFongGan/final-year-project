@@ -5,7 +5,7 @@ include '../contain/header.php';
 
 try {
     // Fetch all users
-    $sqlAllUsers = "SELECT * FROM User";
+    $sqlAllUsers = "SELECT * FROM [User]";
     $stmtAllUsers = $conn->prepare($sqlAllUsers);
     $stmtAllUsers->execute();
     $allUsers = $stmtAllUsers->fetchAll(PDO::FETCH_ASSOC);
@@ -15,7 +15,7 @@ try {
         $userIDToDelete = $_POST['deleteUser'];
 
         // Get the username of the user to be deleted
-        $sqlGetUsername = "SELECT Username FROM User WHERE UserID = ?";
+        $sqlGetUsername = "SELECT Username FROM [User] WHERE UserID = ?";
         $stmtGetUsername = $conn->prepare($sqlGetUsername);
         $stmtGetUsername->bindParam(1, $userIDToDelete, PDO::PARAM_INT);
         $stmtGetUsername->execute();
@@ -25,7 +25,7 @@ try {
         $connn = new PDO('mysql:host=localhost;dbname=adminallhere', 'root', '');
 
         // Use a prepared statement to prevent SQL injection
-        $sqlDeleteOtherTable = "DELETE FROM user WHERE UserID = ?";
+        $sqlDeleteOtherTable = "DELETE FROM [user] WHERE UserID = ?";
         $stmtDeleteOtherTable = $connn->prepare($sqlDeleteOtherTable);
         $stmtDeleteOtherTable->bindParam(1, $usernameToDelete, PDO::PARAM_STR);
         $stmtDeleteOtherTable->execute();
@@ -38,7 +38,7 @@ try {
         }
 
         // Perform the deletion in the main user table
-        $sqlDeleteUser = "DELETE FROM User WHERE UserID = ?";
+        $sqlDeleteUser = "DELETE FROM [User] WHERE UserID = ?";
         $stmtDeleteUser = $conn->prepare($sqlDeleteUser);
         $stmtDeleteUser->bindParam(1, $userIDToDelete, PDO::PARAM_INT);
         $stmtDeleteUser->execute();

@@ -4,7 +4,7 @@ include("../database/database-connect.php");
 include '../contain/header.php';
 
 // Pagination
-$itemsPerPage = isset($_GET['itemsPerPage']) ? (int)$_GET['itemsPerPage'] : 10;
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
 
 try {
     // Fetch total number of transactions
@@ -23,13 +23,23 @@ try {
     // Calculate the offset
     $offset = ($current_page - 1) * $itemsPerPage;
 
-    // Fetch a subset of transactions based on the offset and items per page
-    $sqlSubsetTransactions = "SELECT * FROM [Transaction] ORDER BY TransactionDate DESC LIMIT :limit OFFSET :offset";
+    $sqlSubsetTransactions = "
+    SELECT * 
+    FROM (
+        SELECT 
+            ROW_NUMBER() OVER (ORDER BY TransactionDate DESC) AS RowNum,
+            * 
+        FROM [Transaction]
+    ) AS Sub
+    WHERE RowNum BETWEEN :offset + 1 AND :offset + :limit;
+";
+
     $stmtSubsetTransactions = $conn->prepare($sqlSubsetTransactions);
     $stmtSubsetTransactions->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
     $stmtSubsetTransactions->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmtSubsetTransactions->execute();
     $subsetTransactions = $stmtSubsetTransactions->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     // Handle database errors
     echo "Error: " . $e->getMessage();
@@ -41,7 +51,7 @@ if (isset($_POST['Cnew'])) {
     exit();
 }
 
-$conn = null; // Close the database connection
+$conn = null;
 ?>
 
 <div class="main-content">
@@ -79,12 +89,24 @@ $conn = null; // Close the database connection
                     <?php else: ?>
                         <?php foreach ($subsetTransactions as $transaction): ?>
                             <tr>
-                                <td><?= $transaction['TransactionID'] ?></td>
-                                <td><?= $transaction['WarehouseID'] ?></td>
-                                <td><?= $transaction['CustomerID'] ?></td>
-                                <td><?= $transaction['TransactionType'] ?></td>
-                                <td><?= $transaction['TransactionDate'] ?></td>
-                                <td><?= $transaction['DeliveryStatus'] ?></td>
+                                <td>
+                                    <?= $transaction['TransactionID'] ?>
+                                </td>
+                                <td>
+                                    <?= $transaction['WarehouseID'] ?>
+                                </td>
+                                <td>
+                                    <?= $transaction['CustomerID'] ?>
+                                </td>
+                                <td>
+                                    <?= $transaction['TransactionType'] ?>
+                                </td>
+                                <td>
+                                    <?= $transaction['TransactionDate'] ?>
+                                </td>
+                                <td>
+                                    <?= $transaction['DeliveryStatus'] ?>
+                                </td>
                                 <td>
                                     <form method="GET" action="transaction-detailProduct.php">
                                         <input type="hidden" name="transactionID" value="<?= $transaction['TransactionID'] ?>">
@@ -122,4 +144,5 @@ $conn = null; // Close the database connection
     </main>
 </div>
 </body>
+
 </html>
