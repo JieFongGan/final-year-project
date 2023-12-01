@@ -15,7 +15,7 @@ if (isset($_SESSION['companyname'])) {
 
 // Replace these values with your Azure SQL Database connection details
 $serverName = "tcp:allhereserver.database.windows.net,1433";
-$database = "allheredb";
+$database = $companyname;
 $uid = "sqladmin";
 $pwd = "#Allhere";
 
