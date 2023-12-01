@@ -4,37 +4,39 @@ include("../database/database-connect.php");
 include '../contain/header.php';
 
 // Pagination
-$itemsPerPage = isset($_GET['itemsPerPage']) ? (int)$_GET['itemsPerPage'] : 10;
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
 
-try {
-    // Fetch total number of customers
-    $sqlTotalCustomers = "SELECT COUNT(*) FROM Customer";
-    $stmtTotalCustomers = $conn->prepare($sqlTotalCustomers);
-    $stmtTotalCustomers->execute();
-    $totalCustomers = $stmtTotalCustomers->fetchColumn();
+// Fetch total number of customers
+$sqlTotalCustomers = "SELECT COUNT(*) FROM Customer";
+$resultTotalCustomers = $conn->query($sqlTotalCustomers);
+
+// Check if the query was successful
+if ($resultTotalCustomers) {
+    $totalCustomers = $resultTotalCustomers->fetch_row()[0];
 
     // Calculate total pages and handle division by zero
     $totalPages = $totalCustomers > 0 ? ceil($totalCustomers / $itemsPerPage) : 1;
-
-    // Get the current page from the URL, default to 1 if not set
-    $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
-    $current_page = max(1, min($totalPages, $current_page));
-
-    // Calculate the offset
-    $offset = ($current_page - 1) * $itemsPerPage;
-
-    // Fetch a subset of customers based on the offset and items per page using prepared statement
-    $sqlSubsetCustomers = "SELECT * FROM Customer LIMIT :itemsPerPage OFFSET :offset";
-    $stmtSubsetCustomers = $conn->prepare($sqlSubsetCustomers);
-    $stmtSubsetCustomers->bindParam(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
-    $stmtSubsetCustomers->bindParam(':offset', $offset, PDO::PARAM_INT);
-    $stmtSubsetCustomers->execute();
-    $subsetCustomers = $stmtSubsetCustomers->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // Handle database errors
-    echo "Error: " . $e->getMessage();
+} else {
+    // Handle query error
+    echo "Error fetching total customers: " . $conn->error;
     exit();
 }
+
+// Get the current page from the URL, default to 1 if not set
+$current_page = isset($_GET['page']) ? $_GET['page'] : 1;
+$current_page = max(1, min($totalPages, $current_page));
+
+// Calculate the offset
+$offset = ($current_page - 1) * $itemsPerPage;
+
+// Fetch a subset of customers based on the offset and items per page using prepared statement
+$sqlSubsetCustomers = "SELECT * FROM Customer LIMIT ? OFFSET ?";
+$stmtSubsetCustomers = $conn->prepare($sqlSubsetCustomers);
+$stmtSubsetCustomers->bind_param("ii", $itemsPerPage, $offset);
+$stmtSubsetCustomers->execute();
+$resultSubsetCustomers = $stmtSubsetCustomers->get_result();
+$subsetCustomers = $resultSubsetCustomers->fetch_all(MYSQLI_ASSOC);
+$stmtSubsetCustomers->close();
 
 if (isset($_POST['Cnew'])) {
     header("Location: customer-new.php");
@@ -42,37 +44,41 @@ if (isset($_POST['Cnew'])) {
 }
 
 if (isset($_POST['deleteCustomer'])) {
-    try {
-        // Using prepared statement to prevent SQL injection
-        $customerIDToDelete = $_POST['deleteCustomer'];
-        $deleteSql = "DELETE FROM Customer WHERE CustomerID = :customerID";
-        $stmtDeleteCustomer = $conn->prepare($deleteSql);
-        $stmtDeleteCustomer->bindParam(':customerID', $customerIDToDelete, PDO::PARAM_INT);
-        $stmtDeleteCustomer->execute();
+    // Using prepared statement to prevent SQL injection
+    $customerIDToDelete = $_POST['deleteCustomer'];
+    $deleteSql = "DELETE FROM Customer WHERE CustomerID = ?";
+    $stmtDeleteCustomer = $conn->prepare($deleteSql);
+    $stmtDeleteCustomer->bind_param("i", $customerIDToDelete);
+    $stmtDeleteCustomer->execute();
 
-        if ($stmtDeleteCustomer->rowCount() > 0) {
-            header("Location: customer.php");
-            exit();
-        } else {
-            echo "Error: Customer not found or could not be deleted.";
-        }
-    } catch (PDOException $e) {
-        // Handle database errors
-        echo "Error: " . $e->getMessage();
+    if ($stmtDeleteCustomer->affected_rows > 0) {
+        header("Location: customer.php");
+        exit();
+    } else {
+        echo "Error: " . $stmtDeleteCustomer->error;
     }
+
+    $stmtDeleteCustomer->close();
 }
 
-include '../contain/horizontal-bar.php';
+$conn->close();
 ?>
 
-<?php if ($userrole == 'User'): ?>
-    <br><br><br>
-    <div class="button-and-search">
-        <h3>Sorry, users cannot access this page.</h3>
-    </div>
-<?php endif; ?>
+<div class="main-content">
+    <?php
+    $pathtitle = "Customers";
+    include '../contain/horizontal-bar.php';
+    ?>
 
-<?php if ($userrole !== 'User'): ?>
+    <?php if ($userrole == 'User'): ?>
+        <br><br><br>
+        <div class="button-and-search">
+        <h3>Sorry, user cannot access this page.</h3>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($userrole !== 'User'): ?>
+
     <main>
         <div class="button-and-search">
             <form method="POST">
@@ -102,28 +108,44 @@ include '../contain/horizontal-bar.php';
                     <?php else: ?>
                         <?php foreach ($subsetCustomers as $customer): ?>
                             <tr>
-                                <td><?= $customer['CustomerID'] ?></td>
-                                <td><?= $customer['Name'] ?></td>
-                                <td><?= $customer['Contact'] ?></td>
-                                <td><?= $customer['Email'] ?></td>
-                                <td><?= $customer['Address'] ?></td>
-                                <td><?= $customer['Remark'] ?></td>
+                                <td>
+                                    <?= $customer['CustomerID'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Name'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Contact'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Email'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Address'] ?>
+                                </td>
+                                <td>
+                                    <?= $customer['Remark'] ?>
+                                </td>
                                 <td>
                                     <form method="GET" action="customer-edit.php">
                                         <input type="hidden" name="customerID" value="<?= $customer['CustomerID'] ?>">
                                         <button class="edit" type="submit">edit</button>
                                     </form>
                                     <?php if ($userrole !== 'Manager'): ?>
-                                        <form method="POST">
-                                            <button class="delete" name="deleteCustomer" type="submit" onclick="return confirm('Are you sure you want to delete this customer?')">delete</button>
-                                            <input type="hidden" name="deleteCustomer" value="<?= $customer['CustomerID'] ?>">
-                                        </form>
+
+                                    <form method="POST">
+                                        <button class="delete" name="deleteCustomer" type="submit"
+                                            onclick="return confirm('Are you sure you want to delete this customer?')">delete
+                                        </button>
+                                        <input type="hidden" name="deleteCustomer" value="<?= $customer['CustomerID'] ?>">
+                                    </form>
                                     <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </tbody>
+
             </table>
         </div>
 
@@ -145,8 +167,9 @@ include '../contain/horizontal-bar.php';
             <?php endfor; ?>
         </div>
     </main>
-<?php endif; ?>
+    <?php endif; ?>
 
 </div>
 </body>
+
 </html>
