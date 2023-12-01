@@ -1,9 +1,9 @@
 -- Create a new database
-CREATE DATABASE IF NOT EXISTS easywire;
+CREATE DATABASE easywire;
 USE easywire;
 
 -- Create tables
-CREATE TABLE IF NOT EXISTS Company (
+CREATE TABLE Company (
     CompanyID INT AUTO_INCREMENT PRIMARY KEY,
     CompanyName VARCHAR(255) NOT NULL,
     Email VARCHAR(255),
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS Company (
     Address VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS User (
+CREATE TABLE User (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
     CompanyID INT,
     Username VARCHAR(50) NOT NULL,
@@ -26,13 +26,13 @@ CREATE TABLE IF NOT EXISTS User (
     FOREIGN KEY (CompanyID) REFERENCES Company(CompanyID)
 );
 
-CREATE TABLE IF NOT EXISTS Category (
+CREATE TABLE Category (
     CategoryID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(50) NOT NULL,
     Description TEXT
 );
 
-CREATE TABLE IF NOT EXISTS Warehouse (
+CREATE TABLE Warehouse (
     WarehouseID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
     Address VARCHAR(255),
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS Warehouse (
     Email VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS Customer (
+CREATE TABLE Customer (
     CustomerID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
     Contact VARCHAR(20),
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS Customer (
     Remark VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS Product (
+CREATE TABLE Product (
     ProductID INT AUTO_INCREMENT PRIMARY KEY,
     CategoryID INT,
     WarehouseID INT,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS Product (
     FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID)
 );
 
-CREATE TABLE IF NOT EXISTS Transaction (
+CREATE TABLE Transaction (
     TransactionID INT AUTO_INCREMENT PRIMARY KEY,
     WarehouseID INT,
     CustomerID INT,
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS Transaction (
     FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
 );
 
-CREATE TABLE IF NOT EXISTS TransactionDetail (
+CREATE TABLE TransactionDetail (
     TransactionDetailID INT AUTO_INCREMENT PRIMARY KEY,
     TransactionID INT,
     ProductID INT,
