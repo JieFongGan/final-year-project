@@ -11,14 +11,31 @@ require 'phpmailer/src/SMTP.php';
 $username = $_POST['username'];
 $companyName = $_POST['companyName'];
 
-$checkvalidcompany = mysqli_connect("localhost", "root", "", "adminallhere");
-$checkvalidcompanyquery = "SELECT CompanyName FROM user WHERE CompanyName = '$companyName'";
-$checkvalidcompanyresult = mysqli_query($checkvalidcompany, $checkvalidcompanyquery);
-if (mysqli_num_rows($checkvalidcompanyresult) == 0) {
-    $_SESSION['error_message'] = "Company does not exist";
-    header("Location: forgetpassword.php");
-    exit;
+try {
+    $checkvalidcompany = new PDO(
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+        "sqladmin",
+        "#Allhere",
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
+
+    // Use prepared statements to prevent SQL injection
+    $checkvalidcompanyquery = "SELECT CompanyName FROM [user] WHERE CompanyName = :companyName";
+    $stmt = $checkvalidcompany->prepare($checkvalidcompanyquery);
+    $stmt->bindParam(':companyName', $companyName);
+    $stmt->execute();
+
+    // Check the number of rows returned
+    if ($stmt->rowCount() == 0) {
+        session_start();
+        $_SESSION['error_message'] = "Company does not exist";
+        header("Location: forgetpassword.php");
+        exit;
+    }
+} catch (PDOException $e) {
+    die("Error checking company existence: " . $e->getMessage());
 }
+
 
 $conn = new PDO(
     "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = $companyName",

@@ -79,8 +79,10 @@ if ($username && $password) {
                     $_SESSION['companyname'] = $companyname;
                     $_SESSION['username'] = $username;
                     $_SESSION['userrole'] = $userrole;
-                    header("Location: layout/homepage.php");
-                    echo "Login successful";
+                    $_SESSION['error_message'] = $companyname . " " . $username . " " . $userrole;
+                    header("Location: login.php");
+                    // header("Location: layout/homepage.php");
+                    // echo "Login successful";
                     exit;
                 } else {
                     $_SESSION['error_message'] = "Incorrect password";

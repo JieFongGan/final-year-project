@@ -4,9 +4,14 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-$companyname = $_SESSION['companyname'];
-$username = $_SESSION['username'];
-$userrole = $_SESSION['userrole'];
+// Check if the session variable is set
+if (isset($_SESSION['companyname'])) {
+    $companyname = $_SESSION['companyname'];
+    $username = $_SESSION['username'];
+    $userrole = $_SESSION['userrole'];
+} else {
+    header("Location: ../login.php");
+}
 
 // Replace these values with your Azure SQL Database connection details
 $serverName = "tcp:allhereserver.database.windows.net,1433";
