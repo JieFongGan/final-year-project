@@ -4,7 +4,7 @@ include("../database/database-connect.php");
 include '../contain/header.php';
 
 // Prepare the SQL statement
-$sql = "SELECT * FROM Product";
+$sql = "SELECT * FROM [Transaction]";
 $stmt = $conn->prepare($sql);
 
 // Execute the statement
