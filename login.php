@@ -3,20 +3,25 @@
 session_start();
 
 try {
-    $conn = new PDO("sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb", "sqladmin", "{your_password_here}");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn = new PDO(
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+        "sqladmin",
+        "#Allhere",
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
 
     // Your SQL queries and operations go here
-    $sql = "SELECT * FROM company";
+    $sql = "SELECT * FROM dbo.company";
     $result = $conn->query($sql);
-    $rows = $result->fetchAll();
-    foreach ($rows as $row) {
-        echo $row['company_id'] . " - " . $row['company_name'] . " - " . $row['company_email'] . " - " . $row['company_password'] . " - " . $row['company_address'] . " - " . $row['company_phone'] . " - " . $row['company_website'] . " - " . $row['company_description'] . " - " . $row['company_logo'] . " - " . $row['company_status'] . "<br>";
+
+    // Example fetching data
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "Column1: {$row['column1']}<br>";
+        echo "Column2: {$row['column2']}<br>";
+        // Add more columns as needed
     }
-}
-catch (PDOException $e) {
-    print("Error connecting to SQL Server.");
-    die(print_r($e));
+} catch (PDOException $e) {
+    echo "Error connecting to SQL Server: " . $e->getMessage();
 }
 
 ?>
