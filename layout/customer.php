@@ -149,7 +149,7 @@ if (isset($_POST['deleteCustomer'])) {
 
         <div id="pagination" class="pagination">
             <?php for ($page = 1; $page <= $totalPages; $page++): ?>
-                <a href="?page=<?= $page ?>&itemsPerPage=<?= $itemsPerPage ?>" <?= $page == $current_page ? 'class="active"' : '' ?>>
+                <a href="?page=<?= $page ?>" <?= $page == $current_page ? 'class="active"' : '' ?>>
                     <?= $page ?>
                 </a>
             <?php endfor; ?>
