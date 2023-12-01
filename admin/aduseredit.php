@@ -120,7 +120,7 @@ $conn->close();
             <input type="text" id="userid" name="userid" value="<?php echo $_GET['userid']; ?>" readonly><br><br>
 
             <label for="companyname">Company Name:</label>
-            <input type="text" id="companyname" name="companyname" value="<?php echo $companyName; ?>"><br><br>
+            <input type="text" id="companyname" name="companyname" value="<?php echo $companyName; ?>" readonly><br><br>
 
             <label for="status">Status:</label>
             <select id="status" name="status">

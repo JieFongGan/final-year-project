@@ -86,14 +86,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Create a connection
     $conn = new mysqli($servername, $dbusername, $dbpassword, $database);
+    $connn = new mysqli("localhost", "root", "", "adminallhere");
+
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } else {
         //echo "Connected successfully!";
     }
 
+
     // Check if username already exists
     $sql = "SELECT * FROM user WHERE Username = '$newusername'";
+    $sqle = "SELECT * FROM user WHERE UserID = '$newusername'";
+    $results = mysqli_query($connn, $sqle);
+
+    if (mysqli_num_rows($results) > 0) {
+        $_SESSION['error_message'] = "Username already exists";
+        header("Location: settings-user-create.php");
+        exit;
+    }
+
+
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
         $_SESSION['error_message'] = "Username already exists";
@@ -110,7 +123,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserStatus, UserRole, LastLoginDate) VALUES ('$newUserID', '$companyid', '$newusername', '$password', '$email', '$phone', '$firstname', '$lastname', '$UserStatus', '$userrole', NOW())";
         if ($conn->query($sql) === TRUE) {
 
-            $connn = new mysqli("localhost", "root", "", "adminallhere");
             if ($connn->connect_error) {
                 die("Connection");
             } else {

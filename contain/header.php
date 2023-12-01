@@ -53,7 +53,7 @@
                         <span>Warehouse</span>
                     </a>
                 </li>
-                <?php if ($userrole == 'User'): ?>
+                <?php if ($userrole !== 'User'): ?>
                 <li>
                     <a href="../layout/customer.php">
                         <span class="ti-agenda"></span>
@@ -67,7 +67,7 @@
                         <span>Report</span>
                     </a>
                 </li>
-                <?php if ($userrole == 'User'): ?>
+                <?php if ($userrole !== 'User'): ?>
                 <li>
                     <a href="../layout/settings.php">
                         <span class="ti-settings"></span>

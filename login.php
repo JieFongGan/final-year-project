@@ -264,6 +264,7 @@ if(!$select_db)
                 <label class="login-label">Don't have an account? </label>
                 <a href="register.php" class="login-text2" style="color: blue;">Register</a>
               </div>
+              <br>
 
               <?php
                     // Check if an error message is set

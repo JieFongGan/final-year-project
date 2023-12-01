@@ -172,7 +172,7 @@ if ($stmt->num_rows == 0) {
         FOREIGN KEY (CompanyID) REFERENCES Company(CompanyID)
         )");
 
-        $conn->query("INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus) VALUES ('1', '$companyid', '$username', '$password', '$email', '$phone', '$firstname', '$lastname', 'Admin', '$currentDateTime', 'Active')");
+        $conn->query("INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus) VALUES ('1', '$companyid', '$username', '$password', '$email', '$phone', '$firstname', '$lastname', 'Admin', Now(), 'Active')");
 
         $conn->query("CREATE TABLE IF NOT EXISTS Category (
         CategoryID INT AUTO_INCREMENT PRIMARY KEY,

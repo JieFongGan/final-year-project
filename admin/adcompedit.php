@@ -100,8 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <label for="status">Status:</label>
             <select id="status" name="status">
-                <option value="Available" <?php if ($status == 'Available') echo 'selected'; ?>>Available</option>
-                <option value="Closed" <?php if ($status == 'Closed') echo 'selected'; ?>>Closed</option>
+                <option value="Active" <?php if ($status == 'Active') echo 'selected'; ?>>Active</option>
                 <option value="Disable" <?php if ($status == 'Disable') echo 'selected'; ?>>Disable</option>
             </select><br><br>
 

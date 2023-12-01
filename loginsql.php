@@ -51,6 +51,15 @@ if ($username && $password) {
             header("Location: login.php");
             exit;
         }
+        $sql = "SELECT Status FROM company WHERE CompanyName = '$companyname'";
+        $result = $conn->query($sql);
+        $row = $result->fetch_assoc();
+        $Status = $row['Status'];
+        if ($Status == 'Disable') {
+            $_SESSION['error_message'] = "Company has been terminated";
+            header("Location: login.php");
+            exit;
+        }
 
         $cone = new mysqli($servername, $dbusername, $dbpassword, $companyname);
 

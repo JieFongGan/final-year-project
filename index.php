@@ -78,23 +78,23 @@ $latestTransactionsQuery = mysqli_query($conn, "SELECT * FROM Transaction ORDER 
                         <span>Warehouse</span>
                     </a>
                 </li>
-                <?php if ($userrole == 'User'): ?>
+                <?php if ($userrole !== 'User'): ?>
                 <li>
-                    <a href="../layout/customer.php">
+                    <a href="layout/customer.php">
                         <span class="ti-agenda"></span>
                         <span>Customer</span>
                     </a>
                 </li>
                 <?php endif; ?>
                 <li>
-                    <a href="../layout/report.php">
+                    <a href="layout/report.php">
                         <span class="ti-pie-chart"></span>
                         <span>Report</span>
                     </a>
                 </li>
-                <?php if ($userrole == 'User'): ?>
+                <?php if ($userrole !== 'User'): ?>
                 <li>
-                    <a href="../layout/settings.php">
+                    <a href="layout/settings.php">
                         <span class="ti-settings"></span>
                         <span>Setting</span>
                     </a>
