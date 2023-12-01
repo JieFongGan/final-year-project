@@ -2,21 +2,19 @@
 
 session_start();
 
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "adminallhere";
-$conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed:" . $conn->connect_error);
-}
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    $conn = new PDO(
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+        "sqladmin",
+        "#Allhere",
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
 $username = validateInput($_POST['username']);
-$password = validatePassword($_POST['password']);
+$password = $_POST['password']; // No need to validate password at this stage
 
 function validateInput($data)
 {
@@ -26,70 +24,70 @@ function validateInput($data)
     return $data;
 }
 
-function validatePassword($password)
-{
-    if (strlen($password) >= 6 && preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/", $password)) {
-        return $password;
-    } else {
-        $_SESSION['error_message'] = "Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one number";
-        header("Location: login.php");
-        exit;
-    }
-}
-
-
-
 if ($username && $password) {
-    $sql = "SELECT CompanyName, Status FROM user WHERE UserID = '$username'";
-    $result = $conn->query($sql);
+    try {
+        $stmt = $conn->prepare("SELECT CompanyName, Status FROM user WHERE UserID = :username");
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $companyname = $row['CompanyName'];
-        $Status = $row['Status'];
+        if ($row) {
+            $companyname = $row['CompanyName'];
+            $status = $row['Status'];
 
-        if ($Status == "Disable") {
-            $_SESSION['error_message'] = "Account has been terminated";
-            header("Location: login.php");
-            exit;
-        }
-        $sql = "SELECT Status FROM company WHERE CompanyName = '$companyname'";
-        $result = $conn->query($sql);
-        $row = $result->fetch_assoc();
-        $Status = $row['Status'];
-        if ($Status == 'Disable') {
-            $_SESSION['error_message'] = "Company has been terminated";
-            header("Location: login.php");
-            exit;
-        }
-
-        $cone = new mysqli($servername, $dbusername, $dbpassword, $companyname);
-
-        if ($cone->connect_error) {
-            die("Connection failed: " . $cone->connect_error);
-        }
-
-        $sql = "SELECT Username, Password, UserRole FROM user WHERE Username = '$username'";
-
-        $result = $cone->query($sql);
-
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $storedPassword = $row['Password'];
-            $userrole = $row['UserRole'];
-
-            if ($password === $storedPassword) {
-                // Update LastLoginDate
-                $updateSql = "UPDATE user SET LastLoginDate = NOW() WHERE Username = '$username'";
-                $cone->query($updateSql);
-
-                $_SESSION['companyname'] = $companyname;
-                $_SESSION['username'] = $username;
-                $_SESSION['userrole'] = $userrole;
-                header("Location: layout/homepage.php");
+            if ($status == "Disable") {
+                $_SESSION['error_message'] = "Account has been terminated";
+                header("Location: login.php");
                 exit;
+            }
+
+            $stmt = $conn->prepare("SELECT Status FROM company WHERE CompanyName = :companyname");
+            $stmt->bindParam(':companyname', $companyname);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $status = $row['Status'];
+
+            if ($status == 'Disable') {
+                $_SESSION['error_message'] = "Company has been terminated";
+                header("Location: login.php");
+                exit;
+            }
+
+            $cone = new PDO(
+                "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = easywire",
+                "sqladmin",
+                "#Allhere",
+                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+            );
+
+            $stmt = $cone->prepare("SELECT Username, Password, UserRole FROM user WHERE Username = :username");
+            $stmt->bindParam(':username', $username);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                $storedPassword = $row['Password'];
+                $userrole = $row['UserRole'];
+
+                if (password_verify($password, $storedPassword)) {
+                    // Update LastLoginDate
+                    $updateSql = "UPDATE user SET LastLoginDate = NOW() WHERE Username = :username";
+                    $stmt = $cone->prepare($updateSql);
+                    $stmt->bindParam(':username', $username);
+                    $stmt->execute();
+
+                    $_SESSION['companyname'] = $companyname;
+                    $_SESSION['username'] = $username;
+                    $_SESSION['userrole'] = $userrole;
+                    header("Location: layout/homepage.php");
+                    exit;
+                } else {
+                    $_SESSION['error_message'] = "Incorrect password";
+                    header("Location: login.php");
+                    exit;
+                }
             } else {
-                $_SESSION['error_message'] = "Incorrect password";
+                $_SESSION['error_message'] = "Username not found";
                 header("Location: login.php");
                 exit;
             }
@@ -98,14 +96,11 @@ if ($username && $password) {
             header("Location: login.php");
             exit;
         }
-    } else {
-        $_SESSION['error_message'] = "Username not found";
-        header("Location: login.php");
-        exit;
+    } catch (PDOException $e) {
+        die("Error: " . $e->getMessage());
+    } finally {
+        $conn = null;
+        $cone = null;
     }
 }
-
-$conn->close();
 ?>
-                
-                

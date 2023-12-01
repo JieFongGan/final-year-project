@@ -35,7 +35,7 @@ try {
         $authCode = generateRandomAuthCode($existingAuthCodes);
 
         // Insert new record into the company table
-        $sqlInsert = "INSERT INTO company (CompanyName, Status, AuthCode) VALUES (NULL, NULL, :authCode)";
+        $sqlInsert = "INSERT INTO company (CompanyName, Status, AuthCode) VALUES ('', '', $authCode)";
         $stmtInsert = $conn->prepare($sqlInsert);
         $stmtInsert->bindParam(':authCode', $authCode);
 
