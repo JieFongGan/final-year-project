@@ -13,15 +13,10 @@ if (isset($_SESSION['companyname'])) {
     header("Location: ../login.php");
 }
 
-// Debug statements
-echo "Company Name: $companyname<br>";
-echo "Username: $username<br>";
-echo "User Role: $userrole<br>";
-
 
 // Replace these values with your Azure SQL Database connection details
 $serverName = "tcp:allhereserver.database.windows.net,1433";
-$database = "$companyname";
+$database = "easywire";
 $uid = "sqladmin";
 $pwd = "#Allhere";
 
