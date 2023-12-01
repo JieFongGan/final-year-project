@@ -20,7 +20,7 @@ $processedTransactionsResult = fetchSingleResult($conn, "SELECT COUNT(*) AS tota
 $userCountResult = fetchSingleResult($conn, "SELECT COUNT(*) AS userCount FROM [User]");
 $warehouseCountResult = fetchSingleResult($conn, "SELECT COUNT(*) AS warehouseCount FROM Warehouse");
 $categoryCountResult = fetchSingleResult($conn, "SELECT COUNT(*) AS categoryCount FROM Category");
-$latestTransactionsQuery = $conn->query("SELECT * FROM [Transaction] ORDER BY TransactionDate DESC LIMIT 5");
+$latestTransactionsQuery = $conn->query("SELECT TOP 5 * FROM [Transaction] ORDER BY TransactionDate DESC");
 
 ?>
 
