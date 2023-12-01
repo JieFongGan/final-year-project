@@ -45,16 +45,15 @@ if (isset($_POST['Cnew'])) {
 if (isset($_POST['deleteProduct'])) {
     $productIDToDelete = $_POST['deleteProduct'];
 
-    $deleteSql = "DELETE FROM Product WHERE ProductID = :productIDToDelete";
+    $deleteSql = "DELETE FROM Product WHERE ProductID = :productID";
     $deleteStmt = $conn->prepare($deleteSql);
-    $deleteStmt->bindParam(':productIDToDelete', $productIDToDelete, PDO::PARAM_INT);
-    $deleteResult = $deleteStmt->execute();
+    $deleteStmt->bindParam(':productID', $productIDToDelete, PDO::PARAM_STR);
 
-    if ($deleteResult) {
+    if ($deleteStmt->execute()) {
         header("Location: inventory.php");
         exit();
     } else {
-        echo "Error: " . $conn->errorInfo()[2];
+        echo "Error: " . $deleteStmt->errorInfo()[2];
     }
 }
 
