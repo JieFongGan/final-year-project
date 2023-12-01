@@ -5,27 +5,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
-    // Connect to the database
-    $servername = "localhost";
-    $dbusername = "root";
-    $dbpassword = "";
-    $dbname = "adminallhere";
-
-    $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+    $conn = new PDO(
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+        "sqladmin",
+        "#Allhere",
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
 
     // Prepare and execute the query
     $stmt = $conn->prepare("SELECT * FROM admin WHERE AdminID = ? AND AdminPassword = ?");
-    $stmt->bind_param("ss", $username, $password);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->execute([$username, $password]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Check if username and password match
-    if ($result->num_rows == 1) {
+    if (count($results) == 1) {
         // Redirect to admincomplist.php
         header("Location: admincomplist.php");
         exit();
@@ -33,10 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Display error message
         echo "Incorrect username or password";
     }
-
-    // Close the database connection
-    $stmt->close();
-    $conn->close();
 }
 ?>
 

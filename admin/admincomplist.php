@@ -201,30 +201,24 @@
                     </thead>
 
                     <?php
-                    // Connect to the database
-                    $servername = "localhost";
-                    $dbusername = "root";
-                    $dbpassword = "";
-                    $dbname = "adminallhere";
-
-                    $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-
-                    // Check connection
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
-
+                    $conn = new PDO(
+                        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+                        "sqladmin",
+                        "#Allhere",
+                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+                    );
+                
                     // Fetch data from the database with search conditions
                     $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
                     $query = "SELECT CompanyName, Status, AuthCode FROM company WHERE 
                                 CompanyName LIKE '%$searchKeyword%' OR
                                 Status LIKE '%$searchKeyword%' OR
                                 AuthCode LIKE '%$searchKeyword%'";
-                    $result = mysqli_query($conn, $query);
-
+                    $result = $conn->query($query);
+                
                     // Display the fetched data
                     $number = 1;
-                    while ($row = mysqli_fetch_assoc($result)) {
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         echo "<tr>";
                         echo "<td>" . $number . "</td>";
                         echo "<td>" . $row['CompanyName'] . "</td>";
@@ -241,25 +235,26 @@
                         echo "</tr>";
                         $number++;
                     }
-
-
+                
                     // Delete button functionality
                     if (isset($_POST['delete'])) {
                         $authCode = $_POST['AuthCode'];
-
+                
                         // Select the CompanyName based on the provided AuthCode
-                        $query = 'SELECT CompanyName FROM company WHERE AuthCode = "' . $authCode . '"';
-                        $result = mysqli_query($conn, $query);
-
+                        $query = 'SELECT CompanyName FROM company WHERE AuthCode = :authCode';
+                        $stmt = $conn->prepare($query);
+                        $stmt->bindParam(':authCode', $authCode);
+                        $stmt->execute();
+                
                         // Check if the query was successful
-                        if ($result) {
-                            $row = mysqli_fetch_assoc($result);
+                        if ($stmt) {
+                            $row = $stmt->fetch(PDO::FETCH_ASSOC);
                             $companyName = $row['CompanyName'];
-
+                
                             if ($companyName === null) {
-                                echo "Error retrieving CompanyName: " . mysqli_error($conn);
+                                echo "Error retrieving CompanyName: " . $conn->errorInfo();
                             }
-
+                
                             // Display confirmation dialog using JavaScript
                             $confirmationMessage = ($companyName !== null) ? "Are you sure you want to delete $companyName and its users?" : "Are you sure you want to delete AuthCode: $authCode?";
                             echo "<script>
@@ -268,57 +263,62 @@
                                     }
                                 </script>";
                         } else {
-                            echo "Error retrieving CompanyName: " . mysqli_error($conn);
+                            echo "Error retrieving CompanyName: " . $conn->errorInfo();
                         }
                     }
-
+                
                     // Check if deleteAuthCode is set in the URL
                     if (isset($_GET['deleteAuthCode'])) {
                         $authCodeToDelete = $_GET['deleteAuthCode'];
-
+                
                         // Retrieve CompanyName before deletion
-                        $query = "SELECT CompanyName FROM company WHERE AuthCode = '$authCodeToDelete'";
-                        $result = mysqli_query($conn, $query);
-
-                        if ($result) {
-                            $row = mysqli_fetch_assoc($result);
+                        $query = "SELECT CompanyName FROM company WHERE AuthCode = :authCodeToDelete";
+                        $stmt = $conn->prepare($query);
+                        $stmt->bindParam(':authCodeToDelete', $authCodeToDelete);
+                        $stmt->execute();
+                
+                        if ($stmt) {
+                            $row = $stmt->fetch(PDO::FETCH_ASSOC);
                             $companyName = $row['CompanyName'];
-
+                
                             // Delete all users from the user table with the specified CompanyName
-                            $deleteUsersQuery = "DELETE FROM user WHERE CompanyName = '$companyName'";
-                            $deleteUsersResult = mysqli_query($conn, $deleteUsersQuery);
-
+                            $deleteUsersQuery = "DELETE FROM user WHERE CompanyName = :companyName";
+                            $deleteUsersStmt = $conn->prepare($deleteUsersQuery);
+                            $deleteUsersStmt->bindParam(':companyName', $companyName);
+                            $deleteUsersResult = $deleteUsersStmt->execute();
+                
                             if (!$deleteUsersResult) {
-                                echo "Error deleting users: " . mysqli_error($conn);
+                                echo "Error deleting users: " . $conn->errorInfo();
                             }
                         }
-
+                
                         // Delete the record from the company table
-                        $deleteQueryCompany = "DELETE FROM company WHERE AuthCode = '$authCodeToDelete'";
-                        $deleteResultCompany = mysqli_query($conn, $deleteQueryCompany);
-
+                        $deleteQueryCompany = "DELETE FROM company WHERE AuthCode = :authCodeToDelete";
+                        $deleteStmtCompany = $conn->prepare($deleteQueryCompany);
+                        $deleteStmtCompany->bindParam(':authCodeToDelete', $authCodeToDelete);
+                        $deleteResultCompany = $deleteStmtCompany->execute();
+                
                         if ($deleteResultCompany) {
                             echo "Record deleted successfully.";
-
+                
                             // Check if $companyName is not NULL and delete the corresponding database
                             if ($companyName !== null) {
                                 $deleteDatabaseQuery = "DROP DATABASE $companyName";
-                                $deleteDatabaseResult = mysqli_query($conn, $deleteDatabaseQuery);
-
+                                $deleteDatabaseStmt = $conn->prepare($deleteDatabaseQuery);
+                                $deleteDatabaseResult = $deleteDatabaseStmt->execute();
+                
                                 if ($deleteDatabaseResult) {
                                     echo "Database $companyName deleted successfully.";
                                 } else {
-                                    echo "Error deleting database $companyName: " . mysqli_error($conn);
+                                    echo "Error deleting database $companyName: " . $conn->errorInfo();
                                 }
                             }
-
+                
                             echo "<script>window.location.href='admincomplist.php';</script>";
                         } else {
-                            echo "Error deleting record: " . mysqli_error($conn);
+                            echo "Error deleting record: " . $conn->errorInfo();
                         }
                     }
-
-
                     ?>
                 </table>
             </div>

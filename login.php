@@ -10,16 +10,6 @@ try {
         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
     );
 
-    // Your SQL queries and operations go here
-    $sql = "SELECT * FROM dbo.company";
-    $result = $conn->query($sql);
-
-    // Example fetching data
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        echo "Column1: {$row['column1']}<br>";
-        echo "Column2: {$row['column2']}<br>";
-        // Add more columns as needed
-    }
 } catch (PDOException $e) {
     echo "Error connecting to SQL Server: " . $e->getMessage();
 }
