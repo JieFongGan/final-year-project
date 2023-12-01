@@ -13,7 +13,7 @@ try {
         COUNT(td.TransactionDetailID) AS TotalTransactionDetails,
         SUM(td.Quantity) AS TotalItemsSold
     FROM
-        Transaction t
+        [Transaction] t
     JOIN
         TransactionDetail td ON t.TransactionID = td.TransactionID
     WHERE

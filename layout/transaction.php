@@ -8,7 +8,7 @@ $itemsPerPage = isset($_GET['itemsPerPage']) ? (int)$_GET['itemsPerPage'] : 10;
 
 try {
     // Fetch total number of transactions
-    $sqlTotalTransactions = "SELECT COUNT(*) FROM Transaction";
+    $sqlTotalTransactions = "SELECT COUNT(*) FROM [Transaction]";
     $stmtTotalTransactions = $conn->prepare($sqlTotalTransactions);
     $stmtTotalTransactions->execute();
     $totalTransactions = $stmtTotalTransactions->fetchColumn();
@@ -24,7 +24,7 @@ try {
     $offset = ($current_page - 1) * $itemsPerPage;
 
     // Fetch a subset of transactions based on the offset and items per page
-    $sqlSubsetTransactions = "SELECT * FROM Transaction ORDER BY TransactionDate DESC LIMIT :limit OFFSET :offset";
+    $sqlSubsetTransactions = "SELECT * FROM [Transaction] ORDER BY TransactionDate DESC LIMIT :limit OFFSET :offset";
     $stmtSubsetTransactions = $conn->prepare($sqlSubsetTransactions);
     $stmtSubsetTransactions->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
     $stmtSubsetTransactions->bindValue(':offset', $offset, PDO::PARAM_INT);
