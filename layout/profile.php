@@ -3,7 +3,7 @@ $pageTitle = "Profile";
 include("../database/database-connect.php");
 include '../contain/header.php';
     // Fetch user data based on the username
-    $userDataQuery = mysqli_query($conn, "SELECT * FROM User WHERE Username = '$username'");
+    $userDataQuery = mysqli_query($conn, "SELECT * FROM [user] WHERE Username = '$username'");
     $userData = mysqli_fetch_assoc($userDataQuery);
 
 
@@ -15,7 +15,7 @@ include '../contain/header.php';
         $firstName = $_POST['firstName'];
         $lastName = $_POST['lastName'];
 
-        $sql = "UPDATE User SET Email = '$email', Phone = '$phone', FirstName = '$firstName', LastName = '$lastName' WHERE UserID = '$userID'";
+        $sql = "UPDATE [user] SET Email = '$email', Phone = '$phone', FirstName = '$firstName', LastName = '$lastName' WHERE UserID = '$userID'";
         if ($conn->query($sql) === TRUE) {
             // Redirect back to the previous page or perform any other action
             header('Location: ../index.php');
