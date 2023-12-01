@@ -3,55 +3,36 @@ $pageTitle = "Transactions";
 include("../database/database-connect.php");
 include '../contain/header.php';
 
+// Prepare the SQL statement
+$sql = "SELECT * FROM Product";
+$stmt = $conn->prepare($sql);
+
+// Execute the statement
+$stmt->execute();
+
+// Fetch the results
+$transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Pagination
-$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int)$_GET['itemsPerPage'] : 10;
+$totalItems = count($transactions);
+$totalPages = ceil($totalItems / $itemsPerPage);
 
-try {
-    // Fetch total number of transactions
-    $sqlTotalTransactions = "SELECT COUNT(*) FROM [Transaction]";
-    $stmtTotalTransactions = $conn->prepare($sqlTotalTransactions);
-    $stmtTotalTransactions->execute();
-    $totalTransactions = $stmtTotalTransactions->fetchColumn();
+// Get the current page from the URL, default to 1 if not set
+$current_page = isset($_GET['page']) ? $_GET['page'] : 1;
+$current_page = max(1, min($totalPages, $current_page));
 
-    // Calculate total pages and handle division by zero
-    $totalPages = $totalTransactions > 0 ? ceil($totalTransactions / $itemsPerPage) : 1;
+// Calculate the offset
+$offset = ($current_page - 1) * $itemsPerPage;
 
-    // Get the current page from the URL, default to 1 if not set
-    $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
-    $current_page = max(1, min($totalPages, $current_page));
-
-    // Calculate the offset
-    $offset = ($current_page - 1) * $itemsPerPage;
-
-    $sqlSubsetTransactions = "
-    SELECT * 
-    FROM (
-        SELECT 
-            ROW_NUMBER() OVER (ORDER BY TransactionDate DESC) AS RowNum,
-            * 
-        FROM [Transaction]
-    ) AS Sub
-    WHERE RowNum BETWEEN :offset + 1 AND :offset + :limit;
-";
-
-    $stmtSubsetTransactions = $conn->prepare($sqlSubsetTransactions);
-    $stmtSubsetTransactions->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
-    $stmtSubsetTransactions->bindValue(':offset', $offset, PDO::PARAM_INT);
-    $stmtSubsetTransactions->execute();
-    $subsetTransactions = $stmtSubsetTransactions->fetchAll(PDO::FETCH_ASSOC);
-
-} catch (PDOException $e) {
-    // Handle database errors
-    echo "Error: " . $e->getMessage();
-    exit();
-}
+// Get a subset of transactions based on the offset and items per page
+$subsetTransactions = array_slice($transactions, $offset, $itemsPerPage);
 
 if (isset($_POST['Cnew'])) {
-    header("Location: transaction-new.php");
-    exit();
+    header("Location: inventory-new.php");
+    exit;
 }
 
-$conn = null;
 ?>
 
 <div class="main-content">
@@ -89,24 +70,12 @@ $conn = null;
                     <?php else: ?>
                         <?php foreach ($subsetTransactions as $transaction): ?>
                             <tr>
-                                <td>
-                                    <?= $transaction['TransactionID'] ?>
-                                </td>
-                                <td>
-                                    <?= $transaction['WarehouseID'] ?>
-                                </td>
-                                <td>
-                                    <?= $transaction['CustomerID'] ?>
-                                </td>
-                                <td>
-                                    <?= $transaction['TransactionType'] ?>
-                                </td>
-                                <td>
-                                    <?= $transaction['TransactionDate'] ?>
-                                </td>
-                                <td>
-                                    <?= $transaction['DeliveryStatus'] ?>
-                                </td>
+                                <td><?= $transaction['TransactionID'] ?></td>
+                                <td><?= $transaction['WarehouseID'] ?></td>
+                                <td><?= $transaction['CustomerID'] ?></td>
+                                <td><?= $transaction['TransactionType'] ?></td>
+                                <td><?= $transaction['TransactionDate'] ?></td>
+                                <td><?= $transaction['DeliveryStatus'] ?></td>
                                 <td>
                                     <form method="GET" action="transaction-detailProduct.php">
                                         <input type="hidden" name="transactionID" value="<?= $transaction['TransactionID'] ?>">
@@ -144,5 +113,4 @@ $conn = null;
     </main>
 </div>
 </body>
-
 </html>
