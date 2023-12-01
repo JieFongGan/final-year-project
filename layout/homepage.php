@@ -95,24 +95,20 @@ $latestTransactionsQuery = $pdo->query("SELECT * FROM Transaction ORDER BY Trans
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                while ($row = mysqli_fetch_assoc($latestTransactionsQuery)) {
+                            <?php
+                                foreach ($latestTransactionsResult as $row) {
                                     $statusClass = ($row['DeliveryStatus'] == 'Pending' || $row['DeliveryStatus'] == 'Processing') ? 'warning' : 'success';
                                     ?>
                                     <tr>
-                                        <td>
-                                            <?php echo $row['TransactionType']; ?>
-                                        </td>
-                                        <td>
-                                            <?php echo date('d M, Y', strtotime($row['TransactionDate'])); ?>
-                                        </td>
+                                        <td><?php echo $row['TransactionType']; ?></td>
+                                        <td><?php echo date('d M, Y', strtotime($row['TransactionDate'])); ?></td>
                                         <td>
                                             <span class="badge <?php echo $statusClass; ?>">
                                                 <?php echo $row['DeliveryStatus']; ?>
                                             </span>
                                         </td>
                                     </tr>
-                                    <?php
+                                <?php
                                 }
                                 ?>
                             </tbody>
