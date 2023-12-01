@@ -18,9 +18,9 @@ try {
     WHERE
         t.TransactionType = 'Sales'   -- Filter for sales transactions
     GROUP BY
-        Year
+        YEAR(TransactionDate)  -- Use the actual expression in GROUP BY
     ORDER BY
-        Year;
+        YEAR(TransactionDate);
     ";
 
     $stmt = $conn->prepare($sql);
