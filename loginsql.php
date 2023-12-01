@@ -26,7 +26,7 @@ function validateInput($data)
 
 if ($username && $password) {
     try {
-        $stmt = $conn->prepare("SELECT companyName, Status FROM [user] WHERE UserID = :username");
+        $stmt = $conn->prepare("SELECT CompanyName, Status FROM [user] WHERE UserID = :username");
         $stmt->bindParam(':username', $username);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
