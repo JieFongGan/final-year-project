@@ -13,20 +13,21 @@ if (isset($_SESSION['companyname'])) {
     header("Location: ../login.php");
 }
 
-// Replace these values with your actual database connection details
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$database = $companyname;
+// Replace these values with your Azure SQL Database connection details
+$serverName = "tcp:allhereserver.database.windows.net,1433";
+$database = "allheredb";
+$uid = "sqladmin";
+$pwd = "#Allhere";
 
 // Create a connection
-$conn = new mysqli($servername, $dbusername, $dbpassword, $database);
+$conn = new PDO("sqlsrv:server=$serverName;Database=$database", $uid, $pwd);
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    // echo "Connected successfully!";
+try {
+    $conn = new PDO("sqlsrv:server=$serverName;Database=$database", $uid, $pwd);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
-
 ?>
