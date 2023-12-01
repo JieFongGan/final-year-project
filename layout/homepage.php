@@ -22,6 +22,13 @@ $warehouseCountResult = fetchSingleResult($conn, "SELECT COUNT(*) AS warehouseCo
 $categoryCountResult = fetchSingleResult($conn, "SELECT COUNT(*) AS categoryCount FROM Category");
 $latestTransactionsQuery = $conn->query("SELECT TOP 5 * FROM [Transaction] ORDER BY TransactionDate DESC");
 
+if ($latestTransactionsQuery !== false) {
+    $latestTransactionsResult = $latestTransactionsQuery->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    // Handle the error, you can log it or display a message
+    echo "Error executing the latest transactions query.";
+}
+
 ?>
 
 <div class="main-content">
