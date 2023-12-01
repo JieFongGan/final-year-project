@@ -170,21 +170,15 @@ $successCardholder = "John Doe"; -->
     // Basic card validation
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-      $servername = "localhost";
-      $username = "root";
-      $password = "";
-      $dbname = "adminallhere";
-
-      // Create a connection
-      $conn = new mysqli($servername, $username, $password, $dbname);
-
-      // Check the connection
-      if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-      }
+      $conn = new PDO(
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+        "sqladmin",
+        "#Allhere",
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
 
       // Query to find authcode with NULL CompanyName
-      $sql = "SELECT AuthCode FROM company WHERE CompanyName IS NULL";
+      $sql = "SELECT AuthCode FROM company WHERE CompanyName = ''";
 
       $result = $conn->query($sql);
 
