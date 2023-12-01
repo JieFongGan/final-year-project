@@ -58,6 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Check if the second update was successful
             if ($stmt->execute()) {
                 // Redirect back to the previous page
+                $_SESSION['userrole'] = $userRole ;
                 header('Location: settings-user.php');
                 exit();
             } else {

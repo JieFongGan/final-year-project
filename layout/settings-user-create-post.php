@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $newUserID = $row['max_id'] + 1;
 
         // Create user
-        $sql = "INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserStatus, UserRole, LastLoginDate) VALUES ('$newUserID', '$companyid', '$newusername', '$password', '$email', '$phone', '$firstname', '$lastname', '$UserStatus', '$userrole', '$currentDateTime')";
+        $sql = "INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserStatus, UserRole, LastLoginDate) VALUES ('$newUserID', '$companyid', '$newusername', '$password', '$email', '$phone', '$firstname', '$lastname', '$UserStatus', '$userrole', NOW())";
         if ($conn->query($sql) === TRUE) {
 
             $connn = new mysqli("localhost", "root", "", "adminallhere");

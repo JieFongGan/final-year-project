@@ -222,12 +222,11 @@
             </span>
             <h2 class="about-details-heading heading2">About Our Company</h2>
             <span class="about-details-sub-heading">
-              We are a leading provider of cloud services, offering a wide
-              range of solutions to meet your needs. With our experienced team
-              and top-notch customer service, we strive to exceed your
-              expectations. Whether you need help with savings, security, or
-              maintenance, we've got you covered. Choose us for reliable
-              and affordable services that you can trust.
+            All Here is a Cloud-Based Multi-Tenant Inventory System. This comprehensive solution, featuring a singular, all-encompassing plan, 
+            excels in simplifying inventory management for businesses. Users can effortlessly handle product, category, company, and customer information, ensuring a 
+            streamlined approach to inventory control. With robust transaction tracking and detailed transaction records, businesses gain insights into their operations. 
+            The system's user management ensures secure access, while its singular plan approach eliminates complexity. Cheers to a year of success in delivering efficiency 
+            and transparency to businesses seeking a seamless and inclusive inventory management solution!
             </span>
           </div>
           <img alt="image"

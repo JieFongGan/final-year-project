@@ -58,13 +58,14 @@ if ($username && $password) {
             die("Connection failed: " . $cone->connect_error);
         }
 
-        $sql = "SELECT Username, Password FROM user WHERE Username = '$username'";
+        $sql = "SELECT Username, Password, UserRole FROM user WHERE Username = '$username'";
 
         $result = $cone->query($sql);
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $storedPassword = $row['Password'];
+            $userrole = $row['UserRole'];
 
             if ($password === $storedPassword) {
                 // Update LastLoginDate
@@ -73,6 +74,7 @@ if ($username && $password) {
 
                 $_SESSION['companyname'] = $companyname;
                 $_SESSION['username'] = $username;
+                $_SESSION['userrole'] = $userrole;
                 header("Location: index.php");
                 exit;
             } else {

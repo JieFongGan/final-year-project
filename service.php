@@ -270,12 +270,11 @@
                 </svg>
                 <div class="feature-card-container">
                   <h3 class="feature-card-text heading3">
-                    <span>Flexible Plans</span>
+                    <span>Flexible Style</span>
                   </h3>
                   <span class="feature-card-text1">
                     <span>
-                      Select from three different plan options to suit your
-                      requirements
+                      Create the style that suitable for you and your business
                     </span>
                   </span>
                 </div>

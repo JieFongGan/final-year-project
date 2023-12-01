@@ -1,12 +1,14 @@
 <?php
 // Start the session
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Check if the session variable is set
 if (isset($_SESSION['companyname'])) {
     $companyname = $_SESSION['companyname'];
     $username = $_SESSION['username'];
-    
+    $userrole = $_SESSION['userrole'];
 } else {
     header("Location: ../final-year-project/login.php");
 }

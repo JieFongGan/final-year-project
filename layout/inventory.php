@@ -69,7 +69,9 @@ $conn->close();
     <main>
         <div class="button-and-search">
             <form method="POST">
+            <?php if ($userrole !== 'User'): ?>
                 <button name="Cnew">Create New</button>
+            <?php endif; ?>
             </form>
             <input type="text" id="searchInput" placeholder="Search on current list..." onkeyup="searchTable()">
         </div>
@@ -119,12 +121,14 @@ $conn->close();
                                         <button class="edit" type="submit">edit</button>
                                     </form>
 
+                                    <?php if ($userrole !== 'User'): ?>
                                     <form method="POST">
                                         <button class="delete" name="deleteProduct" type="submit"
                                             onclick="return confirm('Are you sure you want to delete this product?')">delete
                                         </button>
                                         <input type="hidden" name="deleteProduct" value="<?= $product[1] ?>">
                                     </form>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

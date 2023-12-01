@@ -9,7 +9,7 @@ $pendingTransactionsQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalPending
                                                 WHERE DeliveryStatus = 'Pending'");
 $pendingTransactionsResult = mysqli_fetch_assoc($pendingTransactionsQuery);
 
-$processedTransactionsQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalProcessedTransactions FROM Transaction                                                  WHERE DeliveryStatus IN ('Processing', 'Shipped')");
+$processedTransactionsQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalProcessedTransactions FROM Transaction WHERE DeliveryStatus IN ('Processing', 'Shipped')");
 $processedTransactionsResult = mysqli_fetch_assoc($processedTransactionsQuery);
 
 $userCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS userCount FROM User");
@@ -215,37 +215,41 @@ $latestTransactionsQuery = mysqli_query($conn, "SELECT * FROM Transaction ORDER 
                         </div>
                     </div>
 
-                    <div class="summary">
-                        <div class="summary-card">
-                            <div class="summary-single">
-                                <span class="ti-id-badge"></span>
-                                <div>
-                                    <h5>
-                                        <?php echo $userCountResult['userCount']; ?>
-                                    </h5>
-                                    <small>Number of user</small>
+
+                    <?php if ($userrole !== 'User'): ?>
+                        <div class="summary">
+                            <div class="summary-card">
+                                <div class="summary-single">
+                                    <span class="ti-id-badge"></span>
+                                    <div>
+                                        <h5>
+                                            <?php echo $userCountResult['userCount']; ?>
+                                        </h5>
+                                        <small>Number of user</small>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="summary-single">
-                                <span class="ti-calendar"></span>
-                                <div>
-                                    <h5>
-                                        <?php echo $warehouseCountResult['warehouseCount']; ?>
-                                    </h5>
-                                    <small>Number of warehouse</small>
+                                <div class="summary-single">
+                                    <span class="ti-calendar"></span>
+                                    <div>
+                                        <h5>
+                                            <?php echo $warehouseCountResult['warehouseCount']; ?>
+                                        </h5>
+                                        <small>Number of warehouse</small>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="summary-single">
-                                <span class="ti-face-smile"></span>
-                                <div>
-                                    <h5>
-                                        <?php echo $categoryCountResult['categoryCount']; ?>
-                                    </h5>
-                                    <small>Category create</small>
+                                <div class="summary-single">
+                                    <span class="ti-face-smile"></span>
+                                    <div>
+                                        <h5>
+                                            <?php echo $categoryCountResult['categoryCount']; ?>
+                                        </h5>
+                                        <small>Category create</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
+
                 </div>
             </section>
         </main>

@@ -74,7 +74,9 @@ $conn->close();
     <main>
         <div class="button-and-search">
             <form method="POST">
+            <?php if ($userrole !== 'Manager' && $userrole !== 'User'): ?>
                 <button name="Cnew">Create New</button>
+            <?php endif; ?>
             </form>
             <input type="text" id="searchInput" placeholder="Search on the current list..." onkeyup="searchTable()">
         </div>
@@ -88,7 +90,9 @@ $conn->close();
                         <th>Address</th>
                         <th>Contact</th>
                         <th>Email</th>
+                        <?php if ($userrole !== 'User'): ?>
                         <th>Action</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -114,11 +118,13 @@ $conn->close();
                                 <td>
                                     <?= $warehouse[4] ?>
                                 </td>
+                                <?php if ($userrole !== 'User'): ?>
                                 <td>
                                     <form method="GET" action="warehouse-edit.php">
                                         <input type="hidden" name="warehouseID" value="<?= $warehouse[0] ?>">
                                         <button class="edit" type="submit">edit</button>
                                     </form>
+                                    <?php if ($userrole !== 'Manager'): ?>
 
                                     <form method="POST">
                                         <button class="delete" name="deleteWarehouse" type="submit"
@@ -126,7 +132,9 @@ $conn->close();
                                         </button>
                                         <input type="hidden" name="deleteWarehouse" value="<?= $warehouse[0] ?>">
                                     </form>
+                                    <?php endif; ?> 
                                 </td>
+                                <?php endif; ?>   
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

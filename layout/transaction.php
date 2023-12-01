@@ -30,7 +30,7 @@ $current_page = max(1, min($totalPages, $current_page));
 $offset = ($current_page - 1) * $itemsPerPage;
 
 // Fetch a subset of transactions based on the offset and items per page
-$sqlSubsetTransactions = "SELECT * FROM Transaction LIMIT $itemsPerPage OFFSET $offset";
+$sqlSubsetTransactions = "SELECT * FROM Transaction ORDER BY TransactionDate DESC LIMIT $itemsPerPage OFFSET $offset";
 $resultSubsetTransactions = $conn->query($sqlSubsetTransactions);
 
 // Check if the query was successful

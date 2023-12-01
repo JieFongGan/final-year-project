@@ -70,6 +70,15 @@ $conn->close();
     include '../contain/horizontal-bar.php';
     ?>
 
+    <?php if ($userrole == 'User'): ?>
+        <br><br><br>
+        <div class="button-and-search">
+        <h3>Sorry, user cannot access this page.</h3>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($userrole !== 'User'): ?>
+
     <main>
         <div class="button-and-search">
             <form method="POST">
@@ -122,6 +131,7 @@ $conn->close();
                                         <input type="hidden" name="customerID" value="<?= $customer['CustomerID'] ?>">
                                         <button class="edit" type="submit">edit</button>
                                     </form>
+                                    <?php if ($userrole !== 'Manager'): ?>
 
                                     <form method="POST">
                                         <button class="delete" name="deleteCustomer" type="submit"
@@ -129,6 +139,7 @@ $conn->close();
                                         </button>
                                         <input type="hidden" name="deleteCustomer" value="<?= $customer['CustomerID'] ?>">
                                     </form>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -156,6 +167,7 @@ $conn->close();
             <?php endfor; ?>
         </div>
     </main>
+    <?php endif; ?>
 
 </div>
 </body>

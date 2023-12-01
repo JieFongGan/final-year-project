@@ -269,6 +269,7 @@ if ($stmt->num_rows == 0) {
         $conn->close();
         $_SESSION['companyname'] = $companyname;
         $_SESSION['username'] = $username;
+        $_SESSION['userrole'] = "Admin";
         header("Location: index.php");
     }
 }

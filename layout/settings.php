@@ -12,6 +12,15 @@ include '../contain/header.php';
     include '../contain/horizontal-bar.php';
     ?>
 
+    <?php if ($userrole == 'User'): ?>
+        <br><br><br>
+        <div class="button-and-search">
+        <h3>Sorry, user cannot access this page.</h3>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($userrole !== 'User'): ?>
+
     <main>
         <ul class="settings-container">
             <li class="settings-item">
@@ -20,14 +29,17 @@ include '../contain/header.php';
                     <span class="settings-icon">&#9656;</span>
                 </a>
             </li>
+            <?php if ($userrole !== 'Manager'): ?>
             <li class="settings-item">
                 <a class="settings-link" href="settings-user.php">
                     <div class="settings-header">User</div>
                     <span class="settings-icon">&#9656;</span>
                 </a>
             </li>
+            <?php endif; ?>
         </ul>
     </main>
+    <?php endif; ?>
 
 </div>
 </body>
