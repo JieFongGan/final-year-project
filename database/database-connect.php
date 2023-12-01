@@ -19,10 +19,6 @@ $database = $companyname;
 $uid = "sqladmin";
 $pwd = "#Allhere";
 
-// Create a connection
-$conn = new PDO("sqlsrv:server=$serverName;Database=$database", $uid, $pwd);
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
 // Check the connection
 try {
     $conn = new PDO("sqlsrv:server=$serverName;Database=$database", $uid, $pwd);

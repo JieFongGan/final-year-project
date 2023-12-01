@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 $pageTitle = "Homepage";
 include("../database/database-connect.php"); // Include your PDO connection here
 include '../contain/header.php';
