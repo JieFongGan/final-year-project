@@ -26,7 +26,7 @@ function validateInput($data)
 
 if ($username && $password) {
     try {
-        $stmt = $conn->prepare("SELECT CompanyName, Status FROM user WHERE UserID = :username");
+        $stmt = $conn->prepare("SELECT companyName, Status FROM [user] WHERE UserID = :username");
         $stmt->bindParam(':username', $username);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -41,7 +41,7 @@ if ($username && $password) {
                 exit;
             }
 
-            $stmt = $conn->prepare("SELECT Status FROM company WHERE CompanyName = :companyname");
+            $stmt = $conn->prepare("SELECT Status FROM [company] WHERE CompanyName = :companyname");
             $stmt->bindParam(':companyname', $companyname);
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -60,7 +60,7 @@ if ($username && $password) {
                 array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
             );
 
-            $stmt = $cone->prepare("SELECT Username, Password, UserRole FROM user WHERE Username = :username");
+            $stmt = $cone->prepare("SELECT Username, Password, UserRole FROM [user] WHERE Username = :username");
             $stmt->bindParam(':username', $username);
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -71,7 +71,7 @@ if ($username && $password) {
 
                 if (password_verify($password, $storedPassword)) {
                     // Update LastLoginDate
-                    $updateSql = "UPDATE user SET LastLoginDate = NOW() WHERE Username = :username";
+                    $updateSql = "UPDATE [user] SET LastLoginDate = NOW() WHERE Username = :username";
                     $stmt = $cone->prepare($updateSql);
                     $stmt->bindParam(':username', $username);
                     $stmt->execute();
