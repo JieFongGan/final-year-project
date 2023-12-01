@@ -3,27 +3,30 @@ $pageTitle = "Homepage";
 include("../database/database-connect.php");
 include '../contain/header.php';
 
+
 // Fetch relevant data for the dashboard
-$totalInventoryQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalProducts FROM Product");
-$totalInventoryResult = mysqli_fetch_assoc($totalInventoryQuery);
+$totalInventoryQuery = $conn->query("SELECT COUNT(*) AS totalProducts FROM Product");
+$totalInventoryResult = $totalInventoryQuery->fetch(PDO::FETCH_ASSOC);
 
-$pendingTransactionsQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalPendingTransactions FROM Transaction 
-                                                WHERE DeliveryStatus = 'Pending'");
-$pendingTransactionsResult = mysqli_fetch_assoc($pendingTransactionsQuery);
+$pendingTransactionsQuery = $conn->query("SELECT COUNT(*) AS totalPendingTransactions FROM Transaction 
+                                            WHERE DeliveryStatus = 'Pending'");
+$pendingTransactionsResult = $pendingTransactionsQuery->fetch(PDO::FETCH_ASSOC);
 
-$processedTransactionsQuery = mysqli_query($conn, "SELECT COUNT(*) AS totalProcessedTransactions FROM Transaction                                                  WHERE DeliveryStatus IN ('Processing', 'Shipped')");
-$processedTransactionsResult = mysqli_fetch_assoc($processedTransactionsQuery);
+$processedTransactionsQuery = $conn->query("SELECT COUNT(*) AS totalProcessedTransactions FROM Transaction
+                                            WHERE DeliveryStatus IN ('Processing', 'Shipped')");
+$processedTransactionsResult = $processedTransactionsQuery->fetch(PDO::FETCH_ASSOC);
 
-$userCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS userCount FROM User");
-$userCountResult = mysqli_fetch_assoc($userCountQuery);
+$userCountQuery = $conn->query("SELECT COUNT(*) AS userCount FROM User");
+$userCountResult = $userCountQuery->fetch(PDO::FETCH_ASSOC);
 
-$warehouseCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS warehouseCount FROM Warehouse");
-$warehouseCountResult = mysqli_fetch_assoc($warehouseCountQuery);
+$warehouseCountQuery = $conn->query("SELECT COUNT(*) AS warehouseCount FROM Warehouse");
+$warehouseCountResult = $warehouseCountQuery->fetch(PDO::FETCH_ASSOC);
 
-$categoryCountQuery = mysqli_query($conn, "SELECT COUNT(*) AS categoryCount FROM Category");
-$categoryCountResult = mysqli_fetch_assoc($categoryCountQuery);
+$categoryCountQuery = $conn->query("SELECT COUNT(*) AS categoryCount FROM Category");
+$categoryCountResult = $categoryCountQuery->fetch(PDO::FETCH_ASSOC);
 
-$latestTransactionsQuery = mysqli_query($conn, "SELECT * FROM Transaction ORDER BY TransactionDate DESC LIMIT 5");
+$latestTransactionsQuery = $conn->query("SELECT * FROM Transaction ORDER BY TransactionDate DESC LIMIT 5");
+$latestTransactionsResult = $latestTransactionsQuery->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
