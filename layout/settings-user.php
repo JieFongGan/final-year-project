@@ -3,73 +3,64 @@ $pageTitle = "Settings/Users";
 include("../database/database-connect.php");
 include '../contain/header.php';
 
-// Fetch all users
-$sqlAllUsers = "SELECT * FROM User";
-$resultAllUsers = $conn->query($sqlAllUsers);
+try {
+    // Fetch all users
+    $sqlAllUsers = "SELECT * FROM User";
+    $stmtAllUsers = $conn->prepare($sqlAllUsers);
+    $stmtAllUsers->execute();
+    $allUsers = $stmtAllUsers->fetchAll(PDO::FETCH_ASSOC);
 
-if (!$resultAllUsers) {
-    echo "Error fetching all users: " . $conn->error;
+    // Delete user logic
+    if (isset($_POST['deleteUser'])) {
+        $userIDToDelete = $_POST['deleteUser'];
+
+        // Get the username of the user to be deleted
+        $sqlGetUsername = "SELECT Username FROM User WHERE UserID = ?";
+        $stmtGetUsername = $conn->prepare($sqlGetUsername);
+        $stmtGetUsername->bindParam(1, $userIDToDelete, PDO::PARAM_INT);
+        $stmtGetUsername->execute();
+        $usernameToDelete = $stmtGetUsername->fetchColumn();
+
+        // Create a new connection for the other database
+        $connn = new PDO('mysql:host=localhost;dbname=adminallhere', 'root', '');
+
+        // Use a prepared statement to prevent SQL injection
+        $sqlDeleteOtherTable = "DELETE FROM user WHERE UserID = ?";
+        $stmtDeleteOtherTable = $connn->prepare($sqlDeleteOtherTable);
+        $stmtDeleteOtherTable->bindParam(1, $usernameToDelete, PDO::PARAM_STR);
+        $stmtDeleteOtherTable->execute();
+
+        // Check for errors
+        if ($stmtDeleteOtherTable->errorCode() !== '00000') {
+            $errorInfo = $stmtDeleteOtherTable->errorInfo();
+            echo "Error deleting from other table: " . $errorInfo[2];
+            exit();
+        }
+
+        // Perform the deletion in the main user table
+        $sqlDeleteUser = "DELETE FROM User WHERE UserID = ?";
+        $stmtDeleteUser = $conn->prepare($sqlDeleteUser);
+        $stmtDeleteUser->bindParam(1, $userIDToDelete, PDO::PARAM_INT);
+        $stmtDeleteUser->execute();
+
+        // Check for errors
+        if ($stmtDeleteUser->errorCode() !== '00000') {
+            $errorInfo = $stmtDeleteUser->errorInfo();
+            echo "Error deleting user: " . $errorInfo[2];
+            exit();
+        }
+
+        // Redirect to the same page to refresh the user list
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+} catch (PDOException $e) {
+    // Handle database errors
+    echo "Error: " . $e->getMessage();
     exit();
 }
 
-$allUsers = $resultAllUsers->fetch_all(MYSQLI_ASSOC);
-
-// Delete user logic
-if (isset($_POST['deleteUser'])) {
-    $userIDToDelete = $_POST['deleteUser'];
-
-    // Get the username of the user to be deleted
-    $sqlGetUsername = "SELECT Username FROM User WHERE UserID = $userIDToDelete";
-    $resultGetUsername = $conn->query($sqlGetUsername);
-
-    if (!$resultGetUsername) {
-        echo "Error fetching username: " . $conn->error;
-        exit();
-    }
-
-    $usernameToDelete = $resultGetUsername->fetch_assoc()['Username'];
-
-    // Create a new connection for the other database
-    $connn = new mysqli('localhost', 'root', '', 'adminallhere');
-
-    // Check the new connection
-    if ($connn->connect_error) {
-        die("Connection failed: " . $connn->connect_error);
-    }
-
-    // Use a prepared statement to prevent SQL injection
-    $sqlDeleteOtherTable = "DELETE FROM user WHERE UserID = ?";
-    $stmt = $connn->prepare($sqlDeleteOtherTable);
-
-    // Bind parameters
-    $stmt->bind_param('s', $usernameToDelete);
-
-    // Execute the statement
-    $stmt->execute();
-
-    // Check for errors
-    if ($stmt->error) {
-        echo "Error deleting from other table: " . $stmt->error;
-        exit();
-    }
-
-    // Close the statement
-    $stmt->close();
-
-    // Perform the deletion
-    $sqlDeleteUser = "DELETE FROM User WHERE UserID = $userIDToDelete";
-    $resultDeleteUser = $conn->query($sqlDeleteUser);
-    if (!$resultDeleteUser) {
-        echo "Error deleting user: " . $conn->error;
-        exit();
-    }
-
-    // Redirect to the same page to refresh the user list
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
-}
-
-$conn->close();
+$conn = null; // Close the main database connection
 ?>
 
 <div class="main-content">
@@ -109,39 +100,20 @@ $conn->close();
                     <?php else: ?>
                         <?php foreach ($allUsers as $user): ?>
                             <tr>
-                                <td>
-                                    <?= $user['UserID'] ?>
-                                </td>
-                                <td>
-                                    <?= $user['Username'] ?>
-                                </td>
-                                <td>
-                                    <?= $user['Email'] ?>
-                                </td>
-                                <td>
-                                    <?= $user['Phone'] ?>
-                                </td>
-                                <td>
-                                    <?= $user['FirstName'] ?>
-                                </td>
-                                <td>
-                                    <?= $user['LastName'] ?>
-                                </td>
-                                <td>
-                                    <?= $user['UserRole'] ?>
-                                </td>
-                                <td>
-                                    <?= $user['LastLoginDate'] ?>
-                                </td>
-                                <td>
-                                    <?= $user['UserStatus'] ?>
-                                </td>
+                                <td><?= $user['UserID'] ?></td>
+                                <td><?= $user['Username'] ?></td>
+                                <td><?= $user['Email'] ?></td>
+                                <td><?= $user['Phone'] ?></td>
+                                <td><?= $user['FirstName'] ?></td>
+                                <td><?= $user['LastName'] ?></td>
+                                <td><?= $user['UserRole'] ?></td>
+                                <td><?= $user['LastLoginDate'] ?></td>
+                                <td><?= $user['UserStatus'] ?></td>
                                 <td>
                                     <form method="GET" action="settings-user-edit.php">
                                         <input type="hidden" name="userID" value="<?= $user['UserID'] ?>">
                                         <button class="edit" type="submit">edit</button>
                                     </form>
-
                                     <form method="POST">
                                         <button class="delete" name="deleteUser" type="submit"
                                             onclick="return confirm('Are you sure you want to remove this user?')">remove
@@ -158,5 +130,4 @@ $conn->close();
     </main>
 </div>
 </body>
-
 </html>

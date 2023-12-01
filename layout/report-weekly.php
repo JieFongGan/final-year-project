@@ -3,37 +3,40 @@ $pageTitle = "Weekly Report";
 include("../database/database-connect.php");
 include '../contain/header.php';
 
+try {
+    // SQL query for Weekly Sales Report
+    $sql = "
+    SELECT
+        YEAR(TransactionDate) AS Year,
+        WEEK(TransactionDate) AS Week,
+        COUNT(DISTINCT t.TransactionID) AS TotalTransactions,
+        COUNT(td.TransactionDetailID) AS TotalTransactionDetails,
+        SUM(td.Quantity) AS TotalItemsSold
+    FROM
+        Transaction t
+    JOIN
+        TransactionDetail td ON t.TransactionID = td.TransactionID
+    WHERE
+        t.TransactionType = 'Sales'   -- Filter for sales transactions
+    GROUP BY
+        Year, Week
+    ORDER BY
+        Year, Week;
+    ";
 
-// SQL query for Weekly Sales Report
-$sql = "
-SELECT
-    YEAR(TransactionDate) AS Year,
-    WEEK(TransactionDate) AS Week,
-    COUNT(DISTINCT t.TransactionID) AS TotalTransactions,
-    COUNT(td.TransactionDetailID) AS TotalTransactionDetails,
-    SUM(td.Quantity) AS TotalItemsSold
-FROM
-    Transaction t
-JOIN
-    TransactionDetail td ON t.TransactionID = td.TransactionID
-WHERE
-    t.TransactionType = 'Sales'   -- Filter for sales transactions
-GROUP BY
-    Year, Week
-ORDER BY
-    Year, Week;
-";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
 
-$result = $conn->query($sql);
-
-// Check if the result set is empty
-if ($result->num_rows > 0) {
-    $weeklyReport = $result->fetch_all(MYSQLI_ASSOC);
-} else {
-    $weeklyReport = []; // Set an empty array if there are no results
+    // Fetch the result as an associative array
+    $weeklyReport = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // Handle database errors
+    echo "Error: " . $e->getMessage();
+    exit();
+} finally {
+    // Close the database connection
+    $conn = null;
 }
-
-$conn->close();
 ?>
 
 <div class="main-content">
