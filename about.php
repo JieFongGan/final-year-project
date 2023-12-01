@@ -150,10 +150,10 @@
     <div class="about-container">
       <div class="about-header">
         <header data-thq="thq-navbar" class="about-navbar-interactive">
-          <a href="homepage.php" class="about-logo">AllHere</a>
+          <a href="index.php" class="about-logo">AllHere</a>
           <div data-thq="thq-navbar-nav" class="about-desktop-menu">
             <nav class="about-links">
-              <a href="homepage.php">Home</a>
+              <a href="index.php">Home</a>
               <a href="service.php" class="about-nav2">Service</a>
               
               <a href="about.php" class="about-nav4">About</a>
@@ -239,7 +239,7 @@
           <div class="about-container2">
             <span class="about-logo2">AllHere</span>
             <nav class="about-nav1">
-              <a href="homepage.php" class="about-nav12">Home</a>
+              <a href="index.php" class="about-nav12">Home</a>
               <a href="service.php" class="about-nav22">Service</a>
               <a href="about.php" class="about-nav42">About</a>
             </nav>

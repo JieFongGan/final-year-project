@@ -150,10 +150,10 @@
     <div class="service-container">
       <div class="service-header">
         <header data-thq="thq-navbar" class="service-navbar-interactive">
-          <a href="homepage.php" class="service-logo">AllHere</a>
+          <a href="index.php" class="service-logo">AllHere</a>
           <div data-thq="thq-navbar-nav" class="service-desktop-menu">
             <nav class="service-links">
-              <a href="homepage.php">Home</a>
+              <a href="index.php">Home</a>
               <a href="service.php" class="service-nav2">Service</a>
               <a href="about.php" class="service-nav4">About</a>
             </nav>
@@ -305,7 +305,7 @@
           <div class="service-container3">
             <span class="service-logo2">AllHere</span>
             <nav class="service-nav1">
-              <a href="homepage.php" class="service-nav12">Home</a>
+              <a href="index.php" class="service-nav12">Home</a>
               <a href="service.php" class="service-nav22">Service</a>
               <a href="about.php" class="service-nav42">About</a>
             </nav>

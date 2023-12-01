@@ -10,7 +10,7 @@ if (isset($_SESSION['companyname'])) {
     $username = $_SESSION['username'];
     $userrole = $_SESSION['userrole'];
 } else {
-    header("Location: ../final-year-project/login.php");
+    header("Location: ../login.php");
 }
 
 // Replace these values with your actual database connection details

@@ -166,10 +166,10 @@ if(!$select_db)
     <div class="login-container">
       <div class="login-header">
         <header data-thq="thq-navbar" class="login-navbar-interactive">
-          <a href="homepage.php" class="login-logo">AllHere</a>
+          <a href="index.php" class="login-logo">AllHere</a>
           <div data-thq="thq-navbar-nav" class="login-desktop-menu">
             <nav class="login-links">
-              <a href="homepage.php">Home</a>
+              <a href="index.php">Home</a>
               <a href="service.php" class="login-nav2">Service</a>
               <a href="about.php" class="login-nav4">About</a>
             </nav>
@@ -290,7 +290,7 @@ if(!$select_db)
           <div class="login-container2">
             <span class="login-logo2">AllHere</span>
             <nav class="login-nav1">
-              <a href="homepage.php" class="login-nav12">Home</a>
+              <a href="index.php" class="login-nav12">Home</a>
               <a href="service.php" class="login-nav22">Service</a>
               <a href="about.php" class="login-nav42">About</a>
             </nav>

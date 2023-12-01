@@ -153,10 +153,10 @@ session_start();
     <div class="register-container">
       <div class="register-header">
         <header data-thq="thq-navbar" class="register-navbar-interactive">
-          <a href="homepage.php" class="register-logo">AllHere</a>
+          <a href="index.php" class="register-logo">AllHere</a>
           <div data-thq="thq-navbar-nav" class="register-desktop-menu">
             <nav class="register-links">
-              <a href="homepage.php">Home</a>
+              <a href="index.php">Home</a>
               <a href="service.php" class="register-nav2">Service</a>
               <a href="about.php" class="register-nav4">About</a>
             </nav>
@@ -341,7 +341,7 @@ session_start();
           <div class="register-container2">
             <span class="register-logo2">AllHere</span>
             <nav class="register-nav1">
-              <a href="homepage.php" class="register-nav12">Home</a>
+              <a href="index.php" class="register-nav12">Home</a>
               <a href="service.php" class="register-nav22">Service</a>
               <a href="about.php" class="register-nav42">About</a>
             </nav>
