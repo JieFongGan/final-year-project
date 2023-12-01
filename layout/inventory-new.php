@@ -1,18 +1,18 @@
 <?php
 $pageTitle = "Inventory/Create";
-include("../database/database-connect.php");
+include '../database/database-connect.php';
 include '../contain/header.php';
 
 $errors = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
-    $productName = mysqli_real_escape_string($conn, $_POST['productName']);
-    $categoryID = mysqli_real_escape_string($conn, $_POST['category']);
-    $warehouseID = !empty($_POST['productWarehouse']) ? mysqli_real_escape_string($conn, $_POST['productWarehouse']) : null;
-    $description = mysqli_real_escape_string($conn, $_POST['productDescription']);
-    $price = mysqli_real_escape_string($conn, $_POST['productPrice']);
-    $quantity = mysqli_real_escape_string($conn, $_POST['productQuantity']);
+    $productName = $_POST['productName'];
+    $categoryID = $_POST['category'];
+    $warehouseID = !empty($_POST['productWarehouse']) ? $_POST['productWarehouse'] : null;
+    $description = $_POST['productDescription'];
+    $price = $_POST['productPrice'];
+    $quantity = $_POST['productQuantity'];
 
     // Additional validation checks
     if (empty($productName)) {
@@ -41,19 +41,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $insertSql = "INSERT INTO Product (Name, CategoryID, WarehouseID, Description, Price, Quantity, LastUpdatedDate) 
                       VALUES (?, ?, ?, ?, ?, ?, NOW())";
         $insertStmt = $conn->prepare($insertSql);
-        $insertStmt->bind_param("siisdi", $productName, $categoryID, $warehouseID, $description, $price, $quantity);
-        $insertStmt->execute();
+        $insertStmt->execute([$productName, $categoryID, $warehouseID, $description, $price, $quantity]);
 
         // Check if the insertion was successful
-        if ($insertStmt->affected_rows > 0) {
+        if ($insertStmt->rowCount() > 0) {
             echo "Product created successfully.";
             header("Location: inventory.php");
             exit();
         } else {
-            echo "Error creating product: " . $insertStmt->error;
+            echo "Error creating product.";
         }
-
-        $insertStmt->close();
     }
 }
 

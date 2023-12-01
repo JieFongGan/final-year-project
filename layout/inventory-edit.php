@@ -1,6 +1,6 @@
 <?php
 $pageTitle = "Inventory/Edit";
-include("../database/database-connect.php");
+include '../database/database-connect.php';
 include '../contain/header.php';
 
 // Check if the product ID is set in the URL
@@ -10,19 +10,14 @@ if (isset($_GET['productID'])) {
     // Fetch product information based on the product ID
     $sql = "SELECT * FROM Product WHERE ProductID = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $productID);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->execute([$productID]);
+    $productData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($result->num_rows > 0) {
-        $productData = $result->fetch_assoc();
-    } else {
+    if (!$productData) {
         // Handle the case where no product is found with the given ID
         echo "Product not found.";
         exit();
     }
-
-    $stmt->close();
 } else {
     // Handle the case where product ID is not set
     echo "Product ID not specified.";
@@ -53,19 +48,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       LastUpdatedDate = NOW() 
                       WHERE ProductID = ?";
         $updateStmt = $conn->prepare($updateSql);
-        $updateStmt->bind_param("siisdii", $productName, $categoryID, $warehouseID, $description, $price, $quantity, $productID);
-        $updateStmt->execute();
+        $updateStmt->execute([$productName, $categoryID, $warehouseID, $description, $price, $quantity, $productID]);
 
         // Check if the update was successful
-        if ($updateStmt->affected_rows > 0) {
+        if ($updateStmt->rowCount() > 0) {
             echo "Product updated successfully.";
             header("Location: inventory.php");
             exit();
         } else {
-            echo "Error updating product: " . $updateStmt->error;
+            echo "Error updating product.";
         }
-
-        $updateStmt->close();
     }
 }
 
