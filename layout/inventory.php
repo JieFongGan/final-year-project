@@ -1,6 +1,6 @@
 <?php
 $pageTitle = "Inventory";
-include("../database/database-connect.php");
+include '../database/database-connect.php';
 include '../contain/header.php';
 
 $sql = "SELECT Name, ProductID, WarehouseID, Description, Price, Quantity FROM Product";
@@ -8,9 +8,9 @@ $result = $conn->query($sql);
 
 $products = array();
 
-if ($result->num_rows > 0) {
+if ($result->rowCount() > 0) {
     // Fetch data from the result set
-    while ($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $products[] = array(
             $row["Name"],
             $row["ProductID"],
@@ -23,7 +23,7 @@ if ($result->num_rows > 0) {
 }
 
 // Pagination
-$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int)$_GET['itemsPerPage'] : 10;
 $totalItems = count($products);
 $totalPages = ceil($totalItems / $itemsPerPage);
 
@@ -43,20 +43,21 @@ if (isset($_POST['Cnew'])) {
 }
 
 if (isset($_POST['deleteProduct'])) {
-    $productIDToDelete = mysqli_real_escape_string($conn, $_POST['deleteProduct']);
+    $productIDToDelete = $_POST['deleteProduct'];
 
-    $deleteSql = "DELETE FROM Product WHERE ProductID = '$productIDToDelete'";
-    $deleteResult = $conn->query($deleteSql);
+    $deleteSql = "DELETE FROM Product WHERE ProductID = :productIDToDelete";
+    $deleteStmt = $conn->prepare($deleteSql);
+    $deleteStmt->bindParam(':productIDToDelete', $productIDToDelete, PDO::PARAM_INT);
+    $deleteResult = $deleteStmt->execute();
 
     if ($deleteResult) {
         header("Location: inventory.php");
         exit();
     } else {
-        echo "Error: " . $conn->error;
+        echo "Error: " . $conn->errorInfo()[2];
     }
 }
 
-$conn->close();
 ?>
 
 <div class="main-content">
