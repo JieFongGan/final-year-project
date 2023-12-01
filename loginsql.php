@@ -36,7 +36,7 @@ if ($username && $password) {
             $status = $row['Status'];
 
             if ($status == "Disable") {
-                $_SESSION['error_message'] = "Account has been terminated , $companyname";
+                $_SESSION['error_message'] = "Account has been terminated , $companyname, $status";
                 header("Location: login.php");
                 exit;
             }
