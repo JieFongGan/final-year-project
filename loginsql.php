@@ -82,7 +82,7 @@ if ($username && $password) {
                     header("Location: layout/homepage.php");
                     exit;
                 } else {
-                    $_SESSION['error_message'] = "Incorrect password";
+                    $_SESSION['error_message'] = $storedPassword;
                     header("Location: login.php");
                     exit;
                 }
