@@ -24,10 +24,10 @@ try {
     $offset = ($current_page - 1) * $itemsPerPage;
 
     // Fetch a subset of customers based on the offset and items per page using prepared statement
-    $sqlSubsetCustomers = "SELECT * FROM Customer LIMIT :itemsPerPage OFFSET :offset";
+    $sqlSubsetCustomers = "SELECT * FROM Customer LIMIT ? OFFSET ?";
     $stmtSubsetCustomers = $conn->prepare($sqlSubsetCustomers);
-    $stmtSubsetCustomers->bindParam(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
-    $stmtSubsetCustomers->bindParam(':offset', $offset, PDO::PARAM_INT);
+    $stmtSubsetCustomers->bindParam(1, $itemsPerPage, PDO::PARAM_INT);
+    $stmtSubsetCustomers->bindParam(2, $offset, PDO::PARAM_INT);
     $stmtSubsetCustomers->execute();
     $subsetCustomers = $stmtSubsetCustomers->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -45,9 +45,9 @@ if (isset($_POST['deleteCustomer'])) {
     try {
         // Using prepared statement to prevent SQL injection
         $customerIDToDelete = $_POST['deleteCustomer'];
-        $deleteSql = "DELETE FROM Customer WHERE CustomerID = :customerID";
+        $deleteSql = "DELETE FROM Customer WHERE CustomerID = ?";
         $stmtDeleteCustomer = $conn->prepare($deleteSql);
-        $stmtDeleteCustomer->bindParam(':customerID', $customerIDToDelete, PDO::PARAM_INT);
+        $stmtDeleteCustomer->bindParam(1, $customerIDToDelete, PDO::PARAM_INT);
         $stmtDeleteCustomer->execute();
 
         if ($stmtDeleteCustomer->rowCount() > 0) {
