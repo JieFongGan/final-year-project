@@ -39,7 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $price = $_POST['productPrice'];
         $quantity = $_POST['productQuantity'];
 
-        // Update the product in the database
         $updateSql = "UPDATE Product SET 
               Name = ?, 
               CategoryID = ?, 
@@ -47,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               Description = ?, 
               Price = ?, 
               Quantity = ?, 
-              LastUpdatedDate = NOW() 
+              LastUpdatedDate = GETDATE() 
               WHERE ProductID = ?";
         $updateStmt = $conn->prepare($updateSql);
         $updateStmt->execute([$productName, $categoryID, $warehouseID, $description, $price, $quantity, $productID]);
