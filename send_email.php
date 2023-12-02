@@ -39,14 +39,14 @@ try {
 
 try {
     $conn = new PDO(
-        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = $companyName",
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433;Database=$companyName",
         "sqladmin",
         "#Allhere",
         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
     );
 
     // Use prepared statements to prevent SQL injection
-    $query = "SELECT email, password FROM [user] WHERE username = :username";
+    $query = "SELECT Email, Password FROM [user] WHERE username = :username";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':username', $username);
     $stmt->execute();
