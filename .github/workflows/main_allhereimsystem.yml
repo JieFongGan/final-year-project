@@ -63,4 +63,4 @@ jobs:
           app-name: 'allhereimsystem'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B2D9F6C1C3484C30BFF0884AA6CA5D9E }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1BE5BE67C60847CC9B266155FF21CB7C }}
