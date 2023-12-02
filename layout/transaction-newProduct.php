@@ -1,5 +1,6 @@
 <?php
 session_start();
+ob_start(); // Start output buffering
 
 // Include header and database connection
 $pageTitle = "Transactions/New-product";
@@ -31,17 +32,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (empty($errors)) {
         // Insert transaction information
         $insertTransactionSql = "INSERT INTO Transaction (WarehouseID, TransactionType, CustomerID, TransactionDate, DeliveryStatus) VALUES (?, ?, ?, NOW(), 'Pending')";
-        $stmt = $conn->prepare($insertTransactionSql);
-        $stmt->bind_param("iss", $_SESSION['selectedWarehouse'], $_SESSION['selectedTransactionType'], $_SESSION['selectedCustomer']);
-        $stmt->execute();
-        $stmt->close();
+        $stmtTransaction = $conn->prepare($insertTransactionSql);
+        $stmtTransaction->bind_param("iss", $_SESSION['selectedWarehouse'], $_SESSION['selectedTransactionType'], $_SESSION['selectedCustomer']);
+        $stmtTransaction->execute();
+        $stmtTransaction->close();
 
         // Get the ID of the last inserted transaction
         $lastTransactionId = $conn->insert_id;
 
         // Insert selected products and quantities into a transaction details table
         $insertDetailsSql = "INSERT INTO TransactionDetail (TransactionID, ProductID, Quantity) VALUES (?, ?, ?)";
-        $stmt = $conn->prepare($insertDetailsSql);
+        $stmtDetails = $conn->prepare($insertDetailsSql);
 
         // Loop through all products to check if the checkbox is selected
         foreach ($selectedProducts as $key => $productId) {
@@ -50,8 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Check if the checkbox for this product is checked
             if (isset($_POST['selectedProducts'][$productId])) {
                 // Process the selected product
-                $stmt->bind_param("iii", $lastTransactionId, $productId, $quantity);
-                $stmt->execute();
+                $stmtDetails->bind_param("iii", $lastTransactionId, $productId, $quantity);
+                $stmtDetails->execute();
 
                 // Update the product quantity based on the transaction type
                 $updateQuantitySql = "UPDATE Product SET Quantity = Quantity ";
@@ -73,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         }
 
-        $stmt->close();
+        $stmtDetails->close();
 
         // Redirect to the next page or display a success message
         header("Location: transaction.php");
@@ -92,11 +93,11 @@ $selectedWarehouse = $_SESSION['selectedWarehouse'];
 
 // Fetch product data based on the selected warehouse
 $productSql = "SELECT ProductID, Name, Price FROM Product WHERE WarehouseID = ?";
-$stmt = $conn->prepare($productSql);
-$stmt->bind_param("i", $selectedWarehouse);
-$stmt->execute();
-$productResult = $stmt->get_result();
-$stmt->close();
+$stmtProduct = $conn->prepare($productSql);
+$stmtProduct->bind_param("i", $selectedWarehouse);
+$stmtProduct->execute();
+$productResult = $stmtProduct->get_result();
+$stmtProduct->close();
 ?>
 
 <div class="main-content">
@@ -151,6 +152,10 @@ $stmt->close();
         </form>
     </main>
 </div>
+
+<?php
+ob_end_flush(); // Flush the output buffer and turn off output buffering
+?>
 
 </body>
 

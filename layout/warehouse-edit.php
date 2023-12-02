@@ -1,5 +1,3 @@
-
-
 <?php
 $pageTitle = "Warehouse/Edit";
 include("../database/database-connect.php");

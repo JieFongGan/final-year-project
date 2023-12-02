@@ -1,5 +1,6 @@
 <?php
 session_start(); // Start the session
+ob_start(); // Start output buffering
 
 $pageTitle = "Transaction/New";
 include("../database/database-connect.php");
@@ -138,6 +139,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </main>
 </div>
+
+<?php
+ob_end_flush(); // Flush the output buffer and turn off output buffering
+?>
 
 </body>
 

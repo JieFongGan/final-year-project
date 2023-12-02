@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Start output buffering
 $pageTitle = "Transactions/Detail";
 include("../database/database-connect.php");
 include '../contain/header.php';
@@ -98,6 +99,11 @@ if (isset($_GET['transactionID'])) {
         </form>
     </main>
 </div>
+
+<?php
+ob_end_flush(); // Flush the output buffer and turn off output buffering
+?>
+
 </body>
 
 </html>
