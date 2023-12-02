@@ -7,20 +7,25 @@ try {
         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
     );
 
-    // Fetch data from the database with search conditions
-    $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
-    $query = "SELECT CompanyName, UserID, Status FROM [dbo].[user] WHERE 
-                CompanyName LIKE :keyword OR
-                UserID LIKE :keyword OR
-                Status LIKE :keyword";
+    // Initialize results array
+    $results = [];
 
-    $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-    $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
-    $stmt->execute();
-    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    // Check if the search parameter is set
+    if (isset($_GET['search'])) {
+        // Fetch data from the database with search conditions
+        $searchKeyword = $_GET['search'];
+        $query = "SELECT CompanyName, UserID, Status FROM [dbo].[user] WHERE 
+                    CompanyName LIKE :keyword OR
+                    UserID LIKE :keyword OR
+                    Status LIKE :keyword";
 
-    // Fetch the results as an associative array
-    $results = $stmt->fetchAll();
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // Fetch the results as an associative array
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -36,24 +41,20 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company List</title>
+    <title>User List</title>
     <!-- Your existing styles go here -->
 </head>
 
 <body>
     <div class="sidebar">
-        <ul>
-            <li><a href="admincomplist.php">Company List</a></li>
-            <li><a href="adminuserlist.php">User List</a></li>
-            <li><a href="adlogin.php">Log Out</a></li>
-        </ul>
+        <!-- Sidebar content -->
     </div>
 
     <div class="container">
         <div class="content">
             <div class="search-container">
                 <form action="adminuserlist.php" method="GET">
-                    <input type="text" id="searchInput" name="search" placeholder="Search by Company Name, User ID or Status">
+                    <input type="text" id="searchInput" name="search" placeholder="Search by Company Name, User ID, or Status" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
                     <button type="submit">Search</button>
                 </form>
             </div>
@@ -80,7 +81,7 @@ try {
                         echo "<td>" . htmlspecialchars($row['UserID']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
                         echo "<td>";
-                        echo "<button style='display: inline-block;'><a href='aduseredit.php?userid=" . htmlspecialchars($row['UserID']) . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
+                        echo "<button style='display: inline-block;'><a href='aduseredit.php?userid=" . urlencode(htmlspecialchars($row['UserID'])) . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
                         echo "&nbsp;";
                         echo "</td>";
                         echo "</tr>";

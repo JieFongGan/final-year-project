@@ -177,20 +177,19 @@ $successCardholder = "John Doe"; -->
         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
       );
 
-      // Query to find authcode with NULL CompanyName
-      $sql = "SELECT AuthCode FROM company WHERE CompanyName = ''";
-
-      $stmt = $conn->query($sql);
-
-      if ($stmt->rowCount() > 0) {
-        // Fetch the AuthCode
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      $companyName = "";
+      $sql = "SELECT AuthCode FROM company WHERE CompanyName = :companyName";
+      $stmt = $conn->prepare($sql);
+      $stmt->execute([':companyName' => $companyName]);
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      if ($row) {
         $authcode = $row["AuthCode"];
       } else {
         echo "Auth Code is not available.";
         echo "<button class='back-button'><a href='register.php' style='text-decoration: none; color: white;'>Back</a></button>";
         exit;
       }
+
 
       // Close the connection (optional as PDO closes the connection automatically when the script ends)
       $conn = null;
