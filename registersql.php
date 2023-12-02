@@ -121,15 +121,8 @@ $stmt->execute();
 // Fetch the result
 $companynamestore = $stmt->fetchColumn();
 
-// Check if there are any results
-if ($companynamestore === false) {
-    $_SESSION['error_message'] = "Error fetching Authentication Code.";
-    header("Location: register.php");
-    exit;
-}
-
 // Check if CompanyName is not set or is an empty string
-if (!isset($companynamestore) || $companynamestore === '') {
+if ($companynamestore != "") {
     $_SESSION['error_message'] = "Authentication Code is not available.";
     header("Location: register.php");
     exit;
