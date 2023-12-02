@@ -1,4 +1,5 @@
 ﻿<?php
+ob_start();
 // Start the session
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -27,4 +28,5 @@ try {
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
+ob_end_flush();
 ?>
