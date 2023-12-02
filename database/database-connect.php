@@ -1,9 +1,7 @@
 ﻿<?php
 ob_start();
-// Start the session
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+
+session_start();
 
 // Check if the session variable is set
 if (isset($_SESSION['companyname'])) {
@@ -26,7 +24,11 @@ try {
     $conn = new PDO("sqlsrv:server=$serverName;Database=$database", $uid, $pwd);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+    echo "Connection failed. Please try again later.";
+    // Optionally, log the error for debugging purposes
+    // error_log($e->getMessage(), 0);
+    exit();
 }
+
 ob_end_flush();
 ?>
