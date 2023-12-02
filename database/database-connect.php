@@ -24,11 +24,13 @@ try {
     $conn = new PDO("sqlsrv:server=$serverName;Database=$database", $uid, $pwd);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
+    // Log the error to a file for debugging purposes
+    error_log("Connection failed: " . $e->getMessage(), 3, "error.log");
+    // Display a user-friendly message
     echo "Connection failed. Please try again later.";
-    // Optionally, log the error for debugging purposes
-    // error_log($e->getMessage(), 0);
     exit();
 }
+
 
 ob_end_flush();
 ?>
