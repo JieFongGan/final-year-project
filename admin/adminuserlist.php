@@ -17,6 +17,11 @@ try {
     $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
     $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
     $stmt->execute();
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+    // Fetch the results as an associative array
+    $results = $stmt->fetchAll();
+
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
     echo "<br>SQL Query: " . $query;
@@ -24,7 +29,6 @@ try {
     die();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,7 +73,7 @@ try {
                     <?php
                     // Display the fetched data
                     $number = 1;
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    foreach ($results as $row) {
                         echo "<tr>";
                         echo "<td>" . $number . "</td>";
                         echo "<td>" . htmlspecialchars($row['CompanyName']) . "</td>";
