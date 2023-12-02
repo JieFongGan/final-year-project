@@ -11,6 +11,7 @@ if (isset($_SESSION['companyname'])) {
     $userrole = $_SESSION['userrole'];
 } else {
     header("Location: ../login.php");
+    exit();
 }
 
 // Replace these values with your Azure SQL Database connection details
