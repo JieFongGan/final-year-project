@@ -1,5 +1,5 @@
 ﻿<?php
-
+ob_start();
 $pageTitle = "Inventory";
 include '../database/database-connect.php';
 include '../contain/header.php';
@@ -15,7 +15,7 @@ $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Pagination
-$itemsPerPage = isset($_GET['itemsPerPage']) ? (int)$_GET['itemsPerPage'] : 10;
+$itemsPerPage = isset($_GET['itemsPerPage']) ? (int) $_GET['itemsPerPage'] : 10;
 $totalItems = count($products);
 $totalPages = ceil($totalItems / $itemsPerPage);
 
@@ -58,7 +58,7 @@ if (isset($_POST['deleteProduct'])) {
     $pathtitle = "Inventory";
     include '../contain/horizontal-bar.php';
     ?>
-    
+
     <main>
         <div class="button-and-search">
             <form method="POST">
@@ -70,44 +70,56 @@ if (isset($_POST['deleteProduct'])) {
         <div class="table-responsive">
             <table id="myTable" class="table-container" style="width:100%">
                 <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>ProductID</th>
-                    <th>WarehouseID</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Action</th>
-                </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>ProductID</th>
+                        <th>WarehouseID</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
                 </thead>
                 <tbody id="tableBody">
-                <?php if (empty($subsetProducts)): ?>
-                    <tr>
-                        <td colspan="7">No data available</td>
-                    </tr>
-                    <?php foreach ($subsetProducts as $product): ?>
+                    <?php if (empty($subsetProducts)): ?>
                         <tr>
-                            <td><?= $product['Name'] ?></td>
-                            <td><?= $product['ProductID'] ?></td>
-                            <td><?= $product['WarehouseID'] ?></td>
-                            <td><?= $product['Description'] ?></td>
-                            <td><?= $product['Price'] ?></td>
-                            <td><?= $product['Quantity'] ?></td>
-                            <td>
-                                <form method="GET" action="inventory-edit.php">
-                                    <input type="hidden" name="productID" value="<?= $product['ProductID'] ?>">
-                                    <button class="edit" type="submit">edit</button>
-                                </form>
-                                <form method="POST">
-                                    <button class="delete" name="deleteProduct" type="submit"
-                                            onclick="return confirm('Are you sure you want to delete this product?')">delete
-                                    </button>
-                                    <input type="hidden" name="deleteProduct" value="<?= $product['ProductID'] ?>">
-                                </form>
-                            </td>
+                            <td colspan="7">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                        <?php foreach ($subsetProducts as $product): ?>
+                            <tr>
+                                <td>
+                                    <?= $product['Name'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['ProductID'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['WarehouseID'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['Description'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['Price'] ?>
+                                </td>
+                                <td>
+                                    <?= $product['Quantity'] ?>
+                                </td>
+                                <td>
+                                    <form method="GET" action="inventory-edit.php">
+                                        <input type="hidden" name="productID" value="<?= $product['ProductID'] ?>">
+                                        <button class="edit" type="submit">edit</button>
+                                    </form>
+                                    <form method="POST">
+                                        <button class="delete" name="deleteProduct" type="submit"
+                                            onclick="return confirm('Are you sure you want to delete this product?')">delete
+                                        </button>
+                                        <input type="hidden" name="deleteProduct" value="<?= $product['ProductID'] ?>">
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -131,5 +143,9 @@ if (isset($_POST['deleteProduct'])) {
         </div>
     </main>
 </div>
+<?php
+ob_end_flush();
+?>
 </body>
+
 </html>
