@@ -1,7 +1,5 @@
 ﻿<?php
-ob_implicit_flush(false);
 session_start();
-ob_start();
 
 // Check if the session variable is set
 if (isset($_SESSION['companyname'])) {
@@ -31,6 +29,4 @@ try {
     exit();
 }
 
-
-ob_end_flush();
 ?>
