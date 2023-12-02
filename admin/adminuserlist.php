@@ -183,14 +183,15 @@
                     <button type="submit">Search</button>
                 </form>
             </div>
+            <br>
 
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Company Name</th>
                             <th>User ID</th>
+                            <th>Company Name</th>
                             <th>Status</th>
                             <th>Modify</th>
                         </tr>
@@ -205,10 +206,10 @@
                     );
 
                     $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
-                    $query = "SELECT CompanyName, Status, UserID FROM [user] WHERE 
+                    $query = "SELECT UserID, CompanyName, Status FROM [user] WHERE 
+                                UserID LIKE '%$searchKeyword%' OR
                                 CompanyName LIKE '%$searchKeyword%' OR
-                                Status LIKE '%$searchKeyword%' OR
-                                AuthCode LIKE '%$searchKeyword%'";
+                                Status LIKE '%$searchKeyword%'";
                     $result = $conn->query($query);
                     
 
@@ -217,8 +218,8 @@
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         echo "<tr>";
                         echo "<td>" . $number . "</td>";
-                        echo "<td>" . $row['CompanyName'] . "</td>";
                         echo "<td>" . $row['UserID'] . "</td>";
+                        echo "<td>" . $row['CompanyName'] . "</td>";
                         echo "<td>" . $row['Status'] . "</td>";
                         echo "<td>";
                         echo "<button style='display: inline-block;'><a href='aduseredit.php?userid=" . $row['UserID'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
