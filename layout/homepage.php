@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 ob_start(); // Start output buffering
 $pageTitle = "Homepage";
 include '../database/database-connect.php';

@@ -16,7 +16,6 @@
 </head>
 
 <body>
-
     <input type="checkbox" id="sidebar-toggle">
     <div class="sidebar">
         <div class="sidebar-header">
