@@ -1,5 +1,4 @@
 ﻿<?php
-ob_start();
 $pageTitle = "Inventory";
 include '../database/database-connect.php';
 include '../contain/header.php';
@@ -143,9 +142,6 @@ if (isset($_POST['deleteProduct'])) {
         </div>
     </main>
 </div>
-<?php
-ob_end_flush();
-?>
 </body>
 
 </html>
