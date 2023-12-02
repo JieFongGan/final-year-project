@@ -112,7 +112,7 @@ if ($result) {
 }
 
 // Bind the parameters
-$stmt = $conn->prepare("SELECT CompanyName FROM Company WHERE AuthCode = :authCode");
+$stmt = $conn->prepare("SELECT CompanyName FROM [company] WHERE AuthCode = :authCode");
 $stmt->bindParam(":authCode", $authCode, PDO::PARAM_STR);
 
 // Execute the statement
@@ -121,9 +121,9 @@ $stmt->execute();
 // Fetch the result
 $companynamestore = $stmt->fetchColumn();
 
-// Check if CompanyName is not set or is an empty string
+// Check if CompanyName is not an empty string
 if ($companynamestore != "") {
-    $_SESSION['error_message'] = "Authentication Code is not available.";
+    $_SESSION['error_message'] = "Authentication Code is not available. $companynamestore!";
     header("Location: register.php");
     exit;
 } else {
