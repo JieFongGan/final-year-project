@@ -14,7 +14,7 @@ try {
                 UserID LIKE :keyword OR
                 Status LIKE :keyword";
 
-    $stmt = $conn->prepare($query);
+    $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
     $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
     $stmt->execute();
 } catch (PDOException $e) {
@@ -23,8 +23,8 @@ try {
     echo "<br>SQLSTATE Error Code: " . $e->getCode();
     die();
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
