@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // If there are no errors, proceed with database operations
     if (empty($errors)) {
         // Insert transaction information
-        $insertTransactionSql = "INSERT INTO Transaction (WarehouseID, TransactionType, CustomerID, TransactionDate, DeliveryStatus) VALUES (?, ?, ?, NOW(), 'Pending')";
+        $insertTransactionSql = "INSERT INTO Transaction (WarehouseID, TransactionType, CustomerID, TransactionDate, DeliveryStatus) VALUES (?, ?, ?, GETDATE(), 'Pending')";
         $stmtTransaction = $conn->prepare($insertTransactionSql);
         $stmtTransaction->bind_param("iss", $_SESSION['selectedWarehouse'], $_SESSION['selectedTransactionType'], $_SESSION['selectedCustomer']);
         $stmtTransaction->execute();
