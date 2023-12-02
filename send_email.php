@@ -26,9 +26,9 @@ try {
     $stmt = $checkvalidcompany->prepare($checkvalidcompanyquery);
     $stmt->bindParam(':companyName', $companyName);
     $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Check the number of rows returned
-    if ($stmt->rowCount() == 0) {
+    if ($row) {
         $_SESSION['error_message'] = "Company does not exist";
         header("Location: forgetpassword.php");
         exit;
@@ -51,8 +51,9 @@ try {
     $stmt->bindParam(':username', $username);
     $stmt->execute();
 
-    if ($stmt->rowCount() > 0) {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row) {
         $password = $row['password'];
         $email = $row['email'];
 
