@@ -101,7 +101,6 @@ if ($username && $password) {
         die("Error: " . $e->getMessage());
     } finally {
         $conn = null;
-        $cone = null;
     }
 }
 ?>
