@@ -1,7 +1,7 @@
 ﻿<?php
-ob_start(); // Start output buffering
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Start output buffering
+ob_start();
+
 $pageTitle = "Inventory";
 include '../database/database-connect.php';
 include '../contain/header.php';
@@ -87,6 +87,7 @@ if (isset($_POST['deleteProduct'])) {
                         <tr>
                             <td colspan="7">No data available</td>
                         </tr>
+                    <?php else: ?>
                         <?php foreach ($subsetProducts as $product): ?>
                             <tr>
                                 <td>
@@ -147,11 +148,9 @@ if (isset($_POST['deleteProduct'])) {
 </div>
 
 <?php
-ob_end_flush(); // Flush the output buffer and turn off output buffering
+// End output buffering and flush the buffer
+ob_end_flush();
 ?>
-
 </body>
 
 </html>
-
-
