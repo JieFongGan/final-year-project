@@ -86,78 +86,94 @@ if (empty($authCode)) {
     exit;
 }
 
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "adminallhere";
-$conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed:" . $conn->connect_error);
+// Database connection
+try {
+    $conn = new PDO(
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+        "sqladmin",
+        "#Allhere",
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
 // Check if the user already exists
-$sql = "SELECT UserID FROM user WHERE UserID = ?";
+$sql = "SELECT UserID FROM [User] WHERE UserID = :username";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $username);
+$stmt->bindParam(":username", $username, PDO::PARAM_STR);
 $stmt->execute();
-$stmt->store_result();
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($stmt->num_rows > 0) {
+if ($result) {
     $_SESSION['error_message'] = "Username already exists";
     header("Location: register.php");
-    $stmt->close();
-    $conn->close();
     exit;
 }
 
-
-// Prepare the SQL statement
-$sql = "SELECT CompanyName FROM company WHERE AuthCode = ?";
-$stmt = $conn->prepare($sql);
-
 // Bind the parameters
-$stmt->bind_param("s", $authCode);
+$stmt = $conn->prepare("SELECT CompanyName FROM [company] WHERE AuthCode = :authCode");
+$stmt->bindParam(":authCode", $authCode, PDO::PARAM_STR);
 
 // Execute the statement
 $stmt->execute();
 
-// Store the result
-$stmt->store_result();
+// Fetch the result
+$companynamestore = $stmt->fetchColumn();
 
-// Bind the result variables
-$stmt->bind_result($companynamestore);
-
-// Check if there are any results
-if ($stmt->num_rows == 0) {
-    $_SESSION['error_message'] = "Authentication Code is not available.";
+// Check if CompanyName is not an empty string
+if ($companynamestore != "") {
+    $_SESSION['error_message'] = "Authentication Code is not available. $companynamestore!";
     header("Location: register.php");
-    $stmt->close();
-    $conn->close();
     exit;
 } else {
-    $stmt->close();
+    $stmt->closeCursor();
     if (!empty($companynamestore)) {
         $_SESSION['error_message'] = "Company already exists.";
         header("Location: register.php");
-        $conn->close();
         exit;
     } else {
-        $conn->query("CREATE DATABASE IF NOT EXISTS $companyname");
-        $conn->query("USE $companyname");
+
+        try {
+            $cone = new PDO(
+                "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = master",
+                "sqladmin",
+                "#Allhere",
+                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+            );
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+        
+        // Dynamically create the database
+        $cone->query("CREATE DATABASE [$companyname] (EDITION = 'basic')");
+        
+
+        // Create a new connection to the database
+        try {
+            $cono = new PDO(
+                "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = $companyname",
+                "sqladmin",
+                "#Allhere",
+                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+            );
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
 
         // Create tables
-        $conn->query("CREATE TABLE IF NOT EXISTS Company (
-        CompanyID INT AUTO_INCREMENT PRIMARY KEY,
-        CompanyName VARCHAR(255) NOT NULL,
-        Email VARCHAR(255),
-        Phone VARCHAR(20),
-        Address VARCHAR(255)
+        $cono->query("CREATE TABLE Company (
+            CompanyID INT PRIMARY KEY,
+            CompanyName VARCHAR(255) NOT NULL,
+            Email VARCHAR(255),
+            Phone VARCHAR(20),
+            Address VARCHAR(255)
         )");
 
         // Insert values into Company table
-        $conn->query("INSERT INTO Company (CompanyID, CompanyName, Email, Phone, Address) VALUES ('$companyid', '$companyname', '$companyemail', '$companyphone', '$companyaddress')");
+        $cono->query("INSERT INTO Company (CompanyID, CompanyName, Email, Phone, Address) VALUES ('$companyid', '$companyname', '$companyemail', '$companyphone', '$companyaddress')");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS User (
+        $cono->query("CREATE TABLE IF NOT EXISTS User (
         UserID INT AUTO_INCREMENT PRIMARY KEY,
         CompanyID INT,
         Username VARCHAR(50) NOT NULL,
@@ -172,15 +188,15 @@ if ($stmt->num_rows == 0) {
         FOREIGN KEY (CompanyID) REFERENCES Company(CompanyID)
         )");
 
-        $conn->query("INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus) VALUES ('1', '$companyid', '$username', '$password', '$email', '$phone', '$firstname', '$lastname', 'Admin', Now(), 'Active')");
+        $cono->query("INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus) VALUES ('1', '$companyid', '$username', '$password', '$email', '$phone', '$firstname', '$lastname', 'Admin', Now(), 'Active')");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Category (
+        $cono->query("CREATE TABLE IF NOT EXISTS Category (
         CategoryID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(50) NOT NULL,
         Description TEXT
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Warehouse (
+        $cono->query("CREATE TABLE IF NOT EXISTS Warehouse (
         WarehouseID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(255) NOT NULL,
         Address VARCHAR(255),
@@ -188,7 +204,7 @@ if ($stmt->num_rows == 0) {
         Email VARCHAR(255)
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Customer (
+        $cono->query("CREATE TABLE IF NOT EXISTS Customer (
         CustomerID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(255) NOT NULL,
         Contact VARCHAR(20),
@@ -197,7 +213,7 @@ if ($stmt->num_rows == 0) {
         Remark VARCHAR(255)
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Product (
+        $cono->query("CREATE TABLE IF NOT EXISTS Product (
         ProductID INT AUTO_INCREMENT PRIMARY KEY,
         CategoryID INT,
         WarehouseID INT,
@@ -210,7 +226,7 @@ if ($stmt->num_rows == 0) {
         FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID)
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Transaction (
+        $cono->query("CREATE TABLE IF NOT EXISTS Transaction (
         TransactionID INT AUTO_INCREMENT PRIMARY KEY,
         WarehouseID INT,
         CustomerID INT,
@@ -221,7 +237,7 @@ if ($stmt->num_rows == 0) {
         FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS TransactionDetail (
+        $cono->query("CREATE TABLE IF NOT EXISTS TransactionDetail (
             TransactionDetailID INT AUTO_INCREMENT PRIMARY KEY,
             TransactionID INT,
             ProductID INT,
@@ -230,47 +246,47 @@ if ($stmt->num_rows == 0) {
             FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
         )");
 
-        // Connect to the database
-        $servername = "localhost";
-        $user = "root";
-        $password = "";
-        $dbname = "adminallhere";
+        // // Connect to the database
+        // $servername = "localhost";
+        // $user = "root";
+        // $password = "";
+        // $dbname = "adminallhere";
 
-        $conn = new mysqli($servername, $user, $password, $dbname);
+        // $conn = new mysqli($servername, $user, $password, $dbname);
 
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
+        // // Check connection
+        // if ($conn->connect_error) {
+        //     die("Connection failed: " . $conn->connect_error);
+        // }
 
-        // Insert data into the Company table
-        $status = "Active";
-        // Update the Company table
+        // // Insert data into the Company table
+        // $status = "Active";
+        // // Update the Company table
 
-        $companyname = strtolower($companyname);
+        // $companyname = strtolower($companyname);
 
-        $sql = "UPDATE Company SET CompanyName = '$companyname', Status = '$status' WHERE AuthCode = '$authCode'";
+        // $sql = "UPDATE Company SET CompanyName = '$companyname', Status = '$status' WHERE AuthCode = '$authCode'";
 
-        if ($conn->query($sql) === TRUE) {
-            echo "Data updated successfully";
-        } else {
-            echo "Error updating data: " . $conn->error;
-        }
+        // if ($conn->query($sql) === TRUE) {
+        //     echo "Data updated successfully";
+        // } else {
+        //     echo "Error updating data: " . $conn->error;
+        // }
 
-        // Insert data into the User table
-        $sql = "INSERT INTO User (UserID, CompanyName, Status) VALUES ('$username', '$companyname', '$status')";
+        // // Insert data into the User table
+        // $sql = "INSERT INTO User (UserID, CompanyName, Status) VALUES ('$username', '$companyname', '$status')";
 
-        if ($conn->query($sql) === TRUE) {
-            echo "Data inserted successfully";
-        } else {
-            echo "Error inserting data: " . $conn->error;
-        }
+        // if ($conn->query($sql) === TRUE) {
+        //     echo "Data inserted successfully";
+        // } else {
+        //     echo "Error inserting data: " . $conn->error;
+        // }
 
-        $conn->close();
-        $_SESSION['companyname'] = $companyname;
-        $_SESSION['username'] = $username;
-        $_SESSION['userrole'] = "Admin";
-        header("Location: layout/homepage.php");
+        // $conn->close();
+        // $_SESSION['companyname'] = $companyname;
+        // $_SESSION['username'] = $username;
+        // $_SESSION['userrole'] = "Admin";
+        // header("Location: layout/homepage.php");
     }
 }
 
