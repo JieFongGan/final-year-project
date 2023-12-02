@@ -222,7 +222,7 @@
                         echo "<td>" . $row['CompanyName'] . "</td>";
                         echo "<td>" . $row['Status'] . "</td>";
                         echo "<td>";
-                        // echo "<button style='display: inline-block;'><a href='aduseredit.php?userid=" . $row['UserID'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
+                        echo "<button style='display: inline-block;'><a href='aduseredit.php?userid=" . $row['UserID'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
                         echo "&nbsp;";
                         echo "</td>";
                         echo "</tr>";
