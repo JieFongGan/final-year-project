@@ -7,16 +7,25 @@ try {
         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
     );
 
-    // Fetch data from the database with search conditions
-    $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
-    $query = "SELECT CompanyName, UserID, Status FROM [dbo].[user] WHERE 
-                CompanyName LIKE :keyword OR
-                UserID LIKE :keyword OR
-                Status LIKE :keyword";
+    // Initialize results array
+    $results = [];
 
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
-    $stmt->execute();
+    // Check if the search parameter is set
+    if (isset($_GET['search'])) {
+        // Fetch data from the database with search conditions
+        $searchKeyword = $_GET['search'];
+        $query = "SELECT CompanyName, UserID, Status FROM [dbo].[user] WHERE 
+                    CompanyName LIKE :keyword OR
+                    UserID LIKE :keyword OR
+                    Status LIKE :keyword";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // Fetch the results as an associative array
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -44,7 +53,10 @@ try {
     <div class="container">
         <div class="content">
             <div class="search-container">
-                <!-- Search form -->
+                <form action="adminuserlist.php" method="GET">
+                    <input type="text" id="searchInput" name="search" placeholder="Search by Company Name, User ID, or Status" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                    <button type="submit">Search</button>
+                </form>
             </div>
 
             <div class="table-container">
@@ -62,7 +74,7 @@ try {
                     <?php
                     // Display the fetched data
                     $number = 1;
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    foreach ($results as $row) {
                         echo "<tr>";
                         echo "<td>" . $number . "</td>";
                         echo "<td>" . htmlspecialchars($row['CompanyName']) . "</td>";
