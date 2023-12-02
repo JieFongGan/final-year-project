@@ -14,13 +14,10 @@ try {
                 UserID LIKE :keyword OR
                 Status LIKE :keyword";
 
-    $stmt = $conn->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
+    $stmt = $conn->prepare($query);
     $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
     $stmt->execute();
-    $stmt->setFetchMode(PDO::FETCH_ASSOC);
-
-    // Fetch the results as an associative array
-    $results = $stmt->fetchAll();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -36,7 +33,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company List</title>
+    <title>User List</title>
     <!-- Your existing styles go here -->
 </head>
 
@@ -53,7 +50,7 @@ try {
         <div class="content">
             <div class="search-container">
                 <form action="adminuserlist.php" method="GET">
-                    <input type="text" id="searchInput" name="search" placeholder="Search by Company Name, User ID or Status">
+                    <input type="text" id="searchInput" name="search" placeholder="Search by Company Name, User ID, or Status" value="<?php echo htmlspecialchars($searchKeyword); ?>">
                     <button type="submit">Search</button>
                 </form>
             </div>
@@ -80,7 +77,7 @@ try {
                         echo "<td>" . htmlspecialchars($row['UserID']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
                         echo "<td>";
-                        echo "<button style='display: inline-block;'><a href='aduseredit.php?userid=" . htmlspecialchars($row['UserID']) . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
+                        echo "<button style='display: inline-block;'><a href='aduseredit.php?userid=" . urlencode(htmlspecialchars($row['UserID'])) . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
                         echo "&nbsp;";
                         echo "</td>";
                         echo "</tr>";
