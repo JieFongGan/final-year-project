@@ -89,7 +89,7 @@ if (empty($authCode)) {
 // Database connection
 try {
     $conn = new PDO(
-        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = master",
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
         "sqladmin",
         "#Allhere",
         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
@@ -133,14 +133,36 @@ if (!$companynamestore) {
         header("Location: register.php");
         exit;
     } else {
-        // Dynamically create the database
-        $conn->query("CREATE DATABASE [$companyname]");
 
-        // Switch to the new database
-        $conn->query("USE [$companyname]");
+        try {
+            $cone = new PDO(
+                "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = master",
+                "sqladmin",
+                "#Allhere",
+                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+            );
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+        
+        // Dynamically create the database
+        $cone->query("CREATE DATABASE [$companyname] (EDITION = 'basic')");
+        
+
+        // Create a new connection to the database
+        try {
+            $cono = new PDO(
+                "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = $companyname",
+                "sqladmin",
+                "#Allhere",
+                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+            );
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
 
         // Create tables
-        $conn->query("CREATE TABLE Company (
+        $cono->query("CREATE TABLE Company (
             CompanyID INT PRIMARY KEY,
             CompanyName VARCHAR(255) NOT NULL,
             Email VARCHAR(255),
@@ -149,9 +171,9 @@ if (!$companynamestore) {
         )");
 
         // Insert values into Company table
-        $conn->query("INSERT INTO Company (CompanyID, CompanyName, Email, Phone, Address) VALUES ('$companyid', '$companyname', '$companyemail', '$companyphone', '$companyaddress')");
+        $cono->query("INSERT INTO Company (CompanyID, CompanyName, Email, Phone, Address) VALUES ('$companyid', '$companyname', '$companyemail', '$companyphone', '$companyaddress')");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS User (
+        $cono->query("CREATE TABLE IF NOT EXISTS User (
         UserID INT AUTO_INCREMENT PRIMARY KEY,
         CompanyID INT,
         Username VARCHAR(50) NOT NULL,
@@ -166,15 +188,15 @@ if (!$companynamestore) {
         FOREIGN KEY (CompanyID) REFERENCES Company(CompanyID)
         )");
 
-        $conn->query("INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus) VALUES ('1', '$companyid', '$username', '$password', '$email', '$phone', '$firstname', '$lastname', 'Admin', Now(), 'Active')");
+        $cono->query("INSERT INTO User (UserID, CompanyID, Username, Password, Email, Phone, FirstName, LastName, UserRole, LastLoginDate, UserStatus) VALUES ('1', '$companyid', '$username', '$password', '$email', '$phone', '$firstname', '$lastname', 'Admin', Now(), 'Active')");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Category (
+        $cono->query("CREATE TABLE IF NOT EXISTS Category (
         CategoryID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(50) NOT NULL,
         Description TEXT
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Warehouse (
+        $cono->query("CREATE TABLE IF NOT EXISTS Warehouse (
         WarehouseID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(255) NOT NULL,
         Address VARCHAR(255),
@@ -182,7 +204,7 @@ if (!$companynamestore) {
         Email VARCHAR(255)
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Customer (
+        $cono->query("CREATE TABLE IF NOT EXISTS Customer (
         CustomerID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(255) NOT NULL,
         Contact VARCHAR(20),
@@ -191,7 +213,7 @@ if (!$companynamestore) {
         Remark VARCHAR(255)
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Product (
+        $cono->query("CREATE TABLE IF NOT EXISTS Product (
         ProductID INT AUTO_INCREMENT PRIMARY KEY,
         CategoryID INT,
         WarehouseID INT,
@@ -204,7 +226,7 @@ if (!$companynamestore) {
         FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID)
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS Transaction (
+        $cono->query("CREATE TABLE IF NOT EXISTS Transaction (
         TransactionID INT AUTO_INCREMENT PRIMARY KEY,
         WarehouseID INT,
         CustomerID INT,
@@ -215,7 +237,7 @@ if (!$companynamestore) {
         FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
         )");
 
-        $conn->query("CREATE TABLE IF NOT EXISTS TransactionDetail (
+        $cono->query("CREATE TABLE IF NOT EXISTS TransactionDetail (
             TransactionDetailID INT AUTO_INCREMENT PRIMARY KEY,
             TransactionID INT,
             ProductID INT,
