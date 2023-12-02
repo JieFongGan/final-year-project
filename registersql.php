@@ -86,72 +86,66 @@ if (empty($authCode)) {
     exit;
 }
 
-$servername = "localhost";
-$dbusername = "root";
-$dbpassword = "";
-$dbname = "adminallhere";
-$conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed:" . $conn->connect_error);
+// Database connection
+try {
+    $conn = new PDO(
+        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = master",
+        "sqladmin",
+        "#Allhere",
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
 // Check if the user already exists
-$sql = "SELECT UserID FROM user WHERE UserID = ?";
+$sql = "SELECT UserID FROM [User] WHERE UserID = :username";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $username);
+$stmt->bindParam(":username", $username, PDO::PARAM_STR);
 $stmt->execute();
-$stmt->store_result();
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($stmt->num_rows > 0) {
+if ($result) {
     $_SESSION['error_message'] = "Username already exists";
     header("Location: register.php");
-    $stmt->close();
-    $conn->close();
     exit;
 }
 
-
-// Prepare the SQL statement
-$sql = "SELECT CompanyName FROM company WHERE AuthCode = ?";
-$stmt = $conn->prepare($sql);
-
 // Bind the parameters
-$stmt->bind_param("s", $authCode);
+$stmt = $conn->prepare("SELECT CompanyName FROM Company WHERE AuthCode = :authCode");
+$stmt->bindParam(":authCode", $authCode, PDO::PARAM_STR);
 
 // Execute the statement
 $stmt->execute();
 
-// Store the result
-$stmt->store_result();
-
-// Bind the result variables
-$stmt->bind_result($companynamestore);
+// Fetch the result
+$companynamestore = $stmt->fetchColumn();
 
 // Check if there are any results
-if ($stmt->num_rows == 0) {
+if (!$companynamestore) {
     $_SESSION['error_message'] = "Authentication Code is not available.";
     header("Location: register.php");
-    $stmt->close();
-    $conn->close();
     exit;
 } else {
-    $stmt->close();
+    $stmt->closeCursor();
     if (!empty($companynamestore)) {
         $_SESSION['error_message'] = "Company already exists.";
         header("Location: register.php");
-        $conn->close();
         exit;
     } else {
-        $conn->query("CREATE DATABASE IF NOT EXISTS $companyname");
-        $conn->query("USE $companyname");
+        // Dynamically create the database
+        $conn->query("CREATE DATABASE [$companyname]");
+
+        // Switch to the new database
+        $conn->query("USE [$companyname]");
 
         // Create tables
-        $conn->query("CREATE TABLE IF NOT EXISTS Company (
-        CompanyID INT AUTO_INCREMENT PRIMARY KEY,
-        CompanyName VARCHAR(255) NOT NULL,
-        Email VARCHAR(255),
-        Phone VARCHAR(20),
-        Address VARCHAR(255)
+        $conn->query("CREATE TABLE Company (
+            CompanyID INT PRIMARY KEY,
+            CompanyName VARCHAR(255) NOT NULL,
+            Email VARCHAR(255),
+            Phone VARCHAR(20),
+            Address VARCHAR(255)
         )");
 
         // Insert values into Company table
