@@ -17,7 +17,6 @@ try {
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
     $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -26,7 +25,6 @@ try {
     die();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,20 +38,13 @@ try {
 
 <body>
     <div class="sidebar">
-        <ul>
-            <li><a href="admincomplist.php">Company List</a></li>
-            <li><a href="adminuserlist.php">User List</a></li>
-            <li><a href="adlogin.php">Log Out</a></li>
-        </ul>
+        <!-- Sidebar content -->
     </div>
 
     <div class="container">
         <div class="content">
             <div class="search-container">
-                <form action="adminuserlist.php" method="GET">
-                    <input type="text" id="searchInput" name="search" placeholder="Search by Company Name, User ID, or Status" value="<?php echo htmlspecialchars($searchKeyword); ?>">
-                    <button type="submit">Search</button>
-                </form>
+                <!-- Search form -->
             </div>
 
             <div class="table-container">
@@ -71,7 +62,7 @@ try {
                     <?php
                     // Display the fetched data
                     $number = 1;
-                    foreach ($results as $row) {
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         echo "<tr>";
                         echo "<td>" . $number . "</td>";
                         echo "<td>" . htmlspecialchars($row['CompanyName']) . "</td>";
