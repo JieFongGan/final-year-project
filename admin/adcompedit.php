@@ -18,6 +18,7 @@ try {
 
 // Sanitize and validate AuthCode
 $authCode = $_GET['authcode'];
+echo $authCode;
 
 // Check if AuthCode is empty
 if (empty($authCode)) {
