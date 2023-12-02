@@ -17,11 +17,11 @@ try {
 }
 
 // Sanitize and validate AuthCode
-$authCode = preg_replace('/[^a-zA-Z0-9]/', '', $_GET['authcode']);
+$authCode = $_GET['authcode'];
 
 // Check if AuthCode is empty
 if (empty($authCode)) {
-    die("Invalid AuthCode.");
+    die("AuthCode is required.");
 }
 
 $sql = "SELECT * FROM company WHERE AuthCode = :authCode";

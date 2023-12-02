@@ -177,7 +177,7 @@
 
         // Fetch data from the database with search conditions
         $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
-        $query = "SELECT CompanyName, UserID, Status FROM [user] WHERE 
+        $query = "SELECT CompanyName, UserID, Status FROM user WHERE 
                     CompanyName LIKE :keyword OR
                     UserID LIKE :keyword OR
                     Status LIKE :keyword";
