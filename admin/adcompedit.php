@@ -24,7 +24,7 @@ if (empty($authCode)) {
     die("AuthCode is required.");
 }
 
-$sql = "SELECT * FROM [company] WHERE AuthCode = :authCode";
+$sql = "SELECT * FROM [dbo].[company] WHERE AuthCode = :authCode";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':authCode', $authCode, PDO::PARAM_STR);
 $stmt->execute();
@@ -32,6 +32,7 @@ $stmt->execute();
 if ($stmt->rowCount() > 0) {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $companyName = $row['CompanyName'];
+    echo $companyName;
     $status = $row['Status'];
 } else {
     $companyName = '';

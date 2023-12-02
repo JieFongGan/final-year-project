@@ -87,7 +87,6 @@ if (isset($_POST['deleteProduct'])) {
                     <tr>
                         <td colspan="7">No data available</td>
                     </tr>
-                <?php else: ?>
                     <?php foreach ($subsetProducts as $product): ?>
                         <tr>
                             <td><?= $product['Name'] ?></td>
