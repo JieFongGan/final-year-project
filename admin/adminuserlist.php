@@ -183,6 +183,7 @@
                     <button type="submit">Search</button>
                 </form>
             </div>
+            <br>
 
             <div class="table-container">
                 <table>
@@ -208,7 +209,7 @@
                     $query = "SELECT CompanyName, Status, UserID FROM [user] WHERE 
                                 CompanyName LIKE '%$searchKeyword%' OR
                                 Status LIKE '%$searchKeyword%' OR
-                                AuthCode LIKE '%$searchKeyword%'";
+                                UserID LIKE '%$searchKeyword%'";
                     $result = $conn->query($query);
                     
 
