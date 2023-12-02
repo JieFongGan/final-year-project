@@ -19,9 +19,11 @@ try {
     $stmt->execute();
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
-    echo "SQL Query: " . $query; // Add this line for debugging
+    echo "<br>SQL Query: " . $query;
+    echo "<br>SQLSTATE Error Code: " . $e->getCode();
     die();
 }
+
 ?>
 
 <!DOCTYPE html>
