@@ -224,47 +224,47 @@ if (!$companynamestore) {
             FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
         )");
 
-        // Connect to the database
-        $servername = "localhost";
-        $user = "root";
-        $password = "";
-        $dbname = "adminallhere";
+        // // Connect to the database
+        // $servername = "localhost";
+        // $user = "root";
+        // $password = "";
+        // $dbname = "adminallhere";
 
-        $conn = new mysqli($servername, $user, $password, $dbname);
+        // $conn = new mysqli($servername, $user, $password, $dbname);
 
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
+        // // Check connection
+        // if ($conn->connect_error) {
+        //     die("Connection failed: " . $conn->connect_error);
+        // }
 
-        // Insert data into the Company table
-        $status = "Active";
-        // Update the Company table
+        // // Insert data into the Company table
+        // $status = "Active";
+        // // Update the Company table
 
-        $companyname = strtolower($companyname);
+        // $companyname = strtolower($companyname);
 
-        $sql = "UPDATE Company SET CompanyName = '$companyname', Status = '$status' WHERE AuthCode = '$authCode'";
+        // $sql = "UPDATE Company SET CompanyName = '$companyname', Status = '$status' WHERE AuthCode = '$authCode'";
 
-        if ($conn->query($sql) === TRUE) {
-            echo "Data updated successfully";
-        } else {
-            echo "Error updating data: " . $conn->error;
-        }
+        // if ($conn->query($sql) === TRUE) {
+        //     echo "Data updated successfully";
+        // } else {
+        //     echo "Error updating data: " . $conn->error;
+        // }
 
-        // Insert data into the User table
-        $sql = "INSERT INTO User (UserID, CompanyName, Status) VALUES ('$username', '$companyname', '$status')";
+        // // Insert data into the User table
+        // $sql = "INSERT INTO User (UserID, CompanyName, Status) VALUES ('$username', '$companyname', '$status')";
 
-        if ($conn->query($sql) === TRUE) {
-            echo "Data inserted successfully";
-        } else {
-            echo "Error inserting data: " . $conn->error;
-        }
+        // if ($conn->query($sql) === TRUE) {
+        //     echo "Data inserted successfully";
+        // } else {
+        //     echo "Error inserting data: " . $conn->error;
+        // }
 
-        $conn->close();
-        $_SESSION['companyname'] = $companyname;
-        $_SESSION['username'] = $username;
-        $_SESSION['userrole'] = "Admin";
-        header("Location: layout/homepage.php");
+        // $conn->close();
+        // $_SESSION['companyname'] = $companyname;
+        // $_SESSION['username'] = $username;
+        // $_SESSION['userrole'] = "Admin";
+        // header("Location: layout/homepage.php");
     }
 }
 
