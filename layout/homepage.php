@@ -1,8 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ob_start(); // Start output buffering
 $pageTitle = "Homepage";
-
 include '../database/database-connect.php';
 include '../contain/header.php';
 
@@ -161,6 +159,10 @@ if ($latestTransactionsQuery !== false) {
         </section>
     </main>
 </div>
+
+<?php
+ob_end_flush(); // Flush the output buffer and turn off output buffering
+?>
 
 </body>
 

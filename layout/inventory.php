@@ -1,4 +1,7 @@
 ﻿<?php
+// Start output buffering
+ob_start();
+
 $pageTitle = "Inventory";
 include '../database/database-connect.php';
 include '../contain/header.php';
@@ -84,6 +87,7 @@ if (isset($_POST['deleteProduct'])) {
                         <tr>
                             <td colspan="7">No data available</td>
                         </tr>
+                    <?php else: ?>
                         <?php foreach ($subsetProducts as $product): ?>
                             <tr>
                                 <td>
@@ -142,6 +146,11 @@ if (isset($_POST['deleteProduct'])) {
         </div>
     </main>
 </div>
+
+<?php
+// End output buffering and flush the buffer
+ob_end_flush();
+?>
 </body>
 
 </html>
