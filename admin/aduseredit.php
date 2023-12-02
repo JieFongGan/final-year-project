@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $connn = new PDO("sqlsrv:server=$serverName;Database=$companyName", $username, $password);
             $connn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $updateCompanySql = "UPDATE [User] SET UserStatus = ? WHERE Username = ?";
+            $updateCompanySql = "UPDATE [user] SET UserStatus = ? WHERE Username = ?";
             $updateCompanyStmt = $connn->prepare($updateCompanySql);
             $updateCompanyStmt->execute([$newStatus, $userid]);
 

@@ -18,14 +18,13 @@ try {
 
 // Sanitize and validate AuthCode
 $authCode = $_GET['authcode'];
-echo $authCode;
 
 // Check if AuthCode is empty
 if (empty($authCode)) {
     die("AuthCode is required.");
 }
 
-$sql = "SELECT * FROM company WHERE AuthCode = :authCode";
+$sql = "SELECT * FROM [company] WHERE AuthCode = :authCode";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':authCode', $authCode, PDO::PARAM_STR);
 $stmt->execute();
@@ -51,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Update the company details in the database
-    $sql = "UPDATE company SET CompanyName = :companyName, Status = :status WHERE AuthCode = :authCode";
+    $sql = "UPDATE [company] SET CompanyName = :companyName, Status = :status WHERE AuthCode = :authCode";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':companyName', $companyName, PDO::PARAM_STR);
     $stmt->bindParam(':status', $status, PDO::PARAM_STR);

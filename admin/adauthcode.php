@@ -24,7 +24,7 @@ try {
     );
 
     // Fetch existing AuthCodes from the database
-    $sql = "SELECT AuthCode FROM company";
+    $sql = "SELECT AuthCode FROM [company]";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $existingAuthCodes = $stmt->fetchAll(PDO::FETCH_COLUMN);
