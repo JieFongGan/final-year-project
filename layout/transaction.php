@@ -1,6 +1,6 @@
 <?php
 $pageTitle = "Transactions";
-include("../database/database-connect.php");
+include '../database/database-connect.php';
 include '../contain/header.php';
 
 // Prepare the SQL statement
