@@ -37,19 +37,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<p class='error'>$error</p>";
         }
     } else {
-        // Insert the new product into the database
-        $insertSql = "INSERT INTO Product (Name, CategoryID, WarehouseID, Description, Price, Quantity, LastUpdatedDate) 
-                      VALUES (?, ?, ?, ?, ?, ?, NOW())";
-        $insertStmt = $conn->prepare($insertSql);
-        $insertStmt->execute([$productName, $categoryID, $warehouseID, $description, $price, $quantity]);
+        try {
+            // Insert the new product into the database using PDO
+            $insertSql = "INSERT INTO Product (Name, CategoryID, WarehouseID, Description, Price, Quantity, LastUpdatedDate) 
+                          VALUES (:productName, :categoryID, :warehouseID, :description, :price, :quantity, NOW())";
+            $insertStmt = $conn->prepare($insertSql);
+            $insertStmt->bindParam(':productName', $productName);
+            $insertStmt->bindParam(':categoryID', $categoryID);
+            $insertStmt->bindParam(':warehouseID', $warehouseID);
+            $insertStmt->bindParam(':description', $description);
+            $insertStmt->bindParam(':price', $price);
+            $insertStmt->bindParam(':quantity', $quantity);
+            $insertStmt->execute();
 
-        // Check if the insertion was successful
-        if ($insertStmt->rowCount() > 0) {
-            echo "Product created successfully.";
-            header("Location: inventory.php");
-            exit();
-        } else {
-            echo "Error creating product.";
+            // Check if the insertion was successful
+            if ($insertStmt->rowCount() > 0) {
+                echo "Product created successfully.";
+                header("Location: inventory.php");
+                exit();
+            } else {
+                echo "Error creating product.";
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
 }
