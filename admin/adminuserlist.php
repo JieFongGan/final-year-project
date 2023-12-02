@@ -166,6 +166,31 @@
 </head>
 
 <body>
+    <?php
+    try {
+        $conn = new PDO(
+            "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+            "sqladmin",
+            "#Allhere",
+            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        );
+
+        // Fetch data from the database with search conditions
+        $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
+        $query = "SELECT CompanyName, UserID, Status FROM [user] WHERE 
+                    CompanyName LIKE :keyword OR
+                    UserID LIKE :keyword OR
+                    Status LIKE :keyword";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
+        $stmt->execute();
+    } catch (PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+        die();
+    }
+    ?>
+
     <div class="sidebar">
         <ul>
             <li><a href="admincomplist.php">Company List</a></li>
@@ -175,17 +200,14 @@
     </div>
     <div class="container">
         <div class="content">
-           
-            <br>
+
             <div class="search-container">
                 <form action="adminuserlist.php" method="GET">
-                    <input type="text" id="searchInput" name="search"
-                        placeholder="Search by Company Name, User ID or Status">
+                    <input type="text" id="searchInput" name="search" placeholder="Search by Company Name, User ID or Status">
                     <button type="submit">Search</button>
                 </form>
             </div>
 
-            <br>
             <div class="table-container">
                 <table>
                     <thead>
@@ -199,44 +221,26 @@
                     </thead>
 
                     <?php
-                   $conn = new PDO(
-                    "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
-                    "sqladmin",
-                    "#Allhere",
-                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                );
-
-                    // Fetch data from the database with search conditions
-                    $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
-                    $query = "SELECT CompanyName, UserID, Status FROM user WHERE 
-                                CompanyName LIKE '%$searchKeyword%' OR
-                                UserID LIKE '%$searchKeyword%' OR
-                                Status LIKE '%$searchKeyword%'";
-                    $result = mysqli_query($conn, $query);
-
                     // Display the fetched data
                     $number = 1;
-                    while ($row = mysqli_fetch_assoc($result)) {
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         echo "<tr>";
                         echo "<td>" . $number . "</td>";
-                        echo "<td>" . $row['CompanyName'] . "</td>";
-                        echo "<td>" . $row['UserID'] . "</td>";
-                        echo "<td>" . $row['Status'] . "</td>";
+                        echo "<td>" . htmlspecialchars($row['CompanyName']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['UserID']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
                         echo "<td>";
-                        echo "<button style='display: inline-block;'><a href='aduseredit.php?userid=" . $row['UserID'] . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
+                        echo "<button style='display: inline-block;'><a href='aduseredit.php?userid=" . htmlspecialchars($row['UserID']) . "' style='color: inherit; text-decoration: none;'>Edit</a></button>";
                         echo "&nbsp;";
                         echo "</td>";
                         echo "</tr>";
                         $number++;
                     }
-
                     ?>
                 </table>
             </div>
         </div>
     </div>
-
-
 </body>
 
 </html>

@@ -1,30 +1,42 @@
 <?php
+// Connect to the database
+$serverName = "tcp:allhereserver.database.windows.net,1433";
+$database = "allheredb";
+$username = "sqladmin";
+$password = "#Allhere";
 
-    // Connect to the database
+try {
     $conn = new PDO(
-        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
-        "sqladmin",
-        "#Allhere",
+        "sqlsrv:server=$serverName;Database=$database",
+        $username,
+        $password,
         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
     );
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+// Sanitize and validate AuthCode
+$authCode = preg_replace('/[^a-zA-Z0-9]/', '', $_GET['authcode']);
 
-    $authCode = $_GET['authcode'];
-    $sql = "SELECT * FROM company WHERE AuthCode = '" . $authCode . "'";
-    $result = $conn->query($sql);
+// Check if AuthCode is empty
+if (empty($authCode)) {
+    die("Invalid AuthCode.");
+}
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $companyName = $row['CompanyName'];
-        $status = $row['Status'];
+$sql = "SELECT * FROM company WHERE AuthCode = :authCode";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':authCode', $authCode, PDO::PARAM_STR);
+$stmt->execute();
 
-    } else {
-        echo "No data found.";
-    }
+if ($stmt->rowCount() > 0) {
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $companyName = $row['CompanyName'];
+    $status = $row['Status'];
+} else {
+    $companyName = '';
+    $status = '';
+}
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,14 +44,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $companyName = $_POST['companyname'];
     $status = $_POST['status'];
 
+    // Validate form inputs
+    if (empty($companyName) || empty($status)) {
+        die("Company Name and Status are required.");
+    }
+
     // Update the company details in the database
-    $sql = "UPDATE company SET CompanyName = '$companyName', Status = '$status' WHERE AuthCode = '$authCode'";
-    if ($conn->query($sql) === TRUE) {
+    $sql = "UPDATE company SET CompanyName = :companyName, Status = :status WHERE AuthCode = :authCode";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':companyName', $companyName, PDO::PARAM_STR);
+    $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+    $stmt->bindParam(':authCode', $authCode, PDO::PARAM_STR);
+    
+    try {
+        $stmt->execute();
         // Redirect back to the previous page or perform any other action
         header('Location: admincomplist.php');
         exit;
-    } else {
-        echo "Error updating company details: " . $conn->error;
+    } catch (PDOException $e) {
+        echo "Error updating company details: " . $e->getMessage();
     }
 }
 ?>
