@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Start output buffering
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 $pageTitle = "Homepage";
@@ -160,6 +161,10 @@ if ($latestTransactionsQuery !== false) {
         </section>
     </main>
 </div>
+
+<?php
+ob_end_flush(); // Flush the output buffer and turn off output buffering
+?>
 
 </body>
 
