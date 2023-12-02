@@ -32,8 +32,7 @@ $offset = ($current_page - 1) * $itemsPerPage;
 $subsetProducts = array_slice($products, $offset, $itemsPerPage);
 
 if (isset($_POST['Cnew'])) {
-    header("Location: inventory-new.php");
-    exit;
+    exit(header("Location: inventory-new.php"));
 }
 
 if (isset($_POST['deleteProduct'])) {

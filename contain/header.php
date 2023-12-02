@@ -1,7 +1,3 @@
-<?php
-ob_start(); // Output buffering starts
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -84,7 +80,3 @@ ob_start(); // Output buffering starts
             </ul>
         </div>
     </div>
-
-    <?php
-    ob_end_flush(); // Output buffering ends and flushes the buffer
-    ?>
