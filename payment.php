@@ -175,26 +175,26 @@ $successCardholder = "John Doe"; -->
         "sqladmin",
         "#Allhere",
         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-    );
+      );
 
       // Query to find authcode with NULL CompanyName
       $sql = "SELECT AuthCode FROM company WHERE CompanyName = ''";
 
-      $result = $conn->query($sql);
+      $stmt = $conn->query($sql);
 
-      if ($result->num_rows > 0) {
-        // Output the authcodes
-        while ($row = $result->fetch_assoc()) {
-          $authcode = $row["AuthCode"];
-        }
+      if ($stmt->rowCount() > 0) {
+        // Fetch the AuthCode
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $authcode = $row["AuthCode"];
       } else {
-        echo "Auth Code are fulled.";
+        echo "Auth Code is not available.";
         echo "<button class='back-button'><a href='register.php' style='text-decoration: none; color: white;'>Back</a></button>";
         exit;
       }
 
-      // Close the connection
-      $conn->close();
+      // Close the connection (optional as PDO closes the connection automatically when the script ends)
+      $conn = null;
+
 
       $cardNumber = $_POST["card-number"];
       $expiryMonth = $_POST["expiry-month"];  // Fix array key
@@ -208,7 +208,7 @@ $successCardholder = "John Doe"; -->
 
       if ($isValid) {
         // Assuming you are using MySQL
-       
+    
 
         echo '<p class="success-message">Payment successful! ';
         echo $authcode;
@@ -263,12 +263,12 @@ $successCardholder = "John Doe"; -->
       <button type="submit" id="pay-now">Pay Now</button>
       <a href="register.php" style="text-decoration: none; color: black; text-align:center;">Back</a>
     </form>
-    
+
 
     <div id="loading-spinner" class="hidden"></div>
     <!-- Add error message display area -->
   </main>
-<br><br><br>
+  <br><br><br>
   <footer>
     <p>&copy; 2023 All Here. All rights reserved.</p>
   </footer>
