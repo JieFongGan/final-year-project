@@ -1,6 +1,7 @@
 ﻿<?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
+
 $pageTitle = "Inventory/Edit";
 include '../database/database-connect.php';
 include '../contain/header.php';

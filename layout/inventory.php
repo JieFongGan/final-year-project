@@ -2,9 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-include '../contain/header.php';
-include '../database/database-connect.php';
 $pageTitle = "Inventory";
+include '../database/database-connect.php';
+include '../contain/header.php';
 
 // Prepare the SQL statement
 $sql = "SELECT * FROM Product";
