@@ -26,10 +26,8 @@ if (empty($authCode)) {
 
 $sql = "SELECT * FROM [dbo].[company] WHERE AuthCode = :authCode";
 $stmt = $conn->prepare($sql);
-$stmt->execute([':authCode' => $authCode]); // You can pass parameters directly in execute
-
+$stmt->execute([':authCode' => $authCode]); 
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
 if ($row) {
     $companyName = $row['CompanyName'];
     $status = $row['Status'];
