@@ -1,42 +1,5 @@
-<?php
-try {
-    $conn = new PDO(
-        "sqlsrv:server=tcp:allhereserver.database.windows.net,1433;Database=allheredb",
-        "sqladmin",
-        "#Allhere",
-        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-    );
-
-    // Initialize results array
-    $results = [];
-
-    // Check if the search parameter is set
-    if (isset($_GET['search'])) {
-        // Fetch data from the database with search conditions
-        $searchKeyword = $_GET['search'];
-        $query = "SELECT CompanyName, UserID, Status FROM [dbo].[user] WHERE 
-                    CompanyName LIKE :keyword OR
-                    UserID LIKE :keyword OR
-                    Status LIKE :keyword";
-
-        $stmt = $conn->prepare($query);
-        $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
-        $stmt->execute();
-
-        // Fetch the results as an associative array
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-} catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-    echo "<br>SQL Query: " . $query;
-    echo "<br>SQLSTATE Error Code: " . $e->getCode();
-    die();
-}
-?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -54,7 +17,8 @@ try {
         <div class="content">
             <div class="search-container">
                 <form action="adminuserlist.php" method="GET">
-                    <input type="text" id="searchInput" name="search" placeholder="Search by Company Name, User ID, or Status" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                    <input type="text" id="searchInput" name="search" 
+                    placeholder="Search by Company Name, User ID, or Status">
                     <button type="submit">Search</button>
                 </form>
             </div>
@@ -72,9 +36,23 @@ try {
                     </thead>
 
                     <?php
+                    $conn = new PDO(
+                        "sqlsrv:server = tcp:allhereserver.database.windows.net,1433; Database = allheredb",
+                        "sqladmin",
+                        "#Allhere",
+                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+                    );
+
+                    $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
+                    $query = "SELECT CompanyName, Status, UserID FROM [user] WHERE 
+                                CompanyName LIKE '%$searchKeyword%' OR
+                                Status LIKE '%$searchKeyword%' OR
+                                UserID LIKE '%$searchKeyword%'";
+                    $result = $conn->query($query);
+
                     // Display the fetched data
                     $number = 1;
-                    foreach ($results as $row) {
+                    foreach ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         echo "<tr>";
                         echo "<td>" . $number . "</td>";
                         echo "<td>" . htmlspecialchars($row['CompanyName']) . "</td>";
