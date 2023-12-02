@@ -1,5 +1,8 @@
 ﻿<?php
-session_start();
+// Start the session
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Check if the session variable is set
 if (isset($_SESSION['companyname'])) {
