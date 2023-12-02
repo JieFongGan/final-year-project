@@ -32,45 +32,46 @@ $offset = ($current_page - 1) * $itemsPerPage;
 $subsetProducts = array_slice($products, $offset, $itemsPerPage);
 
 if (isset($_POST['Cnew'])) {
-    exit(header("Location: inventory-new.php"));
+    header("Location: inventory-new.php");
+    exit;
 }
 
 if (isset($_POST['deleteProduct'])) {
     // Validate the product ID
     $productIDToDelete = filter_input(INPUT_POST, 'deleteProduct', FILTER_SANITIZE_STRING);
     if (!filter_var($productIDToDelete, FILTER_VALIDATE_INT)) {
-        echo "Invalid product ID.";
-        exit;
+      echo "Invalid product ID.";
+      exit;
     }
-
+  
     try {
-        // Prepare the SQL statement for deletion
-        $deleteSql = "DELETE FROM Product WHERE ProductID = :productID";
-        $deleteStmt = $conn->prepare($deleteSql);
-
-        // Bind the parameters
-        $deleteStmt->bindParam(':productID', $productIDToDelete);
-
-        // Execute the statement for deletion
-        if ($deleteStmt->execute()) {
-            // Check if the product was deleted
-            if ($deleteStmt->rowCount() > 0) {
-                // Product deleted successfully
-                header("Location: inventory.php");
-                exit;
-            } else {
-                // Product not found
-                echo "Error: Product not found.";
-            }
+      // Prepare the SQL statement for deletion
+      $deleteSql = "DELETE FROM Product WHERE ProductID = :productID";
+      $deleteStmt = $conn->prepare($deleteSql);
+  
+      // Bind the parameters
+      $deleteStmt->bindParam(':productID', $productIDToDelete);
+  
+      // Execute the statement for deletion
+      if ($deleteStmt->execute()) {
+        // Check if the product was deleted
+        if ($deleteStmt->rowCount() > 0) {
+          // Product deleted successfully
+          header("Location: inventory.php");
+          exit;
         } else {
-            // Database error
-            echo "Error: " . $deleteStmt->errorInfo()[2];
+          // Product not found
+          echo "Error: Product not found.";
         }
+      } else {
+        // Database error
+        echo "Error: " . $deleteStmt->errorInfo()[2];
+      }
     } catch (PDOException $e) {
-        // Unexpected error
-        echo "Error: " . $e->getMessage();
+      // Unexpected error
+      echo "Error: " . $e->getMessage();
     }
-}
+  }
 
 ?>
 
