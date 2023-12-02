@@ -26,13 +26,12 @@ if (empty($authCode)) {
 
 $sql = "SELECT * FROM [dbo].[company] WHERE AuthCode = :authCode";
 $stmt = $conn->prepare($sql);
-$stmt->bindParam(':authCode', $authCode, PDO::PARAM_STR);
-$stmt->execute();
+$stmt->execute([':authCode' => $authCode]); // You can pass parameters directly in execute
 
-if ($stmt->rowCount() > 0) {
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($row) {
     $companyName = $row['CompanyName'];
-    echo $companyName;
     $status = $row['Status'];
 } else {
     $companyName = '';
