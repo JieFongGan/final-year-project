@@ -1,3 +1,7 @@
+<?php
+ob_start(); // Output buffering starts
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,7 +26,9 @@
         <div class="sidebar-header">
             <h3 class="brand">
                 <span class="ti-unlink"></span>
-                <span><?php echo $companyname ?></span>
+                <span>
+                    <?php echo $companyname ?>
+                </span>
             </h3>
             <label for="sidebar-toggle" class="ti-menu-alt"></label>
         </div>
@@ -54,12 +60,12 @@
                     </a>
                 </li>
                 <?php if ($userrole !== 'User'): ?>
-                <li>
-                    <a href="../layout/customer.php">
-                        <span class="ti-agenda"></span>
-                        <span>Customer</span>
-                    </a>
-                </li>
+                    <li>
+                        <a href="../layout/customer.php">
+                            <span class="ti-agenda"></span>
+                            <span>Customer</span>
+                        </a>
+                    </li>
                 <?php endif; ?>
                 <li>
                     <a href="../layout/report.php">
@@ -68,13 +74,17 @@
                     </a>
                 </li>
                 <?php if ($userrole !== 'User'): ?>
-                <li>
-                    <a href="../layout/settings.php">
-                        <span class="ti-settings"></span>
-                        <span>Setting</span>
-                    </a>
-                </li>
+                    <li>
+                        <a href="../layout/settings.php">
+                            <span class="ti-settings"></span>
+                            <span>Setting</span>
+                        </a>
+                    </li>
                 <?php endif; ?>
             </ul>
         </div>
     </div>
+
+    <?php
+    ob_end_flush(); // Output buffering ends and flushes the buffer
+    ?>

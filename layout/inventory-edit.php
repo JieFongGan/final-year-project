@@ -39,14 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Update the product in the database
         $updateSql = "UPDATE Product SET 
-                      Name = ?, 
-                      CategoryID = ?, 
-                      WarehouseID = ?, 
-                      Description = ?, 
-                      Price = ?, 
-                      Quantity = ?, 
-                      LastUpdatedDate = NOW() 
-                      WHERE ProductID = ?";
+              Name = ?, 
+              CategoryID = ?, 
+              WarehouseID = ?, 
+              Description = ?, 
+              Price = ?, 
+              Quantity = ?, 
+              LastUpdatedDate = NOW() 
+              WHERE ProductID = ?";
         $updateStmt = $conn->prepare($updateSql);
         $updateStmt->execute([$productName, $categoryID, $warehouseID, $description, $price, $quantity, $productID]);
 
@@ -88,10 +88,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="" disabled>Please select a category</option>
                         <?php
                         $categorySql = "SELECT CategoryID, Name FROM Category";
-                        $categoryResult = $conn->query($categorySql);
+                        $categoryStatement = $conn->prepare($categorySql);
+                        $categoryStatement->execute();
 
-                        if ($categoryResult->num_rows > 0) {
-                            while ($category = $categoryResult->fetch_assoc()) {
+                        $categoryResult = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
+
+                        if ($categoryResult) {
+                            foreach ($categoryResult as $category) {
                                 $selected = ($category['CategoryID'] == $productData['CategoryID']) ? 'selected' : '';
                                 ?>
                                 <option value="<?= $category["CategoryID"] ?>" <?= $selected ?>>
@@ -105,16 +108,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         ?>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="productWarehouse">Warehouse:</label>
                     <select id="productWarehouse" name="productWarehouse" required>
                         <option value="" disabled>Please select a warehouse</option>
                         <?php
                         $warehouseSql = "SELECT WarehouseID, Name FROM Warehouse";
-                        $warehouseResult = $conn->query($warehouseSql);
+                        $warehouseStatement = $conn->prepare($warehouseSql);
+                        $warehouseStatement->execute();
 
-                        if ($warehouseResult->num_rows > 0) {
-                            while ($warehouse = $warehouseResult->fetch_assoc()) {
+                        $warehouseResult = $warehouseStatement->fetchAll(PDO::FETCH_ASSOC);
+
+                        if ($warehouseResult) {
+                            foreach ($warehouseResult as $warehouse) {
                                 $selected = ($warehouse['WarehouseID'] == $productData['WarehouseID']) ? 'selected' : '';
                                 ?>
                                 <option value="<?= $warehouse["WarehouseID"] ?>" <?= $selected ?>>
@@ -126,10 +133,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo "0 results";
                         }
 
-                        $conn->close();
+                        $conn = null; // Close the PDO connection
                         ?>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="productDescription">Description:</label>
                     <textarea id="productDescription" name="productDescription" placeholder="Description"
